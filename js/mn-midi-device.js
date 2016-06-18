@@ -1,11 +1,19 @@
 var midi = require("midi");
 
+require("./mn-midi.js");
+
 var SFindMatching = function(inname, outname)
 {
     var device =
     {
       inputs : [],
-      outputs : []
+      outputs : [],
+
+      play : function(note)
+      {
+        this.outputs[0].sendMessage(SMakeNoteOn(note, 127, 0));
+        this.outputs[0].sendMessage(SMakeNoteOff(note, 0));
+      }
     }
 
     var lowercaseOutName = inname.toLowerCase();

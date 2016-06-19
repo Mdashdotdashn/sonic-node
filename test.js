@@ -1,22 +1,22 @@
-var sleep_mod = require("sleep");
 require("./js/mn-midi-device.js");
-
-sleep = function(sec)
-{
-  sleep_mod.usleep(1000000 * sec);
-}
-
-
+require("./js/mn-heartbeat.js");
 
 var device = MidiDevice.find("circuit");
 
-var arp = [ 72, 75, 79 ];
-var index = 0;
-
-while (true)
+var arp = 
 {
-  device.play(arp[index]);
-  index = (index + 1) % arp.length;
-  sleep(0.5);
+  notes: [ 72, 75, 79 ],
+  index: 0,
+
+  tick: function()
+  {
+    device.play(this.notes[this.index]);
+    this.index = (this.index + 1) % this.notes.length;
+  }
 }
+
+
+var heartbeat = new Heartbeat();
+heartbeat.addTicker(arp);
+heartbeat.run();
 

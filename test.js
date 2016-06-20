@@ -1,22 +1,33 @@
 require("./js/mn-midi-device.js");
 require("./js/mn-heartbeat.js");
+require("./js/mn-scale.js");
+require("./js/mn-utils.js");
 
 var device = MidiDevice.find("circuit");
 
 var arp = 
 {
-  notes: [ 72, 75, 79 ],
-  index: 0,
+  notes_: [ 72, 75, 79 ],
+  index_: 0,
 
   tick: function()
   {
     device.play(this.notes[this.index]);
     this.index = (this.index + 1) % this.notes.length;
+  },
+
+  setNotes(notes)
+  {
+    notes_ = notes;
   }
 }
 
 
-var heartbeat = new Heartbeat();
-heartbeat.addTicker(arp);
-heartbeat.run();
+//var heartbeat = new Heartbeat();
+//heartbeat.addTicker(arp);
+//heartbeat.run();
+console.log(Scale.major);
+console.log(Scale.dorian);
+console.log(Scale.phrygian);
+console.log(Scale.minor);
 

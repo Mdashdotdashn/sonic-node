@@ -1,6 +1,7 @@
 require("./js/mn-midi-device.js");
 require("./js/mn-heartbeat.js");
 require("./js/mn-scale.js");
+require("./js/mn-note.js");
 require("./js/mn-utils.js");
 
 var device = MidiDevice.find("circuit");
@@ -26,8 +27,5 @@ var arp =
 //var heartbeat = new Heartbeat();
 //heartbeat.addTicker(arp);
 //heartbeat.run();
-console.log(Scale.major);
-console.log(Scale.dorian);
-console.log(Scale.phrygian);
-console.log(Scale.minor);
+console.log(notemap["c3"]);
 

@@ -32,10 +32,15 @@ var Notes =
     }
     ,
     DEFAULT_OCTAVE :4
-  ,
-    ToMidi : function(note)
-    {
-    }
-    
+  ,  
 }
 
+notemap = {};
+
+for (var midinote = 0; midinote < 128; midinote++)
+{
+  var notenames = ["c","c#","d","d#","e","f","f#","g","g#","a","a#","b"];
+  var note = midinote % 12;
+  octave = (midinote - note) / 12 - 1;
+  notemap[notenames[note] + octave] = midinote;
+}

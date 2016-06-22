@@ -35,12 +35,24 @@ var Notes =
   ,  
 }
 
-notemap = {};
-
-for (var midinote = 0; midinote < 128; midinote++)
+notename = function(midinote)
 {
   var notenames = ["c","c#","d","d#","e","f","f#","g","g#","a","a#","b"];
   var note = midinote % 12;
   octave = (midinote - note) / 12 - 1;
-  notemap[notenames[note] + octave] = midinote;
+  return notenames[note] + octave;
 }
+
+var notemap = {};
+
+for (var midinote = 0; midinote < 128; midinote++)
+{
+  notemap[notename(midinote)] = midinote;
+}
+
+n = function(name)
+{
+  return notemap[name];
+}
+
+

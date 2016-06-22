@@ -4,7 +4,7 @@ var ionian_sequence     = [2, 2, 1, 2, 2, 2, 1];
 var hex_sequence        = [2, 2, 1, 2, 2, 3];
 var pentatonic_sequence = [3, 2, 2, 3, 2];
 
-Scale = {
+var Scale = {
   diatonic:  ionian_sequence,
   ionian:    ionian_sequence,
   major:     ionian_sequence,
@@ -76,5 +76,18 @@ Scale = {
   purvi:     [1, 3, 2, 1, 1, 3, 1],
   chinese:   [4, 2, 1, 4, 1],
   lydian_minor:       [2, 2, 2, 1, 1, 2, 2]
+}
+
+scale = function(noteName, scaleName)
+{
+  var s = eval("Scale."+scaleName);
+  var note = n(noteName);
+  var result = [];
+  for (var interval of s)
+  {
+    result.push(note);
+    note += interval;
+  }
+  return result;
 }
 

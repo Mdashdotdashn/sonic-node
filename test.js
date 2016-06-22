@@ -6,15 +6,15 @@ require("./js/mn-utils.js");
 
 var device = MidiDevice.find("circuit");
 
-var arp = 
+var sequence = 
 {
-  notes_: [ 72, 75, 79 ],
-  index_: 0,
+  notes_: scale("a3", "minor"),
 
   tick: function()
   {
-    device.play(this.notes[this.index]);
-    this.index = (this.index + 1) % this.notes.length;
+    console.log(notename(this.notes_[0]));
+    //device.play(this.notes_[0]);
+    this.notes_ = this.notes_.rotate(1);
   },
 
   setNotes(notes)
@@ -23,9 +23,7 @@ var arp =
   }
 }
 
-
-//var heartbeat = new Heartbeat();
-//heartbeat.addTicker(arp);
-//heartbeat.run();
-console.log(notemap["c3"]);
+var heartbeat = new Heartbeat();
+heartbeat.addTicker(sequence);
+heartbeat.run();
 

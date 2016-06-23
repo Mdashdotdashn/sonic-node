@@ -44,7 +44,10 @@ var SFindMatching = function(inname, outname)
       }
     }
 
-  return device;
+    if (device.inputs.length + device.outputs.length > 0)
+    {
+      return device;
+    }
 }
 
 MidiDevice = {

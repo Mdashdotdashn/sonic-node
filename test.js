@@ -12,12 +12,9 @@ sequence.setContent(scale("a3", "minor"));
 
 var heartbeat = new Heartbeat();
 
-heartbeat.on("tick", function()
-  {
-    sequence.tick();
-  });
+heartbeat.connect(sequence);
 
-sequence.on("tick", function(step)
+sequence.connect(function(step)
   {
     if (device)
     {

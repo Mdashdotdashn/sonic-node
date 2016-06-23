@@ -23,4 +23,17 @@ StepSequence.prototype.setContent = function(content)
   this.content_ = content;
 }
 
-
+StepSequence.prototype.connect = function(target)
+{
+  if (target instanceof Function)
+  {
+    this.on("tick", target);
+  }
+  else
+  {
+    this.on("tick", function()
+      {
+        target.tick();
+      });
+  }
+}

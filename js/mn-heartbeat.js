@@ -17,7 +17,7 @@ util.inherits(Heartbeat, EventEmitter);
 
 Heartbeat.prototype.run = function()
 {
-  this.timer.setInterval(function(hb) { hb.emit("tick")	;}, [this], '2s');        	
+  this.timer.setInterval(function(hb) { hb.emit("tick")	;}, [this], '2s');
 }
 
 Heartbeat.prototype.connect = function(target)

@@ -1,0 +1,31 @@
+start = chord_sequence
+
+digit
+	= d:[0-9]
+    	{ return d;}
+
+space = " ";
+
+comma = space* "," space*;
+
+chord_repetition // {1,2,3}x4
+  = c:chord_list "x" r:digit
+    { var res = c  ; for (var i = 0; i < r -1;i++) { res = res.concat(c) ;}; return res;} 
+
+chord_element
+  = d:digit
+    { return [d];}
+  / r:chord_repetition
+    { return r;}
+
+commaed_chord_element
+	= comma e:chord_element
+		{ return e; }
+
+chord_list // list of elements
+  = "{" space* e:chord_element c:commaed_chord_element* space* "}"
+    { var v = e.concat(c); return v; }
+ 
+chord_sequence // expect chord and some list in brackets
+  = "chord" " " d:chord_list 
+    { return d.toString().split(",")}

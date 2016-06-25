@@ -8,7 +8,7 @@ require("./js/mn-utils.js");
 
 var rootNote = "c4"
 var scale = "minor"
-var progression = [1, 7 ,4, 6, 1, 3, 6, 6];
+var progression = [1, 7 ,4 , 6, 1, 3, 6, 6];
 
 
 var device = MidiDevice.find("circuit");
@@ -36,7 +36,7 @@ sequence.connect(function(step)
     else
     {
       step.forEach(function(note) {
-        console.log(note);
+        console.log(notename(note) + "(" + note + ")");
         });
     }
   });

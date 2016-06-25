@@ -11,5 +11,5 @@ ChordProgression = function(noteName, scaleName)
 ChordProgression.prototype.chord = function(degree)
 {
   var n = this.scaleNotes_;
-  return [n[degree-1], n[degree+2], n[degree+4]];
+  return [n[degree-1], n[degree+1], n[degree+3]];
 }

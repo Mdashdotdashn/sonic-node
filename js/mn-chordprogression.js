@@ -1,3 +1,4 @@
+require("./mn-chord.js");
 
 ChordProgression = function(noteName, scaleName)
 {
@@ -11,5 +12,6 @@ ChordProgression = function(noteName, scaleName)
 ChordProgression.prototype.chord = function(degree)
 {
   var n = this.scaleNotes_;
-  return [n[degree-1], n[degree+1], n[degree+3]];
+  return new Chord([n[degree-1], n[degree+1], n[degree+3]]);
 }
+

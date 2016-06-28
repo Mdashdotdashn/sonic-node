@@ -107,18 +107,17 @@ analyseProgression(chordSequence);
 sequence.setContent(chordSequence);
 
 heartbeat.connect(sequence);
-
   sequence.connect(function(step)
   {
     if (device)
     {
-      step.forEach(function(note) {
+      step.notes_.forEach(function(note) {
         device.play(note);
         });
     }
     else
     {
-      step.forEach(function(note) {
+      step.notes_.forEach(function(note) {
         console.log(notename(note) + "(" + note + ")");
         });
     }

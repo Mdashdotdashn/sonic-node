@@ -2,6 +2,7 @@ var NanoTimer = require("nanotimer");
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 
+
 var STickHeartBeat = function(heartbeat)
 {
   heartbeat.tick();
@@ -9,15 +10,20 @@ var STickHeartBeat = function(heartbeat)
 
 Heartbeat = function()
 {
-    this.tempo = 140;
-    this.timer = new NanoTimer();
+    this.tempo_ = 120;
+    this.timer_ = new NanoTimer();
+    this.clockTicksPerBeat_ = 24;
+    this.tickCount_ = 0;
 }
 
 util.inherits(Heartbeat, EventEmitter);
 
 Heartbeat.prototype.run = function()
 {
-  this.timer.setInterval(function(hb) { hb.emit("tick")	;}, [this], '2s');
+  var interval = '' + 60000./this.tempo_/this.clockTicksPerBeat_ +'m';
+  this.tickCount_ = 0;
+  this.timer_.setInterval(function(hb) 
+    { hb.emit("tick", hb.tickCount_++);}, [this], interval);
 }
 
 Heartbeat.prototype.connect = function(target)
@@ -28,9 +34,14 @@ Heartbeat.prototype.connect = function(target)
   }
   else
   {
-    this.on("tick", function()
+    this.on("tick", function(tickCount)
       {
-        target.tick();
+        target.tick(tickCount);
       });
   }
+}
+
+Heartbeat.prototype.ticksPerSixteenth = function()
+{
+  return this.clockTicksPerBeat_ / 4;
 }

@@ -1,17 +1,18 @@
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 
-StepSequence = function()
+StepSequence = function(resolutionInSixteenth)
 {
   EventEmitter.call(this);
   this.content_ = [];
+  this.modulo_ = 6 * resolutionInSixteenth;
 }
 
 util.inherits(StepSequence, EventEmitter);
 
-StepSequence.prototype.tick = function()
+StepSequence.prototype.tick = function(tickCount)
 {
-  if (this.content_.length > 0)
+  if (this.content_.length > 0 && tickCount % this.modulo_ == 0)
   {
     this.emit("tick", this.content_[0]);
     this.content_ = this.content_.rotate(1);

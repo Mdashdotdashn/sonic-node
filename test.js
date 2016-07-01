@@ -87,41 +87,48 @@ function rectify_progression(sequence)
   }
 }
 
-var device = MidiDevice.find("circuit");
+var device = MidiDevice.find("Circuit");
 
 var cp = new ChordProgression(rootNote, scale);
-var sequence = new StepSequence();
-var heartbeat = new Heartbeat();
-
 var chordSequence = [];
 progression.forEach(function(degree) {
   chordSequence.push(cp.chord(degree));
   });
 
-//chordSequence[0].invert(-2);
+chordSequence[0].invert(-2);
 
 rectify_progression_to_first(chordSequence);
 
 analyseProgression(chordSequence);
 
+
+var sequence = new StepSequence(16);
+var heartbeat = new Heartbeat();
 sequence.setContent(chordSequence);
 
 heartbeat.connect(sequence);
-  sequence.connect(function(step)
+heartbeat.connect(function()
+  {
+    device.outputs[0].sendMessage([0xF8]);
+  });
+
+sequence.connect(function(step)
   {
     if (device)
     {
       step.notes_.forEach(function(note) {
-        device.play(note);
+          device.play(note);
         });
     }
     else
     {
       step.notes_.forEach(function(note) {
-        console.log(notename(note) + "(" + note + ")");
+          console.log(notename(note) + "(" + note + ")");
         });
     }
   });
 
 heartbeat.run();
+device.outputs[0].sendMessage([0xFA]);
+
 

@@ -24,6 +24,7 @@ var SFindMatching = function(inname, outname)
       var outputName = output.getPortName(i);
       if (outputName.toLowerCase().indexOf(lowercaseOutName) != -1)
       {
+        console.log("opening " + outputName);
         var currentOutput = new midi.output();
         currentOutput.openPort(i);
         device.outputs.push(currentOutput);
@@ -39,9 +40,9 @@ var SFindMatching = function(inname, outname)
       if (inputName.toLowerCase().indexOf(lowercaseInName) != -1)
       {
         var currentInput = new midi.input();
-        currentInput.openPort(i);
+  /*      currentInput.openPort(i);
         device.inputs.push(currentInput);
-      }
+  */    }
     }
 
     if (device.inputs.length + device.outputs.length > 0)

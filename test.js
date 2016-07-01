@@ -87,7 +87,6 @@ function rectify_progression(sequence)
   }
 }
 
-var device = MidiDevice.find("Circuit");
 
 var cp = new ChordProgression(rootNote, scale);
 var chordSequence = [];
@@ -101,6 +100,8 @@ rectify_progression_to_first(chordSequence);
 
 analyseProgression(chordSequence);
 
+var device = MidiDevice.find("Through");
+var output = device.getOutput(0);
 
 var sequence = new StepSequence(16);
 var heartbeat = new Heartbeat();
@@ -109,7 +110,7 @@ sequence.setContent(chordSequence);
 heartbeat.connect(sequence);
 heartbeat.connect(function()
   {
-    device.outputs[0].sendMessage([0xF8]);
+    output.sendSync();
   });
 
 sequence.connect(function(step)
@@ -117,7 +118,8 @@ sequence.connect(function(step)
     if (device)
     {
       step.notes_.forEach(function(note) {
-          device.play(note);
+          output.sendNoteOn(note, 127);
+          output.sendNoteOff(note);
         });
     }
     else
@@ -129,6 +131,6 @@ sequence.connect(function(step)
   });
 
 heartbeat.run();
-device.outputs[0].sendMessage([0xFA]);
+output.sendStart();
 
 

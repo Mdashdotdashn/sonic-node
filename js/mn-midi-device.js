@@ -6,13 +6,39 @@ var SFindMatching = function(inname, outname)
 {
     var device =
     {
-      inputs : [],
-      outputs : [],
+      inputs_ : [],
+      outputs_ : [],
 
-      play : function(note)
+      getOutput: function (channel)
       {
-        this.outputs[0].sendMessage(SMakeNoteOn(note, 127, 0));
-        this.outputs[0].sendMessage(SMakeNoteOff(note, 0));
+        var output =
+        {
+          sendNoteOn : function(note, velocity)
+          {
+            this.port_.sendMessage(SMakeNoteOn(note, velocity, this.channel_));
+          },
+
+          sendNoteOff : function(note, velocity)
+          {
+            this.port_.sendMessage(SMakeNoteOff(note, 0));
+          },
+
+          sendSync : function()
+          {
+            this.port_.sendMessage([0xF8]);
+          },
+
+          sendStart : function()
+          {
+            this.port_.sendMessage([0xFA]);
+          }
+
+        };
+
+        output.channel_ = channel;
+        output.port_ = this.outputs_[0];
+   
+        return output;
       }
     }
 
@@ -27,7 +53,7 @@ var SFindMatching = function(inname, outname)
         console.log("opening " + outputName);
         var currentOutput = new midi.output();
         currentOutput.openPort(i);
-        device.outputs.push(currentOutput);
+        device.outputs_.push(currentOutput);
       }
     }
 
@@ -41,11 +67,11 @@ var SFindMatching = function(inname, outname)
       {
         var currentInput = new midi.input();
   /*      currentInput.openPort(i);
-        device.inputs.push(currentInput);
+        device.inputs_.push(currentInput);
   */    }
     }
 
-    if (device.inputs.length + device.outputs.length > 0)
+    if (device.inputs_.length + device.outputs_.length > 0)
     {
       return device;
     }

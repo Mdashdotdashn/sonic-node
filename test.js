@@ -35,58 +35,6 @@ var analyseProgression = function(sequence)
   console.log("entropy = " + sum);
 }
 
-function rectify_closest(from, to)
-{
-  var d = to.distanceFrom(from);
-  var sign = Math.sign(d);
-  d = Math.abs(d);
-  var mind = 1000;
-
-  while(mind > d)
-  {
-    mind =d;
-    to.invert(-sign);
-    d = Math.abs(to.distanceFrom(from));
-  }
-  to.invert(sign);
-  return to;
-}
-
-function rectify_progression_sequential(sequence)
-{
-  for (var i = 0; i < sequence.length-1; i++)
-  {
-    sequence[i+1] = rectify_closest(sequence[i],sequence[i+1]);
-  }
-}
-
-function rectify_progression_to_first(sequence)
-{
-  for (var i = 0; i < sequence.length-1; i++)
-  {
-    sequence[i+1] = rectify_closest(sequence[0],sequence[i+1]);
-  }
-}
-
-function rectify_progression(sequence)
-{
-  var leftIndex = 1;
-  var rightIndex = sequence.length -1;
-
-  sequence[rightIndex--] = rectify_closest(sequence[0], sequence[rightIndex]);
-
-  while (leftIndex < rightIndex)
-  {
-    sequence[leftIndex] = rectify_closest(sequence[leftIndex -1], sequence[leftIndex]);
-    leftIndex++;
-    if (rightIndex > leftIndex)
-    {
-      sequence[rightIndex] = rectify_closest(sequence[rightIndex+1], sequence[rightIndex]);
-      rightIndex--;
-    }
-  }
-}
-
 //-------------------------------------------------------------------
 
 var cp = new ChordProgression(rootNote, scale);
@@ -97,7 +45,7 @@ progression.forEach(function(degree) {
 
 chordSequence[0].invert(-2);
 
-rectify_progression_to_first(chordSequence);
+rectify_progression(chordSequence, 1);
 
 analyseProgression(chordSequence);
 

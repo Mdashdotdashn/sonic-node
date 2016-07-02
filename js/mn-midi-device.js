@@ -120,7 +120,6 @@ NoteStream.prototype.add = function(note, lengthInTick)
     var length = max(this.notes_[note], lengthInTick);
     this.notes_[note] = length;
   }
-  console.log(this.notes_);
 }
 
 NoteStream.prototype.tick = function()

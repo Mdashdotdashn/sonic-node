@@ -1,6 +1,10 @@
 var midi = require("midi");
+var EventEmitter = require('events').EventEmitter;
+var util = require('util');
 
 require("./mn-midi.js");
+
+//--------------------------------------------------------------------------------------------------
 
 var SFindMatching = function(inname, outname)
 {
@@ -77,10 +81,75 @@ var SFindMatching = function(inname, outname)
     }
 }
 
+//--------------------------------------------------------------------------------------------------
+
 MidiDevice = {
 
   find : function(name)
   {
     return SFindMatching(name, name);
+  }
+}
+
+//--------------------------------------------------------------------------------------------------
+
+NoteStream = function()
+{
+  EventEmitter.call(this);
+  this.notes_ = {};
+}
+
+util.inherits(NoteStream, EventEmitter);
+
+NoteStream.prototype.broadcast = function(note, isOn)
+{
+  this.emit("note", {note: note, velocity:1.0, gate:isOn});
+}
+
+NoteStream.prototype.add = function(note, lengthInTick)
+{
+  if (this.notes_[note] === undefined)
+  {
+    this.notes_[note] = lengthInTick;
+    this.broadcast(note, true);
+  }
+  else
+  {
+    this.broadcast(note, false);
+    this.broadcast(note, true);
+    var length = max(this.notes_[note], lengthInTick);
+    this.notes_[note] = length;
+  }
+  console.log(this.notes_);
+}
+
+NoteStream.prototype.tick = function()
+{
+  for (var note in this.notes_)
+  {
+    if (this.notes_[note] == 0)
+    {
+      this.broadcast(note, false);
+      delete this.notes_[note];
+    }
+    else
+    {
+      this.notes_[note] -= 1;
+    }
+  }
+}
+
+NoteStream.prototype.connect = function(target)
+{
+  if (target instanceof Function)
+  {
+    this.on("note", target);
+  }
+  else
+  {
+    this.on("note", function()
+      {
+        target.tick();
+      });
   }
 }

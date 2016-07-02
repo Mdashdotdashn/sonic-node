@@ -87,6 +87,7 @@ function rectify_progression(sequence)
   }
 }
 
+//-------------------------------------------------------------------
 
 var cp = new ChordProgression(rootNote, scale);
 var chordSequence = [];
@@ -100,17 +101,23 @@ rectify_progression_to_first(chordSequence);
 
 analyseProgression(chordSequence);
 
+//-------------------------------------------------------------------
+
 var device = MidiDevice.find("Through");
 var output = device.getOutput(0);
 
+var noteStream = new NoteStream();
+
 var sequence = new StepSequence(16);
-var heartbeat = new Heartbeat();
 sequence.setContent(chordSequence);
+
+var heartbeat = new Heartbeat();
 
 heartbeat.connect(sequence);
 heartbeat.connect(function()
   {
     output.sendSync();
+    noteStream.tick();
   });
 
 sequence.connect(function(step)
@@ -118,18 +125,29 @@ sequence.connect(function(step)
     if (device)
     {
       step.notes_.forEach(function(note) {
-          output.sendNoteOn(note, 127);
-          output.sendNoteOff(note);
-        });
-    }
-    else
-    {
-      step.notes_.forEach(function(note) {
-          console.log(notename(note) + "(" + note + ")");
+          noteStream.add(note,24);
         });
     }
   });
 
+noteStream.connect(function(noteEvent)
+  {
+    if (output)
+    {
+      if (noteEvent.gate)
+      {
+        output.sendNoteOn(noteEvent.note, noteEvent.velocity * 127);
+      }
+      else
+      {
+        output.sendNoteOff(noteEvent.note);
+      }
+    }
+    else
+    {
+      console.log(noteEvent);
+    }
+  });
 heartbeat.run();
 output.sendStart();
 

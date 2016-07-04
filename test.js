@@ -17,6 +17,7 @@ var scale = "minor"
 var progression = [1, 7 ,4 , 6, 1, 3, 6, 6];
 
 
+// dumps some information about distance between inversions in the progression
 var analyseProgression = function(sequence)
 {
   console.log("chord sequence = " + JSON.stringify(sequence));
@@ -44,15 +45,20 @@ progression.forEach(function(degree) {
   chordSequence.push(cp.chord(degree));
   });
 
-chordSequence[0].invert(-2);
+chordSequence[0].invert(0);
 
-rectify_progression(chordSequence, 0);
+rectify_progression(chordSequence, 2);
 
 analyseProgression(chordSequence);
 
+chordSequence.forEach(function(chord)
+  {
+      console.log(chordname(chord.notes_));
+  });
 //-------------------------------------------------------------------
 
-var device = MidiDevice.find("circuit");
+var device = MidiDevice.find("iac");
+//var device = MidiDevice.find("circuit");
 var output = device.getOutput(0);
 
 var noteStream = new NoteStream();
@@ -73,6 +79,7 @@ sequence.connect(function(step)
   {
     if (device)
     {
+      console.log(chordname(step.notes_));
       step.notes_.forEach(function(note) {
           noteStream.add(note,24);
         });

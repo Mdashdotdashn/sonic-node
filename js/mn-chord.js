@@ -57,15 +57,48 @@ Chord.prototype.invert = function(distance)
   }
 }
 
+// Very coarse
+// only supports major/minor
 chordname = function(chord)
 {
+  var chordintervals = 
+  {
+    "4,3" : "",  // major
+    "3,4" : "m", // minor
+  }
+
+  // reduce notes to their degree c,d,e..
   var c = [];
   chord.forEach(function(note)
     {
       n = note % 12;
       c.push(n);
     });
-  c.sort();
-  console.log(c);
-  return "---";
+  c.sort(function(a, b){return a - b});
+
+
+  // try to work out the default inversion of the set
+  for (var i = 0; i < c.length -1 ; i++)
+  {
+    if (c[i+1] - c[i] > 4)
+    {
+      c = c.rotate(i+1);
+    }
+  }  
+
+  // computes intervals between notes
+  var d = [];
+  for (var i = 0; i < c.length -1 ; i++)
+  {
+    if (c[i] > c[i+1])
+    {
+      c[i] -= 12;
+    }
+
+    d.push(c[i+1] - c[i]);      
+  }
+
+  // makes chord name
+  var note = notefromdegree(c[0]); 
+  return note + chordintervals[d.toString()];
 }

@@ -35,9 +35,23 @@ var Notes =
   ,  
 }
 
+var notenames = ["c","c#","d","d#","e","f","f#","g","g#","a","a#","b"];
+
+notefromdegree = function(interval)
+{
+  if (interval < 0)
+  {
+    interval = 12 + interval%12;
+  }
+  else
+  {
+    interval = interval%12;
+  }
+  return notenames[interval];
+}
+
 notename = function(midinote)
 {
-  var notenames = ["c","c#","d","d#","e","f","f#","g","g#","a","a#","b"];
   var note = midinote % 12;
   octave = (midinote - note) / 12 - 1;
   return notenames[note] + octave;

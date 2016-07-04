@@ -7,9 +7,9 @@ require("./js/mn-note.js");
 require("./js/mn-utils.js");
 
 {
-var rootNote = "c4"
-var scale = "major"
-var progression = [1, 5 ,4 , 1];
+//var rootNote = "c4"
+//var scale = "major"
+//var progression = [1, 5 ,4 , 1];
 }
 
 var rootNote = "c4"
@@ -29,6 +29,7 @@ var analyseProgression = function(sequence)
     var next = index < sequence.length -1 ? index + 1 : 0;
     var distance = chordSequence[next].distanceFrom(chordSequence[index]);
     console.log(index + "->" + next + ":" + distance);
+    console.log(chordname(chordSequence[index].notes_));
     sum += Math.abs(distance);
   }
 
@@ -45,13 +46,13 @@ progression.forEach(function(degree) {
 
 chordSequence[0].invert(-2);
 
-rectify_progression(chordSequence, 1);
+rectify_progression(chordSequence, 0);
 
 analyseProgression(chordSequence);
 
 //-------------------------------------------------------------------
 
-var device = MidiDevice.find("Through");
+var device = MidiDevice.find("circuit");
 var output = device.getOutput(0);
 
 var noteStream = new NoteStream();

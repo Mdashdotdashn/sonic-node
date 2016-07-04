@@ -56,3 +56,16 @@ Chord.prototype.invert = function(distance)
     }
   }
 }
+
+chordname = function(chord)
+{
+  var c = [];
+  chord.forEach(function(note)
+    {
+      n = note % 12;
+      c.push(n);
+    });
+  c.sort();
+  console.log(c);
+  return "---";
+}

@@ -117,7 +117,7 @@ NoteStream.prototype.add = function(note, lengthInTick)
   {
     this.broadcast(note, false);
     this.broadcast(note, true);
-    var length = max(this.notes_[note], lengthInTick);
+    var length = Math.max(this.notes_[note], lengthInTick);
     this.notes_[note] = length;
   }
 }

@@ -1,4 +1,5 @@
 var extend = require("extend")
+
 makeChordSequence = function(rootNote, scale, progression)
 {
 	var cp = new ChordProgression(rootNote, scale);
@@ -10,6 +11,16 @@ makeChordSequence = function(rootNote, scale, progression)
 	return chordSequence;	
 }
 
+makeChordSequence = function(chordNames)
+{
+	var chordSequence = [];
+	chordNames.forEach(function(chordName)
+	{
+		chordSequence.push(new Chord(notesfromchordname(chordName)));
+	});
+
+	return chordSequence;
+}
 //------------------------------------------------------------
 
 ChordApp = function(options)

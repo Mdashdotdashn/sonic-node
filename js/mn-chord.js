@@ -57,6 +57,38 @@ Chord.prototype.invert = function(distance)
   }
 }
 
+notesfromchordname = function(chordname)
+{
+  parseIndex = 0;
+  var basenote = chordname.charAt(parseIndex++);
+  if (chordname[parseIndex] === '#')
+  {
+    basenote += chordname.charAt(parseIndex++);
+  }
+
+  var minor =  false;
+
+  if (chordname[parseIndex] === 'm')
+  {
+    minor = true;
+    parseIndex++;
+  }
+
+  octave = 3;
+  if (parseIndex < chordname.length)
+  {
+    octave = parseInt(chordname.charAt(parseIndex++));
+  }
+
+  var interval = intervalfromnotename(basenote);
+  var note = (octave + 1) * 12 + interval;
+  if (minor)
+  {
+    return [note, note + 3, note +7];
+  }
+  return [note, note + 4, note +7];
+}
+
 // Very coarse
 // only supports major/minor
 chordname = function(chord)

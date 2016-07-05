@@ -2,6 +2,7 @@ require("./js/mn-sequence.js");
 require("./js/mn-midi-device.js");
 require("./js/mn-heartbeat.js");
 require("./js/mn-scale.js");
+require("./js/mn-chord.js");
 require("./js/mn-chordprogression.js");
 require("./js/mn-note.js");
 require("./js/mn-utils.js");
@@ -39,10 +40,13 @@ var analyseProgression = function(sequence)
   console.log("entropy = " + sum);
 }
 
+
 //-------------------------------------------------------------------
 
-var cp = new ChordProgression(rootNote, scale);
-var chordSequence = makeChordSequence(rootNote, scale, progression);
+//var cp = new ChordProgression(rootNote, scale);
+//var chordSequence = makeChordSequence(rootNote, scale, progression);
+
+var chordSequence = makeChordSequence(["a","d","e","f#","d","c","cm", "a"]);
 chordSequence[0].invert(0);
 
 analyseProgression(chordSequence);

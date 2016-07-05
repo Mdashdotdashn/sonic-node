@@ -50,6 +50,17 @@ notefromdegree = function(interval)
   return notenames[interval];
 }
 
+intervalfromnotename = function(notename)
+{
+  for (var index = 0; index < notenames.length; index++)
+  {
+    if (notename === notenames[index])
+    {
+      return index;
+    }
+  }
+}
+
 notename = function(midinote)
 {
   var note = midinote % 12;

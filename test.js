@@ -46,7 +46,7 @@ var analyseProgression = function(sequence)
 //var cp = new ChordProgression(rootNote, scale);
 //var chordSequence = makeChordSequence(rootNote, scale, progression);
 
-var chordSequence = makeChordSequence(["a","d","e","f#","d","c","cm", "a"]);
+var chordSequence = makeChordSequence(["a","cm"]);
 chordSequence[0].invert(0);
 
 analyseProgression(chordSequence);
@@ -54,8 +54,10 @@ analyseProgression(chordSequence);
 
 var app = new ChordApp({
   sequence: chordSequence,
+  resolution: 64,
   rectify: 2,
   device: "iac",
+  tempo: 72,
 });
 console.log(JSON.stringify(app));
 app.run();

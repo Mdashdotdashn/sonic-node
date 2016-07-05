@@ -30,6 +30,7 @@ ChordApp = function(options)
 		sequence: [],
 		rectify: 0,
 		device: "",
+		tempo: 120,
 		resolution: 16,  // In sixteenth
 		length: 0.5,      // percentage
 	}
@@ -53,6 +54,8 @@ ChordApp = function(options)
 	this.resolution_ = parameters.resolution;
 
 	this.gateLength_ = parameters.length * 6 * parameters.resolution;
+	this.tempo_ = parameters.tempo;
+
 	console.log(this);
 }
 
@@ -67,6 +70,7 @@ ChordApp.prototype.run = function()
 	var output = this.output_;
 	var gateLength = this.gateLength_;
 
+	heartbeat.setTempo(this.tempo_);
 	heartbeat.connect(sequence);
 	heartbeat.connect(function()
 	  {

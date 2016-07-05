@@ -18,6 +18,11 @@ Heartbeat = function()
 
 util.inherits(Heartbeat, EventEmitter);
 
+Heartbeat.prototype.setTempo = function(tempo)
+{
+  this.tempo_ = tempo;
+}
+
 Heartbeat.prototype.run = function()
 {
   var interval = '' + 60000./this.tempo_/this.clockTicksPerBeat_ +'m';

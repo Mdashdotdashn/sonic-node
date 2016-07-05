@@ -6,6 +6,8 @@ require("./js/mn-chordprogression.js");
 require("./js/mn-note.js");
 require("./js/mn-utils.js");
 
+require("./chord-app.js");
+
 {
 //var rootNote = "c4"
 //var scale = "major"
@@ -40,71 +42,19 @@ var analyseProgression = function(sequence)
 //-------------------------------------------------------------------
 
 var cp = new ChordProgression(rootNote, scale);
-var chordSequence = [];
-progression.forEach(function(degree) {
-  chordSequence.push(cp.chord(degree));
-  });
-
+var chordSequence = makeChordSequence(rootNote, scale, progression);
 chordSequence[0].invert(0);
-
-rectify_progression(chordSequence, 2);
 
 analyseProgression(chordSequence);
 
-chordSequence.forEach(function(chord)
-  {
-      console.log(chordname(chord.notes_));
-  });
-//-------------------------------------------------------------------
 
-var device = MidiDevice.find("iac");
-//var device = MidiDevice.find("circuit");
-var output = device.getOutput(0);
+var app = new ChordApp({
+  sequence: chordSequence,
+  rectify: 2,
+  device: "iac",
+});
+console.log(JSON.stringify(app));
+app.run();
 
-var noteStream = new NoteStream();
-
-var sequence = new StepSequence(16);
-sequence.setContent(chordSequence);
-
-var heartbeat = new Heartbeat();
-
-heartbeat.connect(sequence);
-heartbeat.connect(function()
-  {
-    output.sendSync();
-    noteStream.tick();
-  });
-
-sequence.connect(function(step)
-  {
-    if (device)
-    {
-      console.log(chordname(step.notes_));
-      step.notes_.forEach(function(note) {
-          noteStream.add(note,24);
-        });
-    }
-  });
-
-noteStream.connect(function(noteEvent)
-  {
-    if (output)
-    {
-      if (noteEvent.gate)
-      {
-        output.sendNoteOn(noteEvent.note, noteEvent.velocity * 127);
-      }
-      else
-      {
-        output.sendNoteOff(noteEvent.note);
-      }
-    }
-    else
-    {
-      console.log(noteEvent);
-    }
-  });
-heartbeat.run();
-output.sendStart();
 
 

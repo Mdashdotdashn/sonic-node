@@ -46,7 +46,7 @@ var analyseProgression = function(sequence)
 //var cp = new ChordProgression(rootNote, scale);
 //var chordSequence = makeChordSequence(rootNote, scale, progression);
 
-var chordSequence = makeChordSequence(["a","cm"]);
+var chordSequence = makeChordSequence(["a","d","e","f#","d"]);
 chordSequence[0].invert(0);
 
 analyseProgression(chordSequence);

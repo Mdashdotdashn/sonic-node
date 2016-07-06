@@ -1,6 +1,6 @@
 var extend = require("extend")
 
-makeChordSequence = function(rootNote, scale, progression)
+makeChordProgression = function(rootNote, scale, progression)
 {
 	var cp = new ChordProgression(rootNote, scale);
 	var chordSequence = [];

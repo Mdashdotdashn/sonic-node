@@ -97,6 +97,7 @@ chordname = function(chord)
   {
     "4,3" : "",  // major
     "3,4" : "m", // minor
+    "3,3" : "º"
   }
 
   // reduce notes to their degree c,d,e..

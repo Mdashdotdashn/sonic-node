@@ -9,7 +9,10 @@ require("../js/mn-chordprogression.js");
 require("../js/mn-note.js");
 require("../js/mn-utils.js");
 
-var makeChordSequence = function(rootNote, scale, progression)
+var scale = "minor";
+var rootNote = "d3";
+
+var makeChordProgression = function(rootNote, scale, progression)
 {
     var cp = new ChordProgression(rootNote, scale);
     var chordSequence = [];
@@ -36,11 +39,7 @@ var peg = require("pegjs");
 var fs = require('fs');
 var app = require('./serverapp.js');
 
-var chordSequence = makeChordSequence(["a","d","e","f#","d"]);
-chordSequence[0].invert(0);
-
 app.init({
- sequence: chordSequence,
  device: "iac"});
 
 var parser;
@@ -81,13 +80,19 @@ server.route({
         var response;
         try {
             var result = parser.parse(input.toLowerCase()); // returns ["a", "b", "b", "a"]
+            var chords = JSON.parse("[" + result + "]");
+            var chordSequence = makeChordProgression(rootNote, scale, chords);
+            chordSequence[0].invert(0);
+           console.log(chordSequence);
+ 
+            app.setChordSequence(chordSequence);
             response = { reply: result};
         }
         catch(err) 
         {
-            response = { reply: err.message };
+            console.log(err)
+            response = { reply: "*error*: " + err.message };
         }
-            console.log(response);
         reply(response);
     }
 });

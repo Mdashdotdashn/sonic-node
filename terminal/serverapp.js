@@ -44,22 +44,22 @@ ServerApp.prototype.run = function()
 {
 	var noteStream = new NoteStream();
 
-	var sequence = new StepSequence(this.resolution_);
-	sequence.setContent(this.sequence_);
+	this.sequencer_ = new StepSequence(this.resolution_);
+	this.sequencer_.setContent(this.sequence_);
 
 	var heartbeat = new Heartbeat();
 	var output = this.output_;
 	var gateLength = this.gateLength_;
 
 	heartbeat.setTempo(this.tempo_);
-	heartbeat.connect(sequence);
+	heartbeat.connect(this.sequencer_);
 	heartbeat.connect(function()
 	  {
 	    output.sendSync();
 	    noteStream.tick();
 	  });
 
-	sequence.connect(function(step)
+	this.sequencer_.connect(function(step)
 	  {
 	      console.log(chordname(step.notes_));
 	      step.notes_.forEach(function(note) {
@@ -88,6 +88,11 @@ ServerApp.prototype.run = function()
 	heartbeat.run();
 
 //	this.output_.sendStart();
+}
+
+ServerApp.prototype.setChordSequence = function(notes)
+{
+	this.sequencer_.setContent(notes);
 }
 
 module.exports = new ServerApp();

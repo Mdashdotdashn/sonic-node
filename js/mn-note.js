@@ -80,4 +80,9 @@ n = function(name)
   return notemap[name];
 }
 
+midinotefromname = function(name)
+{
+  return notemap[name];  
+}
+
 

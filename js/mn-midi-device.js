@@ -61,7 +61,7 @@ var SFindMatching = function(inname, outname)
       }
     }
 
-    var lowercaseInName = outname.toLowerCase();
+/*    var lowercaseInName = outname.toLowerCase();
     var input = new midi.input();
     var count = input.getPortCount();
     for (i=0; i < count; i++)
@@ -70,11 +70,11 @@ var SFindMatching = function(inname, outname)
       if (inputName.toLowerCase().indexOf(lowercaseInName) != -1)
       {
         var currentInput = new midi.input();
-  /*      currentInput.openPort(i);
+        currentInput.openPort(i);
         device.inputs_.push(currentInput);
-  */    }
+      }
     }
-
+*/
     if (device.inputs_.length + device.outputs_.length > 0)
     {
       return device;

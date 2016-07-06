@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <meta name="Description" content=""/>
+    <link rel="shortcut icon" href=""/>
+    <!--[if IE]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="terminal/css/jquery.terminal.css" rel="stylesheet"/>
+    <style>
+body {
+    background-color: #B9B7AA;
+}
+.wrapper {
+    position: absolute;
+    left: 50%;
+    margin-left: -250px;
+}
+.wrapper, .monitor {
+    width: 500px;
+    height: 350px;
+}
+.monitor {
+    position: absolute;
+    top: 0
+    left: 0;
+}
+.wrapper {
+    position: relative;
+    background-color: #9C9CFF;
+}
+#term {
+    position: absolute;
+    top: 80px;
+    left: 65px;
+    z-index: 100;
+}
+.monitor {
+    background: transparent url(monitor.png) no-repeat;
+	*background-image: none;
+    filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='monitor.png', sizingMethod='scale');
+}
+.terminal, .cmd {
+    background-color: #3939DE;
+    color: #9C9CFF;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 0;
+}
+.terminal .cmd span.inverted {
+    background-color: #9C9CFF;
+    color: #3939DE;
+}
+.terminal-output > div {
+    padding-top: 0;
+}
+div.terminal-output div div {
+    margin-top: -3px;
+}
+.cmd {
+    height: 1em;
+}
+.cmd span {
+    margin-top: -3px;
+}
+    </style>
+    <script src="terminal/js/jquery-1.7.1.min.js"></script>
+	<script src="terminal/js/jquery.terminal-src.js"></script>
+    <script>
+$(function() {
+    $('#term').terminal(function(command, term) {
+        if (command.trim())
+        {
+            $.getJSON('/command', { command : command }, function(response)
+            {
+                term.echo(response.reply);            
+            })            
+        }
+    }, {
+        prompt: '',
+        greetings: '     **** COMMODORE 64 BASIC V2 ****\n\n' +
+            ' 64K RAM SYSTEM   38911 BASIC BYTES FREE\n\nREADY.',
+        keypress: function(e, term) {
+            term.insert(String.fromCharCode(e.which).toUpperCase());
+            return false;
+        },
+        width: 370,
+        height: 190
+    });
+
+});
+
+$( document ).ready(function() {
+    console.log( "ready!" );
+});
+    </script>
+</head>
+<body>
+	<div class="wrapper">
+		<div class="monitor"></div>
+		<div id="term"></div>
+	</div>
+</body>
+</html>

@@ -19,7 +19,8 @@ var SFindMatching = function(inname, outname)
         {
           sendNoteOn : function(note, velocity)
           {
-            this.port_.sendMessage(SMakeNoteOn(note, velocity, this.channel_));
+            var message = SMakeNoteOn(note, velocity, this.channel_);
+            this.port_.sendMessage(message);
           },
 
           sendNoteOff : function(note, velocity)

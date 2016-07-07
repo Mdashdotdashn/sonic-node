@@ -95,7 +95,7 @@ Application.prototype.start = function()
 	    {
 	      if (noteEvent.gate)
 	      {
-	        output.sendNoteOn(noteEvent.note, noteEvent.velocity * 127);
+	        output.sendNoteOn(noteEvent.note, noteEvent.velocity);
 	      }
 	      else
 	      {

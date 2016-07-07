@@ -81,7 +81,6 @@ Application.prototype.start = function()
 
 	this.sequencer_.connect(function(step)
 	  {
-	      console.log(chordname(step.notes_));
 	      step.notes_.forEach(function(note) {
 	          noteStream.add(note,gateLength);
 	        });

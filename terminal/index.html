@@ -69,8 +69,9 @@ div.terminal-output div div {
     <script src="terminal/js/jquery-1.7.1.min.js"></script>
 	<script src="terminal/js/jquery.terminal-src.js"></script>
     <script>
-$(function() {
-    $('#term').terminal(function(command, term) {
+
+    function processCommand(command, term)
+    {
         if (command.trim())
         {
             $.getJSON('/command', { command : command }, function(response)
@@ -78,12 +79,24 @@ $(function() {
                 term.echo(response.reply);            
             })            
         }
+    }
+
+$(function() {
+    $('#term').terminal(function(command, term) {
+        processCommand(command, term);
     }, {
         prompt: '',
         greetings: '     **** COMMODORE 64 BASIC V2 ****\n\n' +
             ' 64K RAM SYSTEM   38911 BASIC BYTES FREE\n\nREADY.',
         keypress: function(e, term) {
-            term.insert(String.fromCharCode(e.which).toUpperCase());
+            if (e.keyCode === 3)
+            {
+                processCommand('exit', term);
+            }
+            else
+            {
+                term.insert(String.fromCharCode(e.which).toUpperCase());                
+            }
             return false;
         },
         width: 370,

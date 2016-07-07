@@ -51,8 +51,7 @@ Server.prototype.init = function(parser)
             var input = request.url.query.command;
             var response;
             try {
-                var result = "Done, sir."
-                request.server.parser_.parse(input);
+                var result = request.server.parser_.parse(input);
                 response = { reply: result};
             }
             catch(err) 

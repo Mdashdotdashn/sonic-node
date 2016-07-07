@@ -82,14 +82,12 @@ scale = function(noteName, scaleName)
 {
   var s = eval("Scale."+scaleName);
   var note = midinotefromname(noteName);
-  console.log(note);
   var result = [];
   for (var interval of s)
   {
     result.push(note);
     note += interval;
   }
-  console.log(result);
   return result;
 }
 

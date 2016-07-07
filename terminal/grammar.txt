@@ -28,4 +28,4 @@ chord_list // list of elements
  
 chord_sequence // expect chord and some list in brackets
   = "chord" " " d:chord_list 
-    { return d.toString().split(",")}
+    { return { method: "setProgression", arguments: d.toString().split(",")} }

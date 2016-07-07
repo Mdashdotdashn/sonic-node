@@ -114,14 +114,29 @@ Application.prototype.start = function()
 
 Application.prototype.parse = function(command) 
 {
-	var result = parser.parse(command.toLowerCase());
-	var chords = JSON.parse("[" + result + "]");
+	var result = parser.parse(command.toLowerCase()); // returns something like a function call: method, arg1, arg2, arg3
+	return this[result.method](result.arguments);
+};
+
+Application.prototype.setProgression = function(arguments)
+{
+	var chords = [];
+	 arguments.forEach(function(element) {
+	 	chords.push(parseInt(element))
+	 });
+
 	var chordSequence = makeChordProgression(rootNote, scale, chords);
 	chordSequence[0].invert(0);
-	console.log(chordSequence);
 
 	this.sequencer_.setContent(chordSequence);
-};
+
+	var chordnameList = "Chord sequence: ";
+	chordSequence.forEach(function (chord)
+	{
+		chordnameList += chordname(chord.notes_) + ",";
+	})
+	return chordnameList;
+}
 
 module.exports = new Application();
 

@@ -24,6 +24,11 @@ StepSequence.prototype.setContent = function(content)
   this.content_ = content;
 }
 
+StepSequence.prototype.getContent = function()
+{
+  return this.content_;
+}
+
 StepSequence.prototype.connect = function(target)
 {
   if (target instanceof Function)

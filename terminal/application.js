@@ -7,9 +7,6 @@ require("../js/mn-chordprogression.js");
 require("../js/mn-note.js");
 require("../js/mn-utils.js");
 
-var scale = "minor";
-var rootNote = "d3";
-
 var extend = require("extend")
 var peg = require("pegjs");
 var fs = require('fs');
@@ -27,9 +24,9 @@ var Application = function()
 }
 
 Application.prototype.init = function(options) {
+
 	var parameters =
 	{
-		sequence: [],
 		rectify: 0,
 		device: "",
 		tempo: 120,
@@ -44,7 +41,9 @@ Application.prototype.init = function(options) {
 		rectify_progression(parameters.sequence, parameters.rectify - 1);
 	}
 
-	this.sequence_ = parameters.sequence;
+	this.progression_ = [];
+	this.scale_ = "major";
+	this.rootNote_ = "c3";
 
 	if (parameters.device.trim())
 	{
@@ -67,7 +66,6 @@ Application.prototype.start = function()
 	var noteStream = new NoteStream();
 
 	this.sequencer_ = new StepSequence(this.resolution_);
-	this.sequencer_.setContent(this.sequence_);
 
 	var heartbeat = new Heartbeat();
 	var output = this.output_;
@@ -112,9 +110,28 @@ Application.prototype.start = function()
 //	this.output_.sendStart();
 }
 
+Application.prototype.updateSequence = function()
+{
+	var chordSequence = makeChordProgression(this.rootNote_, this.scale_, this.progression_);
+	chordSequence[0].invert(0);
+	this.sequencer_.setContent(chordSequence);
+}
+
+Application.prototype.currentSequenceString = function()
+{
+	var chordnameList = "Chord sequence: ";
+	var chordSequence = this.sequencer_.getContent();
+	chordSequence.forEach(function (chord)
+	{
+		chordnameList += chordname(chord.notes_) + ",";
+	})
+	return chordnameList;
+}
+
 Application.prototype.parse = function(command) 
 {
 	var result = parser.parse(command.toLowerCase()); // returns something like a function call: method, arg1, arg2, arg3
+	console.log("executing: " + JSON.stringify(result));
 	return this[result.method](result.arguments);
 };
 
@@ -124,6 +141,15 @@ Application.prototype.exit = function(arguments)
 	return "Bye, dave";
 }
 
+Application.prototype.setScale = function(arguments)
+{
+	this.scale_ = arguments.scale;
+	this.rootNote_ = arguments.root+"3";
+	this.updateSequence();
+
+	return this.currentSequenceString();
+}
+
 Application.prototype.setProgression = function(arguments)
 {
 	var chords = [];
@@ -131,18 +157,15 @@ Application.prototype.setProgression = function(arguments)
 	 	chords.push(parseInt(element))
 	 });
 
-	var chordSequence = makeChordProgression(rootNote, scale, chords);
-	chordSequence[0].invert(0);
+	this.progression_ = chords;
+	this.updateSequence();
 
-	this.sequencer_.setContent(chordSequence);
-
-	var chordnameList = "Chord sequence: ";
-	chordSequence.forEach(function (chord)
-	{
-		chordnameList += chordname(chord.notes_) + ",";
-	})
-	return chordnameList;
+	return this.currentSequenceString();
 }
 
+Application.prototype.debug = function(arguments)
+{
+	console.log(this);
+}
 module.exports = new Application();
 

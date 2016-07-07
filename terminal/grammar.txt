@@ -1,12 +1,25 @@
 start = command
 
+//---------------------- Basic types
+
 digit
 	= d:[0-9]
     	{ return d;}
 
 space = " ";
 
+word = chars:[a-zA-Z]+
+  { return chars.join(""); }
+
 comma = space* "," space*;
+
+//---------------------- Notes
+
+note 
+  = n:[a-g] m:[b#]?
+    { return (m === null) ? n : n+m; }
+
+//---------------------- Chord progressions
 
 chord_repetition // {1,2,3}x4
   = c:chord_list "x" r:digit
@@ -26,7 +39,11 @@ chord_list // list of elements
   = "{" space* e:chord_element c:commaed_chord_element* space* "}"
     { var v = e.concat(c); return v; }
 
-// Commands
+scale_definition 
+  = n:note " " w:word
+    { return { root: n, scale: w}; }
+
+//----------------------- Commands
 
 chord_progression // expect chord and some list in brackets
   = "progression" " " d:chord_list 
@@ -34,9 +51,18 @@ chord_progression // expect chord and some list in brackets
 
 exit
   = "exit"
-    { return { method: "exit" , argiments : []}}
-// Main
+    { return { method: "exit" , arguments : []}}
+
+debug
+  = "debug"
+    { return { method: "debug" , arguments : []}}
+
+scale
+  = "scale" " " s:scale_definition
+    { return { method: "setScale", arguments: s }}
+
+
+//----------------------- Main
 
 command
-  = chord_sequence
-  / exit
+  = chord_progression / exit / scale / debug

@@ -28,8 +28,8 @@ chord_list // list of elements
 
 // Commands
 
-chord_sequence // expect chord and some list in brackets
-  = "chord" " " d:chord_list 
+chord_progression // expect chord and some list in brackets
+  = "progression" " " d:chord_list 
     { return { method: "setProgression", arguments: d.toString().split(",")} }
 
 exit

@@ -118,6 +118,12 @@ Application.prototype.parse = function(command)
 	return this[result.method](result.arguments);
 };
 
+Application.prototype.exit = function(arguments)
+{
+	process.exit();
+	return "Bye, dave";
+}
+
 Application.prototype.setProgression = function(arguments)
 {
 	var chords = [];

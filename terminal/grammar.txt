@@ -1,4 +1,4 @@
-start = chord_sequence
+start = command
 
 digit
 	= d:[0-9]
@@ -25,7 +25,18 @@ commaed_chord_element
 chord_list // list of elements
   = "{" space* e:chord_element c:commaed_chord_element* space* "}"
     { var v = e.concat(c); return v; }
- 
+
+// Commands
+
 chord_sequence // expect chord and some list in brackets
   = "chord" " " d:chord_list 
     { return { method: "setProgression", arguments: d.toString().split(",")} }
+
+exit
+  = "exit"
+    { return { method: "exit" , argiments : []}}
+// Main
+
+command
+  = chord_sequence
+  / exit

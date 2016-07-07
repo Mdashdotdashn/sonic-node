@@ -1,10 +1,32 @@
+require("../js/mn-sequence.js");
+require("../js/mn-midi-device.js");
+require("../js/mn-heartbeat.js");
+require("../js/mn-scale.js");
+require("../js/mn-chord.js");
+require("../js/mn-chordprogression.js");
+require("../js/mn-note.js");
+require("../js/mn-utils.js");
+
+var scale = "minor";
+var rootNote = "d3";
+
 var extend = require("extend")
+var peg = require("pegjs");
+var fs = require('fs');
 
-var ServerApp = function()
-{}
+var Application = function()
+{
 
+	fs.readFile( __dirname + '/grammar.txt', function (err, data) {
+	  if (err) {
+	    throw err; 
+	  }
+	  this.parser = peg.buildParser(data.toString());
 
-ServerApp.prototype.init = function(options) {
+	});
+}
+
+Application.prototype.init = function(options) {
 	var parameters =
 	{
 		sequence: [],
@@ -40,7 +62,7 @@ ServerApp.prototype.init = function(options) {
 
 };
 
-ServerApp.prototype.run = function()
+Application.prototype.start = function()
 {
 	var noteStream = new NoteStream();
 
@@ -90,10 +112,16 @@ ServerApp.prototype.run = function()
 //	this.output_.sendStart();
 }
 
-ServerApp.prototype.setChordSequence = function(notes)
+Application.prototype.parse = function(command) 
 {
-	this.sequencer_.setContent(notes);
-}
+	var result = parser.parse(command.toLowerCase());
+	var chords = JSON.parse("[" + result + "]");
+	var chordSequence = makeChordProgression(rootNote, scale, chords);
+	chordSequence[0].invert(0);
+	console.log(chordSequence);
 
-module.exports = new ServerApp();
+	this.sequencer_.setContent(chordSequence);
+};
+
+module.exports = new Application();
 

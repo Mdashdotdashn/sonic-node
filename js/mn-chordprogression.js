@@ -84,3 +84,25 @@ rectify_progression = function(sequence, mode)
       break;
   }
 }
+
+makeChordProgression = function(rootNote, scale, progression)
+{
+    var cp = new ChordProgression(rootNote, scale);
+    var chordSequence = [];
+    progression.forEach(function(degree) {
+      chordSequence.push(cp.chord(degree));
+      });
+
+    return chordSequence;   
+}
+
+makeChordSequence = function(chordNames)
+{
+    var chordSequence = [];
+    chordNames.forEach(function(chordName)
+    {
+        chordSequence.push(new Chord(notesfromchordname(chordName)));
+    });
+
+    return chordSequence;
+}

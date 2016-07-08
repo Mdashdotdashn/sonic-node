@@ -156,7 +156,15 @@ Application.prototype.setScale = function(arguments)
 	this.rootNote_ = arguments.root+"3";
 	this.updateSequence();
 
-	return this.currentSequenceString();
+	var scaleChords = makeChordProgression(this.rootNote_, this.scale_, [1,2,3,4,5,6,7]);
+
+	scaleChordsNameList = "";
+	scaleChords.forEach(function (chord)
+	{
+		scaleChordsNameList += chordname(chord.notes_) + ",";
+	})
+
+	return "Scale chords: " + scaleChordsNameList + "\n" + this.currentSequenceString();
 }
 
 Application.prototype.setResolution = function(argument)

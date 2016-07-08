@@ -149,6 +149,12 @@ Application.prototype.setScale = function(arguments)
 	return this.currentSequenceString();
 }
 
+Application.prototype.setResolution = function(argument)
+{
+	this.sequencer_.setResolution(argument);
+	return this.currentSequenceString();
+}
+
 Application.prototype.setProgression = function(arguments)
 {
 	var chords = [];

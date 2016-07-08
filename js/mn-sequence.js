@@ -19,6 +19,11 @@ StepSequence.prototype.tick = function(tickCount)
   }
 }
 
+StepSequence.prototype.setResolution = function(resolutionInSixteenth)
+{
+  this.modulo_ = 6 * resolutionInSixteenth;
+}
+
 StepSequence.prototype.setContent = function(content)
 {
   this.content_ = content;

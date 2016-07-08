@@ -6,6 +6,10 @@ digit
 	= d:[0-9]
     	{ return d;}
 
+positive_integer
+  = d:digit+
+      { return d.join("");}
+
 space = " ";
 
 word = chars:[a-zA-Z]+
@@ -58,11 +62,13 @@ debug
     { return { method: "debug" , arguments : []}}
 
 scale
-  = "scale" " " s:scale_definition
+  = "scale" space* s:scale_definition
     { return { method: "setScale", arguments: s }}
 
-
+resolution
+  = "resolution" space* n:positive_integer
+    { return { method: "setResolution", arguments: n}}
 //----------------------- Main
 
 command
-  = chord_progression / exit / scale / debug
+  = chord_progression / exit / scale / debug / resolution

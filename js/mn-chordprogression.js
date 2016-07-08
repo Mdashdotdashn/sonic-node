@@ -1,4 +1,5 @@
 require("./mn-chord.js");
+require("./mn-scale.js");
 
 ChordProgression = function(noteName, scaleName)
 {
@@ -17,7 +18,7 @@ ChordProgression.prototype.chord = function(degree)
 
 //------------------------------------------------------------
 
-var rectify_closest = function(from, to)
+rectify_closest = function(from, to)
 {
   var d = to.distanceFrom(from);
   var sign = Math.sign(d);
@@ -55,7 +56,8 @@ var rectify_progression_inwards = function(sequence)
   var leftIndex = 1;
   var rightIndex = sequence.length -1;
 
-  sequence[rightIndex--] = rectify_closest(sequence[0], sequence[rightIndex]);
+  sequence[rightIndex] = rectify_closest(sequence[0], sequence[rightIndex]);
+  rightIndex--;
 
   while (leftIndex < rightIndex)
   {
@@ -71,7 +73,6 @@ var rectify_progression_inwards = function(sequence)
 
 rectify_progression = function(sequence, mode)
 {
-  console.log(mode);
   switch(mode)
   {
     case 0:

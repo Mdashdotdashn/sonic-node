@@ -1,4 +1,5 @@
 require ("./mn-utils.js")
+require ("./mn-note.js")
 
 var ionian_sequence     = [2, 2, 1, 2, 2, 2, 1];
 var hex_sequence        = [2, 2, 1, 2, 2, 3];

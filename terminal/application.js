@@ -44,6 +44,8 @@ Application.prototype.init = function(options) {
 	this.progression_ = [];
 	this.scale_ = "major";
 	this.rootNote_ = "c3";
+	this.inversion_ = 0;
+	this.rectificationMethod_ = 0;
 
 	if (parameters.device.trim())
 	{
@@ -111,9 +113,17 @@ Application.prototype.start = function()
 
 Application.prototype.updateSequence = function()
 {
-	var chordSequence = makeChordProgression(this.rootNote_, this.scale_, this.progression_);
-	chordSequence[0].invert(0);
-	this.sequencer_.setContent(chordSequence);
+	if (this.progression_.length != 0)
+	{
+		var chordSequence = makeChordProgression(this.rootNote_, this.scale_, this.progression_);
+		chordSequence[0].invert(this.inversion_);
+		rectify_progression(chordSequence, this.rectificationMethod_);
+		this.sequencer_.setContent(chordSequence);
+	}
+	else
+	{
+		this.sequencer_.setContent([]);
+	}
 }
 
 Application.prototype.currentSequenceString = function()
@@ -152,6 +162,21 @@ Application.prototype.setScale = function(arguments)
 Application.prototype.setResolution = function(argument)
 {
 	this.sequencer_.setResolution(argument);
+	return this.currentSequenceString();
+}
+
+Application.prototype.setRectification = function(argument)
+{
+	console.log(argument);
+	this.rectificationMethod_ = parseInt(argument);
+	this.updateSequence();
+	return this.currentSequenceString();
+}
+
+Application.prototype.setInversion = function(argument)
+{
+	this.inversion_ = parseInt(argument);
+	this.updateSequence();
 	return this.currentSequenceString();
 }
 

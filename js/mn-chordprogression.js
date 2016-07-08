@@ -71,15 +71,18 @@ var rectify_progression_inwards = function(sequence)
 
 rectify_progression = function(sequence, mode)
 {
+  console.log(mode);
   switch(mode)
   {
     case 0:
-      rectify_progression_sequential(sequence);
       break;
     case 1:
-      rectify_progression_to_first(sequence);
+      rectify_progression_sequential(sequence);
       break;
     case 2:
+      rectify_progression_to_first(sequence);
+      break;
+    case 3:
       rectify_progression_inwards(sequence);
       break;
   }

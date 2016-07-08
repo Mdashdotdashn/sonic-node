@@ -10,6 +10,10 @@ positive_integer
   = d:digit+
       { return d.join("");}
 
+integer
+  = n:"-"? d:digit+
+      { return (n?n:"") + d;}
+
 space = " ";
 
 word = chars:[a-zA-Z]+
@@ -53,6 +57,10 @@ chord_progression // expect chord and some list in brackets
   = "progression" " " d:chord_list 
     { return { method: "setProgression", arguments: d.toString().split(",")} }
 
+clear
+  = "clear"
+    { return { method: "setProgression", arguments : []}}
+
 exit
   = "exit"
     { return { method: "exit" , arguments : []}}
@@ -68,7 +76,22 @@ scale
 resolution
   = "resolution" space* n:positive_integer
     { return { method: "setResolution", arguments: n}}
+
+inversion
+  = "inversion" space* n:integer
+    { return { method: "setInversion", arguments: n}}
+
+rectification_method
+  = "none" { return 0 ;}
+  / "sequential" { return 1;} 
+  / "first" { return 2;} 
+  / "inwards" { return 3;}
+
+rectify
+  = "rectify" space* m:rectification_method
+  { return { method: "setRectification", arguments : m}}
+
 //----------------------- Main
 
 command
-  = chord_progression / exit / scale / debug / resolution
+  = chord_progression / exit / scale / debug / resolution / clear / inversion / rectify

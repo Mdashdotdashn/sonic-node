@@ -54,7 +54,7 @@ Application.prototype.init = function(options) {
 		var device = MidiDevice.find(parameters.device);
 		if (device)
 		{
-			this.streamOutput_ = new NoteStreamOutput(device, 0);
+			this.chordOutput_ = new NoteStreamOutput(device, 0);
 		}
 	}
 
@@ -67,23 +67,23 @@ Application.prototype.init = function(options) {
 
 Application.prototype.start = function()
 {
-	this.sequencer_ = new StepSequence(this.resolution_);
+	this.chordSequencer_ = new StepSequence(this.resolution_);
 
 	var heartbeat = new Heartbeat();
-	var output = this.streamOutput_;
+	var chordOutput = this.chordOutput_;
 	var gateLength = this.gateLength_;
 
 	heartbeat.setTempo(this.tempo_);
-	heartbeat.connect(this.sequencer_);
+	heartbeat.connect(this.chordSequencer_);
 	heartbeat.connect(function()
 	  {
-	    output.tick();
+	    chordOutput.tick();
 	  });
 
-	this.sequencer_.connect(function(step)
+	this.chordSequencer_.connect(function(step)
 	  {
 	      step.notes_.forEach(function(note) {
-	          output.add(note,gateLength);
+	          chordOutput.add(note,gateLength);
 	        });
 	  });
 
@@ -99,18 +99,18 @@ Application.prototype.updateSequence = function()
 		var chordSequence = makeChordProgression(this.rootNote_, this.scale_, this.progression_);
 		chordSequence[0].invert(this.inversion_);
 		rectify_progression(chordSequence, this.rectificationMethod_);
-		this.sequencer_.setContent(chordSequence);
+		this.chordSequencer_.setContent(chordSequence);
 	}
 	else
 	{
-		this.sequencer_.setContent([]);
+		this.chordSequencer_.setContent([]);
 	}
 }
 
 Application.prototype.currentSequenceString = function()
 {
 	var chordnameList = "Chord sequence: ";
-	var chordSequence = this.sequencer_.getContent();
+	var chordSequence = this.chordSequencer_.getContent();
 	chordSequence.forEach(function (chord)
 	{
 		chordnameList += chordname(chord.notes_) + ",";
@@ -150,7 +150,7 @@ Application.prototype.setScale = function(arguments)
 
 Application.prototype.setResolution = function(argument)
 {
-	this.sequencer_.setResolution(argument);
+	this.chordSequencer_.setResolution(argument);
 	return this.currentSequenceString();
 }
 

@@ -7,6 +7,8 @@ require("../js/mn-chordprogression.js");
 require("../js/mn-note.js");
 require("../js/mn-utils.js");
 
+require("./notestream-output.js")
+
 var extend = require("extend")
 var peg = require("pegjs");
 var fs = require('fs');
@@ -16,7 +18,7 @@ var Application = function()
 
 	fs.readFile( __dirname + '/grammar.txt', function (err, data) {
 	  if (err) {
-	    throw err; 
+	    throw err;
 	  }
 	  this.parser = peg.buildParser(data.toString());
 
@@ -52,7 +54,7 @@ Application.prototype.init = function(options) {
 		var device = MidiDevice.find(parameters.device);
 		if (device)
 		{
-			this.output_ = device.getOutput(0);
+			this.streamOutput_ = new NoteStreamOutput(device, 0);
 		}
 	}
 
@@ -65,47 +67,26 @@ Application.prototype.init = function(options) {
 
 Application.prototype.start = function()
 {
-	var noteStream = new NoteStream();
-
 	this.sequencer_ = new StepSequence(this.resolution_);
 
 	var heartbeat = new Heartbeat();
-	var output = this.output_;
+	var output = this.streamOutput_;
 	var gateLength = this.gateLength_;
 
 	heartbeat.setTempo(this.tempo_);
 	heartbeat.connect(this.sequencer_);
 	heartbeat.connect(function()
 	  {
-	    output.sendSync();
-	    noteStream.tick();
+	    output.tick();
 	  });
 
 	this.sequencer_.connect(function(step)
 	  {
 	      step.notes_.forEach(function(note) {
-	          noteStream.add(note,gateLength);
+	          output.add(note,gateLength);
 	        });
 	  });
 
-	noteStream.connect(function(noteEvent)
-	  {
-	    if (output)
-	    {
-	      if (noteEvent.gate)
-	      {
-	        output.sendNoteOn(noteEvent.note, noteEvent.velocity);
-	      }
-	      else
-	      {
-	        output.sendNoteOff(noteEvent.note);
-	      }
-	    }
-	    else
-	    {
-	      console.log(noteEvent);
-	    }
-	  });
 	heartbeat.run();
 
 //	this.output_.sendStart();
@@ -137,7 +118,7 @@ Application.prototype.currentSequenceString = function()
 	return chordnameList;
 }
 
-Application.prototype.parse = function(command) 
+Application.prototype.parse = function(command)
 {
 	var result = parser.parse(command.toLowerCase()); // returns something like a function call: method, arg1, arg2, arg3
 	console.log("executing: " + JSON.stringify(result));
@@ -206,4 +187,3 @@ Application.prototype.debug = function(arguments)
 	console.log(this);
 }
 module.exports = new Application();
-

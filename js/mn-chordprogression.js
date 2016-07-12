@@ -13,7 +13,7 @@ ChordProgression = function(noteName, scaleName)
 ChordProgression.prototype.chord = function(degree)
 {
   var n = this.scaleNotes_;
-  return new Chord([n[degree-1], n[degree+1], n[degree+3]]);
+  return new Chord([n[degree-1], n[degree+1], n[degree+3]], n[degree-1]-24);
 }
 
 //------------------------------------------------------------
@@ -97,7 +97,7 @@ makeChordProgression = function(rootNote, scale, progression)
       chordSequence.push(cp.chord(degree));
       });
 
-    return chordSequence;   
+    return chordSequence;
 }
 
 makeChordSequence = function(chordNames)

@@ -9,9 +9,10 @@ var note_gravity_center = function(notes)
 }
 
 
-Chord = function (notes)
+Chord = function (notes, bass)
 {
   this.notes_ = notes;
+  this.bass_ = bass;
 }
 
 Chord.prototype.notes = function()
@@ -21,7 +22,7 @@ Chord.prototype.notes = function()
 
 Chord.prototype.distanceFrom = function(fromChord)
 {
-  return note_gravity_center(this.notes_) - note_gravity_center(fromChord.notes_); 
+  return note_gravity_center(this.notes_) - note_gravity_center(fromChord.notes_);
 }
 
 Chord.prototype.invertUp = function()
@@ -93,7 +94,7 @@ notesfromchordname = function(chordname)
 // only supports major/minor
 chordname = function(chord)
 {
-  var chordintervals = 
+  var chordintervals =
   {
     "4,3" : "",  // major
     "3,4" : "m", // minor
@@ -117,7 +118,7 @@ chordname = function(chord)
     {
       c = c.rotate(i+1);
     }
-  }  
+  }
 
   // computes intervals between notes
   var d = [];
@@ -128,10 +129,10 @@ chordname = function(chord)
       c[i] -= 12;
     }
 
-    d.push(c[i+1] - c[i]);      
+    d.push(c[i+1] - c[i]);
   }
 
   // makes chord name
-  var note = notefromdegree(c[0]); 
+  var note = notefromdegree(c[0]);
   return note + chordintervals[d.toString()];
 }

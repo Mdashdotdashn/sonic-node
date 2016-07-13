@@ -55,6 +55,7 @@ Application.prototype.init = function(options) {
 		if (device)
 		{
 			this.chordOutput_ = new NoteStreamOutput(device, 0);
+			this.bassOutput_ = new NoteStreamOutput(device, 1);
 		}
 	}
 
@@ -68,28 +69,39 @@ Application.prototype.init = function(options) {
 Application.prototype.start = function()
 {
 	this.chordSequencer_ = new StepSequence(this.resolution_);
+	this.bassSequencer_ = new StepSequence(4);
 
 	var heartbeat = new Heartbeat();
 	var chordOutput = this.chordOutput_;
 	var gateLength = this.gateLength_;
+	var bassOutput = this.bassOutput_;
+	var bassSequencer = this.bassSequencer_;
 
 	heartbeat.setTempo(this.tempo_);
 	heartbeat.connect(this.chordSequencer_);
+	heartbeat.connect(this.bassSequencer_);
 	heartbeat.connect(function()
 	  {
 	    chordOutput.tick();
+   	    bassOutput.tick();
 	  });
 
 	this.chordSequencer_.connect(function(step)
 	  {
 	      step.notes_.forEach(function(note) {
-	          chordOutput.add(note,gateLength);
+	           chordOutput.add(note,gateLength);
 	        });
+		bassSequencer.setContent([step.bass_, step.bass_ - 12]);
 	  });
+
+	this.bassSequencer_.connect(function(step)
+		{
+			bassOutput.add(step, 8);
+		});
 
 	heartbeat.run();
 
-//	this.output_.sendStart();
+	this.chordOutput_.sendStart();
 }
 
 Application.prototype.updateSequence = function()

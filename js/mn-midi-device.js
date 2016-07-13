@@ -25,7 +25,8 @@ var SFindMatching = function(inname, outname)
 
           sendNoteOff : function(note, velocity)
           {
-            this.port_.sendMessage(SMakeNoteOff(note, 0));
+            var message = SMakeNoteOff(note, this.channel_);
+            this.port_.sendMessage(message);
           },
 
           sendSync : function()

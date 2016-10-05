@@ -16,14 +16,14 @@ integer
 
 space = " ";
 
-word = chars:[a-zA-Z]+
+word = chars:[a-z_A-Z]+
   { return chars.join(""); }
 
 comma = space* "," space*;
 
 //---------------------- Notes
 
-note 
+note
   = n:[a-g] m:[b#]?
     { return (m === null) ? n : n+m; }
 
@@ -31,7 +31,7 @@ note
 
 chord_repetition // {1,2,3}x4
   = c:chord_list "x" r:digit
-    { var res = c  ; for (var i = 0; i < r -1;i++) { res = res.concat(c) ;}; return res;} 
+    { var res = c  ; for (var i = 0; i < r -1;i++) { res = res.concat(c) ;}; return res;}
 
 chord_element
   = d:digit
@@ -47,14 +47,14 @@ chord_list // list of elements
   = "{" space* e:chord_element c:commaed_chord_element* space* "}"
     { var v = e.concat(c); return v; }
 
-scale_definition 
+scale_definition
   = n:note " " w:word
     { return { root: n, scale: w}; }
 
 //----------------------- Commands
 
 chord_progression // expect chord and some list in brackets
-  = "progression" " " d:chord_list 
+  = "progression" " " d:chord_list
     { return { method: "setProgression", arguments: d.toString().split(",")} }
 
 clear
@@ -83,8 +83,8 @@ inversion
 
 rectification_method
   = "none" { return 0 ;}
-  / "sequential" { return 1;} 
-  / "first" { return 2;} 
+  / "sequential" { return 1;}
+  / "first" { return 2;}
   / "inwards" { return 3;}
 
 rectify

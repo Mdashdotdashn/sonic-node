@@ -32,10 +32,13 @@ var Notes =
     }
     ,
     DEFAULT_OCTAVE :4
-  ,  
+  ,
 }
 
 var notenames = ["c","c#","d","d#","e","f","f#","g","g#","a","a#","b"];
+
+// Returns the note name from the given interval/index
+// this is not per se a degree since it's the index from C
 
 notefromdegree = function(interval)
 {
@@ -50,6 +53,8 @@ notefromdegree = function(interval)
   return notenames[interval];
 }
 
+// Given a note name, eturns the note index from C
+
 intervalfromnotename = function(notename)
 {
   for (var index = 0; index < notenames.length; index++)
@@ -60,6 +65,8 @@ intervalfromnotename = function(notename)
     }
   }
 }
+
+// Given a midi note number, returns the note name (with octave - e.g E5)
 
 notename = function(midinote)
 {
@@ -80,9 +87,9 @@ n = function(name)
   return notemap[name];
 }
 
+// Given a note name (with octave, e.g. D4), returns the midi note number
+
 midinotefromname = function(name)
 {
-  return notemap[name];  
+  return notemap[name];
 }
-
-

@@ -93,3 +93,75 @@ scale = function(midiNoteName, scaleName)
   }
   return result;
 }
+
+computeScaleScore = function(scaleName, indexesToMatch, offset)
+{
+  var s = eval("Scale."+scaleName);
+  var indexes = [0,0,0,0,0,0,0,0,0,0,0,0];
+  var currentIndex = offset;
+  indexes[currentIndex] = 1;
+  s.forEach(function(interval)
+  {
+    currentIndex += interval;
+    indexes[currentIndex % 12] = 1;
+  });
+//  console.log(indexes);
+
+  var score = 0;
+  var base = 0;
+
+  for (var index = 0; index < indexesToMatch.length; index++)
+  {
+      if (indexesToMatch[index] === 1)
+      {
+        score+= indexes[index] === 1 ? 1 : -1;
+        base += 1;
+      }
+  }
+//  console.log(score/base);
+  return score/base;
+}
+
+// try to detect the scale name from a list of chord names
+
+detectScaleName = function(chordNameList)
+{
+  // build a vector of note indexes, based on C4
+  // because at this point, we can't manipulate chords/intervals directly
+
+  var indexes = [0,0,0,0,0,0,0,0,0,0,0,0];
+  chordNameList.forEach(function(chordName)
+  {
+    var midiChord = chordName + "4";
+    var midiNotes = notesfromchordname(midiChord);
+    var c4 = midinotefromname("c4");
+    midiNotes.forEach(function(midiNote)
+    {
+      var interval = (midiNote - c4) % 12;
+      indexes[interval] = 1;
+    })
+  })
+  console.log(indexes);
+  var testScales = ["major", "minor", "harmonic_minor", "dorian", "phrygian", "lydian"];
+  testScales.forEach(function(scaleName)
+  {
+    var bestScore = 0;
+    var winnerList = [];
+
+    for (var offset = 0; offset < 12; offset++)
+    {
+      score = computeScaleScore(scaleName, indexes , offset);
+      if (score > bestScore)
+      {
+        bestScore = score;
+        winnerList = [];
+      }
+
+      if (score === bestScore)
+      {
+        winnerList.push("" + notefromdegree(offset) + " " + scaleName);
+      }
+    }
+    console.log("score :" +bestScore + " [" + winnerList + "]");
+  })
+}

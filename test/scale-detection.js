@@ -3,6 +3,27 @@ var assert = require("assert");
 require("../js/mn-chord.js");
 require("../js/mn-note.js");
 require("../js/mn-scale.js");
+require("../js/mn-chordprogression.js");
 
-var intervals = scale("c4","major");
-console.log(intervals);
+// let's perpare some data
+
+function makeChordList()
+{
+  var rootNote = "c4";
+  var scale = "major";
+  var progression = [1,5];
+
+  var chordSequence = makeChordProgression(rootNote, scale, progression);
+  var chordList = [];
+
+  chordSequence.forEach(function (chord)
+  {
+    chordList.push(chordname(chord.notes_));
+  })
+  return chordList;
+}
+
+//var chordList = makeChordList();
+var chordList = ["f#m", "a","e","bm","c#"];
+console.log(chordList);
+detectScaleName(chordList);

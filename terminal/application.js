@@ -20,7 +20,7 @@ var Application = function()
 	  if (err) {
 	    throw err;
 	  }
-	  this.parser = peg.buildParser(data.toString());
+	  this.parser = peg.generate(data.toString());
 
 	});
 }

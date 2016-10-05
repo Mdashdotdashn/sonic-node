@@ -79,10 +79,12 @@ var Scale = {
   lydian_minor:       [2, 2, 2, 1, 1, 2, 2]
 }
 
-scale = function(noteName, scaleName)
+// returns the list of midi notes for a given scale
+
+scale = function(midiNoteName, scaleName)
 {
   var s = eval("Scale."+scaleName);
-  var note = midinotefromname(noteName);
+  var note = midinotefromname(midiNoteName);
   var result = [];
   for (var interval of s)
   {
@@ -91,4 +93,3 @@ scale = function(noteName, scaleName)
   }
   return result;
 }
-

@@ -105,21 +105,22 @@ notesfromchordname = function(chordname)
   return [note, note + 4, note +7];
 }
 
-// given a collaction of note number, returns the name of a chord
+// given a collaction of note number, returns the name of a chord (without octave)
 // Very coarse as it only supports major/minor
 
-chordname = function(chord)
+chordname = function(midiNotes)
 {
   var chordintervals =
   {
     "4,3" : "",  // major
     "3,4" : "m", // minor
-    "3,3" : "º"  // diminished
+    "3,3" : "º",  // diminished
+    "4,4" : "+"  //   augmented ?
   }
 
-  // reduce notes to their degree c,d,e..
+  // reduce notes to their index c,d,e..
   var c = [];
-  chord.forEach(function(note)
+  midiNotes.forEach(function(note)
     {
       n = note % 12;
       c.push(n);

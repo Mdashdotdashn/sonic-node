@@ -29,22 +29,22 @@ note
 
 //---------------------- Chord progressions
 
-chord_repetition // {1,2,3}x4
-  = c:chord_list "x" r:digit
+scale_degree_repetition // {1,2,3}x4
+  = c:scale_degree_list "x" r:digit
     { var res = c  ; for (var i = 0; i < r -1;i++) { res = res.concat(c) ;}; return res;}
 
-chord_element
+scale_degree_element
   = d:digit
     { return [d];}
-  / r:chord_repetition
+  / r:scale_degree_repetition
     { return r;}
 
-commaed_chord_element
-	= comma e:chord_element
+commaed_scale_degree_element
+	= comma e:scale_degree_element
 		{ return e; }
 
-chord_list // list of elements
-  = "{" space* e:chord_element c:commaed_chord_element* space* "}"
+scale_degree_list // list of elements
+  = "{" space* e:scale_degree_element c:commaed_scale_degree_element* space* "}"
     { var v = e.concat(c); return v; }
 
 scale_definition
@@ -54,7 +54,7 @@ scale_definition
 //----------------------- Commands
 
 chord_progression // expect chord and some list in brackets
-  = "progression" " " d:chord_list
+  = "progression" " " d:scale_degree_list
     { return { method: "setProgression", arguments: d.toString().split(",")} }
 
 clear

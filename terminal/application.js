@@ -166,6 +166,13 @@ Application.prototype.setResolution = function(argument)
 	return this.currentSequenceString();
 }
 
+Application.prototype.analyseChords = function(argument)
+{
+	var result = scalesFromChords(argument);
+	return "score: " + result.score_ + "\n" + result.scaleList_;
+	return this.currentSequenceString();
+}
+
 Application.prototype.setRectification = function(argument)
 {
 	console.log(argument);

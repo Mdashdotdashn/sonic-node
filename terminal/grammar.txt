@@ -27,7 +27,7 @@ note
   = n:[a-g] m:[b#]?
     { return (m === null) ? n : n+m; }
 
-//---------------------- Chord progressions
+//---------------------- Scale degree progressions
 
 scale_degree_repetition // {1,2,3}x4
   = c:scale_degree_list "x" r:digit
@@ -46,6 +46,26 @@ commaed_scale_degree_element
 scale_degree_list // list of elements
   = "{" space* e:scale_degree_element c:commaed_scale_degree_element* space* "}"
     { var v = e.concat(c); return v; }
+
+//----------------------- Chords
+
+chord_element // note, optional minor,
+	= n:note m:[m]?
+		{
+		 	var result = n;
+			if (m) result +=m;
+			return [result];
+		}
+
+commaed_chord_element
+	= comma e:chord_element
+		{ return e; }
+
+chord_list
+	= "{" space* e:chord_element c:commaed_chord_element* space* "}"
+	  { var v = e.concat(c); return v; }
+
+//----------------------- scale
 
 scale_definition
   = n:note " " w:word
@@ -91,7 +111,15 @@ rectify
   = "rectify" space* m:rectification_method
   { return { method: "setRectification", arguments : m}}
 
+analysis
+  = "chords" space* l:chord_list
+	{ return { method: "analyseChords", arguments: l.toString().split(",")} }
+
+analyse
+  = "analyze"	space* a:analysis
+	{ return a;}
+
 //----------------------- Main
 
 command
-  = chord_progression / exit / scale / debug / resolution / clear / inversion / rectify
+  = chord_progression / exit / scale / debug / resolution / clear / inversion / rectify / analyse

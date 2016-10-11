@@ -24,6 +24,7 @@ function makeChordList()
 }
 
 //var chordList = makeChordList();
-var chordList = ["f#m", "a","e","bm","c#"];
+var chordList = ["cm", "a#", "fm", "g#"];
 console.log(chordList);
-detectScaleName(chordList);
+var result = scalesFromChords(chordList);
+console.log(result);

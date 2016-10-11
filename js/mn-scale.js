@@ -118,13 +118,12 @@ computeScaleScore = function(scaleName, indexesToMatch, offset)
         base += 1;
       }
   }
-//  console.log(score/base);
   return score/base;
 }
 
 // try to detect the scale name from a list of chord names
 
-detectScaleName = function(chordNameList)
+scalesFromChords = function(chordNameList)
 {
   // build a vector of note indexes, based on C4
   // because at this point, we can't manipulate chords/intervals directly
@@ -141,13 +140,15 @@ detectScaleName = function(chordNameList)
       indexes[interval] = 1;
     })
   })
-  console.log(indexes);
+//  console.log(indexes);
+
+  var bestScore = 0;
+  var winnerList = [];
+
   var testScales = ["major", "minor", "harmonic_minor", "dorian", "phrygian", "lydian"];
+
   testScales.forEach(function(scaleName)
   {
-    var bestScore = 0;
-    var winnerList = [];
-
     for (var offset = 0; offset < 12; offset++)
     {
       score = computeScaleScore(scaleName, indexes , offset);
@@ -162,6 +163,12 @@ detectScaleName = function(chordNameList)
         winnerList.push("" + notefromdegree(offset) + " " + scaleName);
       }
     }
-    console.log("score :" +bestScore + " [" + winnerList + "]");
   })
+
+  var result =
+  {
+    score_ : bestScore,
+    scaleList_ : winnerList
+  };
+  return result;
 }

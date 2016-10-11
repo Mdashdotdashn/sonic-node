@@ -105,19 +105,11 @@ notesfromchordname = function(chordname)
   return [note, note + 4, note +7];
 }
 
-// given a collaction of note number, returns the name of a chord (without octave)
-// Very coarse as it only supports major/minor
+// given a serie of midi notes belonging to a chord, tries to organise the notes
+//  in a canonical form so that the root note is the lowest
 
-chordname = function(midiNotes)
+makeCanonicalChord = function(midiNotes)
 {
-  var chordintervals =
-  {
-    "4,3" : "",  // major
-    "3,4" : "m", // minor
-    "3,3" : "º",  // diminished
-    "4,4" : "+"  //   augmented ?
-  }
-
   // reduce notes to their index c,d,e..
   var c = [];
   midiNotes.forEach(function(note)
@@ -136,6 +128,24 @@ chordname = function(midiNotes)
       c = c.rotate(i+1);
     }
   }
+
+  return c;
+}
+
+// given a collaction of note number, returns the name of a chord (without octave)
+// Very coarse as it only supports major/minor
+
+chordname = function(midiNotes)
+{
+  var chordintervals =
+  {
+    "4,3" : "",  // major
+    "3,4" : "m", // minor
+    "3,3" : "º",  // diminished
+    "4,4" : "+"  //   augmented ?
+  }
+
+  var c = makeCanonicalChord(midiNotes);
 
   // computes intervals between notes
   var d = [];

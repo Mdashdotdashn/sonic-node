@@ -91,5 +91,5 @@ n = function(name)
 
 midinotefromname = function(name)
 {
-  return notemap[name];
+  return notemap[name.toLowerCase()];
 }

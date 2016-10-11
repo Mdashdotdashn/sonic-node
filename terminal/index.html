@@ -45,7 +45,7 @@ body {
 .terminal, .cmd {
     background-color: #3939DE;
     color: #9C9CFF;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: bold;
     padding: 0;
 }
@@ -76,8 +76,8 @@ div.terminal-output div div {
         {
             $.getJSON('/command', { command : command }, function(response)
             {
-                term.echo(response.reply);            
-            })            
+                term.echo(response.reply);
+            })
         }
     }
 
@@ -95,7 +95,7 @@ $(function() {
             }
             else
             {
-                term.insert(String.fromCharCode(e.which).toUpperCase());                
+                term.insert(String.fromCharCode(e.which).toUpperCase());
             }
             return false;
         },

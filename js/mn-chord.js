@@ -163,3 +163,11 @@ chordname = function(midiNotes)
   var note = notefromdegree(c[0]);
   return note + chordintervals[d.toString()];
 }
+
+// Returns the root note index
+
+rootofchord = function(midiNotes)
+{
+  var c = makeCanonicalChord(midiNotes);
+  return c[0];  
+}

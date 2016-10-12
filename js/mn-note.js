@@ -57,9 +57,11 @@ notefromdegree = function(interval)
 
 intervalfromnotename = function(notename)
 {
+  var needle = notename.toLowerCase();
+
   for (var index = 0; index < notenames.length; index++)
   {
-    if (notename === notenames[index])
+    if (needle === notenames[index])
     {
       return index;
     }

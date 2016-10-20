@@ -7,12 +7,19 @@ var Server = function()
     this.server_ = new Hapi.Server();
 }
 
-Server.prototype.init = function(parser)
+Server.prototype.init = function(application)
 {
-    this.server_.parser_ = parser;
+    this.server_.application_ = application;
 
     this.server_.connection({ port: 3000 });
     this.server_.register(require('inert'));
+
+    this.server_.checkForReport = function(request, reply)
+    {
+      reply({ reply: "ping"});
+    }
+
+
 
     // set up static routes
 
@@ -51,10 +58,10 @@ Server.prototype.init = function(parser)
             var input = request.url.query.command;
             var response;
             try {
-                var result = request.server.parser_.parse(input);
+                var result = request.server.application_.parse(input);
                 response = { reply: result};
             }
-            catch(err) 
+            catch(err)
             {
                 console.log(err)
                 response = { reply: "*error*: " + err.message };
@@ -62,6 +69,18 @@ Server.prototype.init = function(parser)
             reply(response);
             }
     });
+
+    // route response url to application feedbacl
+
+    this.server_.route({
+        method: 'GET',
+        path: '/reporter',
+        handler: function (request, reply) {
+            console.log("got request for event, waiting a bit");
+
+            setTimeout(function() { request.server.checkForReport(request, reply); console.log("reply sent"); } , 3000);
+          }
+      });
 }
 
 Server.prototype.start = function()
@@ -72,7 +91,7 @@ Server.prototype.start = function()
             throw err;
         }
         console.log('Server running at:', this.server_.info.uri);
-    });    
+    });
 }
 
 module.exports = new Server();

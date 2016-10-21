@@ -2,24 +2,50 @@
 
 const Hapi = require('hapi');
 
+// -----------------------------------------------------------------------------
+
+var Reporter = function()
+{
+  this.info_ = "";
+}
+
+Reporter.prototype.init = function(publisher)
+{
+  var wtf = this;
+  publisher.on('info', function(info)
+  {
+    wtf.info_ = info;
+  })
+}
+
+Reporter.prototype.collectInfo = function(reply)
+{
+  if (this.info_ != "")
+  {
+    reply( { reply: this.info_});
+    this.info_ = "";
+  }
+  else {
+    var wtf = this;
+    setTimeout(function() { wtf.collectInfo(reply);} , 50);
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+
 var Server = function()
 {
     this.server_ = new Hapi.Server();
+    this.server_.reporter_ = new Reporter();
 }
 
 Server.prototype.init = function(application)
 {
     this.server_.application_ = application;
-
+    this.server_.reporter_.init(application.publisher_);
     this.server_.connection({ port: 3000 });
     this.server_.register(require('inert'));
-
-    this.server_.checkForReport = function(request, reply)
-    {
-      reply({ reply: "ping"});
-    }
-
-
 
     // set up static routes
 
@@ -76,9 +102,7 @@ Server.prototype.init = function(application)
         method: 'GET',
         path: '/reporter',
         handler: function (request, reply) {
-            console.log("got request for event, waiting a bit");
-
-            setTimeout(function() { request.server.checkForReport(request, reply); console.log("reply sent"); } , 3000);
+            request.server.reporter_.collectInfo(reply);
           }
       });
 }

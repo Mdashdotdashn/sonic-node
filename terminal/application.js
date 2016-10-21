@@ -13,6 +13,23 @@ var extend = require("extend")
 var peg = require("pegjs");
 var fs = require('fs');
 
+var EventEmitter = require('events').EventEmitter;
+var util = require('util');
+
+// -----------------------------------------------------------------------------
+
+var Publisher = function()
+{
+}
+
+util.inherits(Publisher, EventEmitter);
+
+Publisher.prototype.report = function(info)
+{
+	this.emit('info', info);
+}
+// -----------------------------------------------------------------------------
+
 var Application = function()
 {
 
@@ -23,6 +40,8 @@ var Application = function()
 	  this.parser = peg.generate(data.toString());
 
 	});
+
+	this.publisher_ = new Publisher();
 }
 
 Application.prototype.init = function(options) {
@@ -76,6 +95,7 @@ Application.prototype.start = function()
 	var gateLength = this.gateLength_;
 	var bassOutput = this.bassOutput_;
 	var bassSequencer = this.bassSequencer_;
+	var publisher = this.publisher_;
 
 	heartbeat.setTempo(this.tempo_);
 	heartbeat.connect(this.chordSequencer_);
@@ -88,10 +108,13 @@ Application.prototype.start = function()
 
 	this.chordSequencer_.connect(function(step)
 	  {
-	      step.notes_.forEach(function(note) {
-	           chordOutput.add(note,gateLength);
+				var notes = "";
+	      step.notes_.forEach(function(midinote) {
+						 notes += ":" + notename(midinote);
+	           chordOutput.add(midinote,gateLength);
 	        });
-		bassSequencer.setContent([step.bass_, step.bass_ - 12]);
+				bassSequencer.setContent([step.bass_, step.bass_ - 12]);
+				publisher.report("chord "+ notes);
 	  });
 
 	this.bassSequencer_.connect(function(step)

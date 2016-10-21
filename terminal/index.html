@@ -107,12 +107,10 @@ $(function() {
 
 function pollServerEvents()
 {
-  console.log("waiting for server event");
   $.getJSON('/reporter', function(response)
   {
-      console.log("got server event");
       console.log(response.reply);
-      setTimeout(pollServerEvents, 10);
+      setTimeout(pollServerEvents, 1);
   })
 }
 

@@ -142,7 +142,7 @@ chordname = function(midiNotes)
     "4,3" : "",  // major
     "3,4" : "m", // minor
     "3,3" : "º",  // diminished
-    "4,4" : "+"  //   augmented ?
+    "4,4" : "+"  //   augmented
   }
 
   var c = makeCanonicalChord(midiNotes);
@@ -169,5 +169,5 @@ chordname = function(midiNotes)
 rootofchord = function(midiNotes)
 {
   var c = makeCanonicalChord(midiNotes);
-  return c[0];  
+  return c[0];
 }

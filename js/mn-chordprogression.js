@@ -1,5 +1,6 @@
 require("./mn-chord.js");
 require("./mn-scale.js");
+require("./theory/theory.js");
 
 // Chord progression helper object
 
@@ -15,13 +16,32 @@ ChordProgression = function(rootNote, mode)
 // return the chord corresponding to the nth degree in the current progression
 // n starts with 1
 
-ChordProgression.prototype.chord = function(degree)
+ChordProgression.prototype.makeChord = function(degree, alteration)
 {
   var n = this.scaleNotes_;
-  return new Chord([n[degree-1], n[degree+1], n[degree+3]], n[degree-1]-24);
+  var root = n[degree-1];
+  var bass = root - 24;
+
+  // If there's an alteration, force it
+  if (alteration && alteration.length_ != 0)
+  {
+      var current = root;
+      var notes = [ current ];
+      var intervals = intervalsFromChordToken(alteration);
+      intervals.forEach(function(interval) {
+        current += interval;
+        notes.push(current);
+      })
+      return new Chord(notes, bass )
+  }
+  // return the default chord for the scale
+  return new Chord([n[degree-1], n[degree+1], n[degree+3]], bass);
 }
 
 // creates a chord progression from a list of scale degree
+// supported format:
+//
+// 1,2,3: natural chord from the scale degree
 
 makeChordProgression = function(rootNote, mode, progression)
 {
@@ -29,7 +49,10 @@ makeChordProgression = function(rootNote, mode, progression)
     var chordSequence = [];
 
     progression.forEach(function(degree) {
-      chordSequence.push(cp.chord(degree));
+      var degreeAsString = ("" + degree).trim();
+      var base = parseInt(degreeAsString[0]);
+      var alteration = degreeAsString.slice(1);
+      chordSequence.push(cp.makeChord(base, alteration));
       });
 
     return chordSequence;

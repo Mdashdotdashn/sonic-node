@@ -33,4 +33,5 @@ testChordName([ "G" , "D#", "C"], "Cm");
 testChordName([ "B" , "G", "D"], "G");
 
 testChordRootIndex([ "B" , "G", "D" ], "G"); // G chord
-testChordRootIndex([ "g#" , "B", "E" ], "E"); // Eaug chord
+testChordRootIndex([ "G" , "B", "E" ], "E"); // Eaug chord
+testChordRootIndex([ "G#" , "B", "E" ], "E"); // Eaug chord

@@ -1,3 +1,26 @@
+{
+	var eval_roman_numeral = function(numeral)
+	{
+		switch(numeral.toLowerCase())
+		{
+			case 'i':
+				return 1;
+			case 'ii':
+				return 2;
+			case 'iii':
+				return 3;
+			case 'iv':
+				return 4;
+			case 'v':
+				return 5;
+			case 'vi':
+				return 6;
+			case 'vii':
+				return 7;
+		}
+	}
+}
+
 start = command
 
 //---------------------- Basic types
@@ -29,13 +52,30 @@ note
 
 //---------------------- Scale degree progressions
 
+chord_alteration
+	= a: ('M'/'m')
+		{ return a;}
+
 scale_degree_repetition // {1,2,3}x4
   = c:scale_degree_list "x" r:digit
-    { var res = c  ; for (var i = 0; i < r -1;i++) { res = res.concat(c) ;}; return res;}
+	{ var res = c  ; for (var i = 0; i < r -1;i++) { res = res.concat(c) ;}; return res;}
+
+major_numeral
+	= d:('VII'/'VI'/'V'/'IV'/'III'/'II'/'I')
+	{ return eval_roman_numeral(d)+"M" ;}
+
+minor_numeral
+	= d:('vii'/'vi'/'v'/'iv'/'iii'/'ii'/'i')
+	{ return eval_roman_numeral(d)+"m" ;}
+
+scale_degree_numeral
+	= minor_numeral / major_numeral
 
 scale_degree_element
-  = d:digit
-    { return [d];}
+  = d:digit a:chord_alteration*
+    { return [d+a];}
+	/ r:scale_degree_numeral
+		{ return r;}
   / r:scale_degree_repetition
     { return r;}
 
@@ -74,31 +114,31 @@ scale_definition
 //----------------------- Commands
 
 chord_progression // expect chord and some list in brackets
-  = "progression" " " d:scale_degree_list
+  = "progression"i " " d:scale_degree_list
     { return { method: "setProgression", arguments: d.toString().split(",")} }
 
 clear
-  = "clear"
+  = "clear"i
     { return { method: "setProgression", arguments : []}}
 
 exit
-  = "exit"
+  = "exit"i
     { return { method: "exit" , arguments : []}}
 
 debug
-  = "debug"
+  = "debug"i
     { return { method: "debug" , arguments : []}}
 
 scale
-  = "scale" space* s:scale_definition
+  = "scale"i space* s:scale_definition
     { return { method: "setScale", arguments: s }}
 
 resolution
-  = "resolution" space* n:positive_integer
+  = "resolution"i space* n:positive_integer
     { return { method: "setResolution", arguments: n}}
 
 inversion
-  = "inversion" space* n:integer
+  = "inversion"i space* n:integer
     { return { method: "setInversion", arguments: n}}
 
 rectification_method
@@ -108,15 +148,15 @@ rectification_method
   / "inwards" { return 3;}
 
 rectify
-  = "rectify" space* m:rectification_method
+  = "rectify"i space* m:rectification_method
   { return { method: "setRectification", arguments : m}}
 
 analysis
-  = "chords" space* l:chord_list
+  = "chords"i space* l:chord_list
 	{ return { method: "analyseChords", arguments: l.toString().split(",")} }
 
 analyse
-  = "analyze"	space* a:analysis
+  = "analyze"i	space* a:analysis
 	{ return a;}
 
 //----------------------- Main

@@ -32,7 +32,7 @@ Publisher.prototype.report = function(info)
 
 var Application = function()
 {
-
+	console.log("loading grammar");
 	fs.readFile( __dirname + '/grammar.txt', function (err, data) {
 	  if (err) {
 	    throw err;
@@ -155,7 +155,7 @@ Application.prototype.currentSequenceString = function()
 
 Application.prototype.parse = function(command)
 {
-	var result = parser.parse(command.toLowerCase()); // returns something like a function call: method, arg1, arg2, arg3
+	var result = parser.parse(command); // returns something like a function call: method, arg1, arg2, arg3
 	console.log("executing: " + JSON.stringify(result));
 	return this[result.method](result.arguments);
 };
@@ -198,7 +198,6 @@ Application.prototype.analyseChords = function(argument)
 
 Application.prototype.setRectification = function(argument)
 {
-	console.log(argument);
 	this.rectificationMethod_ = parseInt(argument);
 	this.updateSequence();
 	return this.currentSequenceString();
@@ -215,7 +214,7 @@ Application.prototype.setProgression = function(arguments)
 {
 	var chords = [];
 	 arguments.forEach(function(element) {
-	 	chords.push(parseInt(element))
+	 	chords.push(element)
 	 });
 
 	this.progression_ = chords;

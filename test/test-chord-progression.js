@@ -14,10 +14,10 @@ var progression = makeChordProgression("c3", "minor", sequence);
 assert.equal(chordname(progression[0].notes_), "cm");
 assert.equal(chordname(progression[1].notes_), "g#");
 
-var sequence = ["1","6M"];
+var sequence = ["1","5M"];
 var progression = makeChordProgression("c3", "major", sequence);
 assert.equal(chordname(progression[0].notes_), "c");
-assert.equal(chordname(progression[1].notes_), "a");
+assert.equal(chordname(progression[1].notes_), "g");
 
 // Rectification
 

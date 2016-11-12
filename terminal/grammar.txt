@@ -75,7 +75,7 @@ scale_degree_element
   = d:digit a:chord_alteration*
     { return [d+a];}
 	/ r:scale_degree_numeral
-		{ return r;}
+		{ return [r];}
   / r:scale_degree_repetition
     { return r;}
 

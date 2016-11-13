@@ -87,6 +87,17 @@ scale_degree_list // list of elements
   = "{" space* e:scale_degree_element c:commaed_scale_degree_element* space* "}"
     { var v = e.concat(c); return v; }
 
+//----------------------- Notes
+
+commaed_note
+	= comma e:note
+		{ return e; }
+
+note_list
+  = "{" space* e:note c:commaed_note* space* "}"
+    { var a = [e]; var v = a.concat(c); return v; }
+
+
 //----------------------- Chords
 
 chord_element // note, optional minor,
@@ -154,6 +165,8 @@ rectify
 analysis
   = "chords"i space* l:chord_list
 	{ return { method: "analyseChords", arguments: l.toString().split(",")} }
+  / "notes"i space* n:note_list
+	{ return { method: "analyseNotes", arguments: n.toString().split(",")} }
 
 analyse
   = "analyze"i	space* a:analysis

@@ -32,13 +32,13 @@ Publisher.prototype.report = function(info)
 
 var Application = function()
 {
-	console.log("loading grammar");
+	console.log("loading grammar..");
 	fs.readFile( __dirname + '/grammar.txt', function (err, data) {
 	  if (err) {
 	    throw err;
 	  }
 	  this.parser = peg.generate(data.toString());
-
+		console.log("loaded.");
 	});
 
 	this.publisher_ = new Publisher();
@@ -186,6 +186,13 @@ Application.prototype.setScale = function(arguments)
 Application.prototype.setResolution = function(argument)
 {
 	this.chordSequencer_.setResolution(argument);
+	return this.currentSequenceString();
+}
+
+Application.prototype.analyseNotes = function(argument)
+{
+	var result = scalesFromNotes(argument);
+	return "score: " + result.score_ + "\n" + result.scaleList_;
 	return this.currentSequenceString();
 }
 

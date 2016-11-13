@@ -139,6 +139,7 @@ Application.prototype.updateSequence = function()
 	else
 	{
 		this.chordSequencer_.setContent([]);
+		this.bassSequencer_.setContent([]);
 	}
 }
 

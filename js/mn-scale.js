@@ -158,6 +158,28 @@ scalesFromIndexes = function(indexes)
     return result;
 }
 
+// Attempts to order the scale list so that the ones contaning the firt note
+// are presented first
+
+filterScaleResult = function(result, firstNote)
+{
+  var filtered = [];
+  result.scaleList_.forEach(function(scale)
+  {
+    if (scale[0].toLowerCase() == firstNote[0].toLowerCase())
+    {
+      filtered.push(scale);
+    }
+  });
+  if (filtered.length != 0)
+  {
+    result.scaleList_ = filtered;
+  }
+  return result;
+}
+
+// try to detect possible scales from a list of notes
+
 scalesFromNotes = function(noteNameList)
 {
   var indexes = [0,0,0,0,0,0,0,0,0,0,0,0];
@@ -168,7 +190,9 @@ scalesFromNotes = function(noteNameList)
     var interval = intervalfromnotename(noteName);
     indexes[interval] = 1;
   });
-  return scalesFromIndexes(indexes);
+
+  return filterScaleResult(scalesFromIndexes(indexes), noteNameList[0]);
+
 }
 // try to detect the scale name from a list of chord names
 
@@ -191,5 +215,5 @@ scalesFromChords = function(chordNameList)
     })
   })
 
-  return scalesFromIndexes(indexes);
+  return filterScaleResult(scalesFromIndexes(indexes), chordNameList[0]);
 }

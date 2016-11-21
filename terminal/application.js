@@ -65,8 +65,8 @@ Application.prototype.init = function(options) {
 	this.progression_ = [];
 	this.scale_ = "major";
 	this.rootNote_ = "c3";
-	this.inversion_ = 0;
-	this.rectificationMethod_ = 0;
+	this.inversion_ = -2;
+	this.rectificationMethod_ = 1;
 
 	if (parameters.device.trim())
 	{

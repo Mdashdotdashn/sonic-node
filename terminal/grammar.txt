@@ -79,13 +79,9 @@ scale_degree_element
   / r:scale_degree_repetition
     { return r;}
 
-commaed_scale_degree_element
-	= comma e:scale_degree_element
-		{ return e; }
-
 scale_degree_list // list of elements
-  = "{" space* e:scale_degree_element c:commaed_scale_degree_element* space* "}"
-    { var v = e.concat(c); return v; }
+  = "{" l:(e:scale_degree_element comma? space* { return e;})+ "}"
+    { console.log(l) ; return l; }
 
 //----------------------- Notes
 

@@ -1,6 +1,6 @@
 require("../js/mn-sequence.js");
 require("../js/mn-midi-device.js");
-require("../js/mn-heartbeat.js");
+require("../js/sequencing/mn-heartbeat.js");
 require("../js/mn-scale.js");
 require("../js/mn-chord.js");
 require("../js/mn-chordprogression.js");

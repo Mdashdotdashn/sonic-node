@@ -1,7 +1,5 @@
 require("../js/mn-midi-device.js");
-require("../js/sequencing/mn-heartbeat.js");
-require("../js/sequencing/mn-beat-time-source.js");
-require("../js/sequencing/mn-beat-time-step-sequence.js");
+require("../js/sequencing/sequencing.js");
 require("../js/mn-scale.js");
 require("../js/mn-chord.js");
 require("../js/mn-chordprogression.js");

@@ -1,6 +1,7 @@
-require("../js/mn-sequence.js");
 require("../js/mn-midi-device.js");
 require("../js/sequencing/mn-heartbeat.js");
+require("../js/sequencing/mn-beat-time-source.js");
+require("../js/sequencing/mn-beat-time-step-sequence.js");
 require("../js/mn-scale.js");
 require("../js/mn-chord.js");
 require("../js/mn-chordprogression.js");
@@ -28,6 +29,7 @@ Publisher.prototype.report = function(info)
 {
 	this.emit('info', info);
 }
+
 // -----------------------------------------------------------------------------
 
 var Application = function()
@@ -44,6 +46,8 @@ var Application = function()
 	this.publisher_ = new Publisher();
 }
 
+// Init merely sets up the data and parameters
+
 Application.prototype.init = function(options) {
 
 	var parameters =
@@ -53,6 +57,7 @@ Application.prototype.init = function(options) {
 		tempo: 120,
 		resolution: 16,  // In sixteenth
 		length: 0.5,      // percentage
+		ticksPerBeat: 24,
 	}
 
 	extend(parameters, options);
@@ -78,34 +83,44 @@ Application.prototype.init = function(options) {
 		}
 	}
 
-	this.resolution_ = parameters.resolution;
-
-	this.gateLength_ = parameters.length * 6 * parameters.resolution;
+	this.resolutionInSixteenth_ = parameters.resolution;
+	this.gateLength_ = parameters.length  * parameters.resolution  * parameters.ticksPerBeat / 4;
 	this.tempo_ = parameters.tempo;
-
+	this.ticksPerBeat_ = parameters.ticksPerBeat;
 };
 
 Application.prototype.start = function()
 {
-	this.chordSequencer_ = new StepSequence(this.resolution_);
-	this.bassSequencer_ = new StepSequence(4);
+	this.chordSequencer_ = new StepSequence(this.resolutionInSixteenth_);
+	this.bassSequencer_ = new StepSequence(this.resolutionInSixteenth_);
 
-	var heartbeat = new Heartbeat();
+  // Sets up the heartbeat
+	var heartbeat = new Heartbeat(this.ticksPerBeat_);
+	heartbeat.setTempo(this.tempo_);
+
+	// Sets up the beat time source
+	this.beatTimeSource_ = new BeatTimeSource(this.ticksPerBeat_);
+	heartbeat.connect(this.beatTimeSource_);
+
+	// Hook up sequencers
 	var chordOutput = this.chordOutput_;
 	var gateLength = this.gateLength_;
 	var bassOutput = this.bassOutput_;
 	var bassSequencer = this.bassSequencer_;
 	var publisher = this.publisher_;
 
-	heartbeat.setTempo(this.tempo_);
-	heartbeat.connect(this.chordSequencer_);
-	heartbeat.connect(this.bassSequencer_);
+	// trigger the chord sequencer
+	this.beatTimeSource_.connect(this.chordSequencer_);
+	// trigger the bqss sequencer
+	this.beatTimeSource_.connect(this.bassSequencer_);
+	// flushes midi output
 	heartbeat.connect(function()
 	  {
 	    chordOutput.tick();
-   	    bassOutput.tick();
+   	  bassOutput.tick();
 	  });
 
+  // Implement step trigger for the chords
 	this.chordSequencer_.connect(function(step)
 	  {
 				var notes = "";
@@ -117,13 +132,16 @@ Application.prototype.start = function()
 				publisher.report("chord "+ notes);
 	  });
 
+	// Implement step trigger for the bass
 	this.bassSequencer_.connect(function(step)
 		{
 			bassOutput.add(step, 8);
 		});
 
+	// Start ticking
 	heartbeat.run();
 
+	// Send midi sync
 	this.chordOutput_.sendStart();
 }
 

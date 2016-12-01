@@ -8,11 +8,11 @@ var STickHeartBeat = function(heartbeat)
   heartbeat.tick();
 }
 
-Heartbeat = function()
+Heartbeat = function(ticksPerBeat)
 {
     this.tempo_ = 120;
     this.timer_ = new NanoTimer();
-    this.clockTicksPerBeat_ = 24;
+    this.clockTicksPerBeat_ = ticksPerBeat;
     this.tickCount_ = 0;
 }
 
@@ -27,7 +27,7 @@ Heartbeat.prototype.run = function()
 {
   var interval = '' + 60000./this.tempo_/this.clockTicksPerBeat_ +'m';
   this.tickCount_ = 0;
-  this.timer_.setInterval(function(hb) 
+  this.timer_.setInterval(function(hb)
     { hb.emit("tick", hb.tickCount_++);}, [this], interval);
 }
 
@@ -46,7 +46,7 @@ Heartbeat.prototype.connect = function(target)
   }
 }
 
-Heartbeat.prototype.ticksPerSixteenth = function()
+Heartbeat.prototype.ticksPerBeat = function()
 {
-  return this.clockTicksPerBeat_ / 4;
+  return this.clockTicksPerBeat_;
 }

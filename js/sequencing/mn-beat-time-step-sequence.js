@@ -5,24 +5,25 @@ StepSequence = function(resolutionInSixteenth)
 {
   EventEmitter.call(this);
   this.content_ = [];
-  this.modulo_ = 6 * resolutionInSixteenth;
+  this.resolutionInSixteenth_ = resolutionInSixteenth;
   this.index_ = 0;
 }
 
 util.inherits(StepSequence, EventEmitter);
 
-StepSequence.prototype.tick = function(tickCount)
+StepSequence.prototype.tick = function(position)
 {
-  if (this.content_.length > 0 && tickCount % this.modulo_ == 0)
+  var sixteenth = sixteenthCount(position);
+  if (this.content_.length > 0 && position.ticks_ == 0 && (sixteenth % this.resolutionInSixteenth_ == 0))
   {
-    this.emit("tick", this.content_[this.index_]);
-    this.index_ = (this.index_ + 1) % this.content_.length;
+    var step = sixteenth / this.resolutionInSixteenth_;
+    this.emit("tick", this.content_[step % this.content_.length]);
   }
 }
 
 StepSequence.prototype.setResolution = function(resolutionInSixteenth)
 {
-  this.modulo_ = 6 * resolutionInSixteenth;
+  this.resolutionInSixteenth_ = resolutionInSixteenth;
 }
 
 StepSequence.prototype.setContent = function(content)

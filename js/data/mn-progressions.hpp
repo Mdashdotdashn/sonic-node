@@ -26,7 +26,12 @@
   },
   {
     mode: "harmonic_minor",
-    progression: "1,4,6,5",
+    progression: "1,4,6,57",
     origin: "amy whinehouse - back to black"
-  }
+  },
+    {
+      mode: "minor",
+      progression: "1,3,7,1,7,5,1,1",
+      origin: "dolly parton - jolene"
+    }
 }

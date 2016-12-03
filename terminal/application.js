@@ -84,6 +84,7 @@ Application.prototype.init = function(options) {
 	this.resolutionInSixteenth_ = parameters.resolution;
 	this.gateLength_ = parameters.length  * parameters.resolution  * parameters.ticksPerBeat / 4;
 	this.tempo_ = parameters.tempo;
+	this.signature_ = new Signature();
 	this.ticksPerBeat_ = parameters.ticksPerBeat;
 };
 
@@ -106,11 +107,21 @@ Application.prototype.start = function()
 	var bassOutput = this.bassOutput_;
 	var bassSequencer = this.bassSequencer_;
 	var publisher = this.publisher_;
+	var signature = this.signature_;
 
 	// trigger the chord sequencer
 	this.beatTimeSource_.connect(this.chordSequencer_);
 	// trigger the bqss sequencer
 	this.beatTimeSource_.connect(this.bassSequencer_);
+	// Debug timeline
+	this.beatTimeSource_.connect(function(position){
+		if (position.ticks_ == 0)
+		{
+			var beatCount = position.beats_;
+			var beatPerMeasure =  signature.numerator;
+			console.log(Math.floor(beatCount / beatPerMeasure + 1) + "." + (beatCount % beatPerMeasure + 1) + "." + (position.sixteenth_ + 1));
+		}
+	})
 	// flushes midi output
 	heartbeat.connect(function()
 	  {
@@ -245,6 +256,13 @@ Application.prototype.setProgression = function(arguments)
 	this.updateSequence();
 
 	return this.currentSequenceString();
+}
+
+Application.prototype.setSignature = function(arguments)
+{
+	this.signature_.numerator = arguments.numerator;
+	this.signature_.denominator =  arguments.denominator;
+	return "";
 }
 
 Application.prototype.debug = function(arguments)

@@ -144,6 +144,10 @@ resolution
   = "resolution"i space* n:positive_integer
     { return { method: "setResolution", arguments: n}}
 
+signature
+	= "signature"i space* n:positive_integer "/" d: positive_integer
+		{ return { method: "setSignature", arguments: { numerator:n, denominator:d}}}
+
 inversion
   = "inversion"i space* n:integer
     { return { method: "setInversion", arguments: n}}
@@ -171,4 +175,4 @@ analyse
 //----------------------- Main
 
 command
-  = chord_progression / exit / scale / debug / resolution / clear / inversion / rectify / analyse
+  = chord_progression / exit / scale / debug / resolution / clear / inversion / rectify / analyse / signature

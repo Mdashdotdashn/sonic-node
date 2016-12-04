@@ -1,5 +1,5 @@
 require("./mn-heartbeat.js")
-require("./mn-sequencing-position.js")
+require("./mn-beat-time-line.js")
 
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');

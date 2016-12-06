@@ -1,6 +1,6 @@
 var assert = require("assert");
 
-require("../js/mn-chord.js");
+require("../js/theory/mn-chords.js");
 require("../js/mn-note.js");
 require("../js/mn-utils.js");
 

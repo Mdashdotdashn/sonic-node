@@ -1,9 +1,8 @@
 var assert = require("assert");
 
-require("../js/mn-chord.js");
+require("../js/theory/mn-chords.js");
 require("../js/mn-note.js");
 require("../js/mn-scale.js");
-require("../js/mn-chordprogression.js");
 
 // let's perpare some data
 
@@ -25,6 +24,8 @@ function makeChordList()
 
 //var chordList = makeChordList();
 var chordList = ["cm", "a#", "fm", "g#"];
-console.log(chordList);
 var result = scalesFromChords(chordList);
-console.log(result);
+
+assert.equal(result.score_, 1);
+assert.equal(result.scaleList_.length, 1);
+assert.equal(result.scaleList_[0], "c minor");

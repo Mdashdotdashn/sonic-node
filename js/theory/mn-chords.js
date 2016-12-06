@@ -1,76 +1,3 @@
-// Computes the center of gravity for a group of notes
-
-var note_gravity_center = function(notes)
-{
-  var sum = 0.0;
-  notes.forEach(function(note)
-    {
-      sum += note;
-    });
-  return sum / notes.length;
-}
-
-// Build a chord object to manipulate the content
-
-Chord = function (notes, bass)
-{
-  this.notes_ = notes;
-  this.bass_ = bass;
-}
-
-// return the notes
-
-Chord.prototype.notes = function()
-{
-  return this.notes_;
-}
-
-// Computes the distance between two chords
-
-Chord.prototype.distanceFrom = function(fromChord)
-{
-  return note_gravity_center(this.notes_) - note_gravity_center(fromChord.notes_);
-}
-
-// Inverts the chord upwards
-
-Chord.prototype.invertUp = function()
-{
-  this.notes_.sort();
-  var lowest = this.notes_.shift();
-  this.notes_.push(lowest+12);
-}
-
-// Inverts the chord downwards
-
-Chord.prototype.invertDown = function()
-{
-  this.notes_.sort();
-  var highest = this.notes_.pop();
-  this.notes_.unshift(highest-12);
-}
-
-// Inverts the chord from a given amount
-
-Chord.prototype.invert = function(distance)
-{
-  var sign = Math.sign(distance);
-  var count = Math.abs(distance);
-
-  for (var i = 0; i< count; i++)
-  {
-    switch(sign)
-    {
-      case 1:
-        this.invertUp();
-        break;
-
-      case -1:
-        this.invertDown();
-    }
-  }
-}
-
 // Returns the notes for a given chord name (with octave e.g D4)
 
 notesfromchordname = function(chordname)
@@ -170,4 +97,32 @@ rootofchord = function(midiNotes)
 {
   var c = makeCanonicalChord(midiNotes);
   return c[0];
+}
+
+// invert a sert of notes
+
+invertChord = function(midiNoteList, distance)
+{
+  var sign = Math.sign(distance);
+  var count = Math.abs(distance);
+
+  var inverted = midiNoteList;
+
+  for (var i = 0; i< count; i++)
+  {
+    switch(sign)
+    {
+      case 1:
+        inverted.sort();
+        var lowest = inverted.shift();
+        inverted.push(lowest+12);
+        break;
+
+      case -1:
+        inverted.sort();
+        var highest = inverted.pop();
+        inverted.unshift(highest-12);
+    }
+  }
+  return inverted;
 }

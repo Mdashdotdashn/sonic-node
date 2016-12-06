@@ -1,7 +1,8 @@
 var assert = require("assert");
 
-require("../js/mn-chordprogression.js");
-
+require("../js/progression/progression.js");
+require("../js/theory/theory.js");
+require("../js/mn-scale.js");
 // Progression generation
 
 var sequence = [1,6];

@@ -1,8 +1,8 @@
 require("../js/mn-midi-device.js");
+require("../js/theory/theory.js");
 require("../js/sequencing/sequencing.js");
+require("../js/progression/progression.js");
 require("../js/mn-scale.js");
-require("../js/mn-chord.js");
-require("../js/mn-chordprogression.js");
 require("../js/mn-note.js");
 require("../js/mn-utils.js");
 
@@ -50,7 +50,6 @@ Application.prototype.init = function(options) {
 
 	var parameters =
 	{
-		rectify: 0,
 		device: "",
 		tempo: 120,
 		resolution: 16,  // In sixteenth
@@ -59,11 +58,6 @@ Application.prototype.init = function(options) {
 	}
 
 	extend(parameters, options);
-
-	if (parameters.rectify > 0)
-	{
-		rectify_progression(parameters.sequence, parameters.rectify - 1);
-	}
 
 	this.progression_ = [];
 	this.scale_ = "major";
@@ -114,14 +108,14 @@ Application.prototype.start = function()
 	// trigger the bqss sequencer
 	this.beatTimeSource_.connect(this.bassSequencer_);
 	// Debug timeline
-	this.beatTimeSource_.connect(function(position){
+/*	this.beatTimeSource_.connect(function(position){
 		if (position.ticks_ == 0)
 		{
 			var beatCount = position.beats_;
 			var beatPerMeasure =  signature.numerator;
 			console.log(Math.floor(beatCount / beatPerMeasure + 1) + "." + (beatCount % beatPerMeasure + 1) + "." + (position.sixteenth_ + 1));
 		}
-	})
+	})*/
 	// flushes midi output
 	heartbeat.connect(function()
 	  {
@@ -158,8 +152,11 @@ Application.prototype.updateSequence = function()
 {
 	if (this.progression_.length != 0)
 	{
+		// create chord progression
 		var chordSequence = makeChordProgression(this.rootNote_, this.scale_, this.progression_);
-		chordSequence[0].invert(this.inversion_);
+		// apply desired inversion to the first chord
+		chordSequence[0].notes_ = invertChord(chordSequence[0].notes_,this.inversion_);
+		// apply voicing
 		rectify_progression(chordSequence, this.rectificationMethod_);
 		this.chordSequencer_.setContent(chordSequence);
 	}

@@ -39,6 +39,6 @@ HarmonyEngine.prototype.rebuild = function()
 		chordSequence[0].notes_ = invertChord(chordSequence[0].notes_,this.inversion_);
 		// apply voicing
 		rectify_progression(chordSequence, this.rectificationMethod_);
-		console.log("produced chord sequence = " + JSON.stringify(chordSequence));
+		return chordSequence;
   }
 }

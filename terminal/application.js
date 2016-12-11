@@ -111,7 +111,8 @@ Application.prototype.exit = function(arguments)
 
 Application.prototype.rebuild = function()
 {
-	this.harmony_.rebuild();
+	var chordSequence = this.harmony_.rebuild();
+	this.engine_.setChordSequence(chordSequence);
 }
 
 Application.prototype.setScale = function(arguments)

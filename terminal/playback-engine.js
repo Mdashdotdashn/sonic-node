@@ -98,6 +98,10 @@ PlaybackEngine = function()
 PlaybackEngine.prototype.init = function(deviceName)
 {
   var device = MidiDevice.find(deviceName);
+  if (!device)
+  {
+    throw new Error("No midi device");
+  }
   if (device)
   {
     for (var i = 0; i < 4; i++)
@@ -106,9 +110,9 @@ PlaybackEngine.prototype.init = function(deviceName)
       track.init(device, i);
       this.tracks_.push(track);
     }
+    this.tracks_[0].setPlayer(new ChordPlayer());
   }
 
-  this.tracks_[0].setPlayer(new ChordPlayer());
 
   this.heartbeat_ = new Heartbeat(this.ticksPerBeat_);
 	this.heartbeat_.setTempo(this.tempo_);

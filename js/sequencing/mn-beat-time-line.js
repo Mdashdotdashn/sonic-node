@@ -1,6 +1,18 @@
 
 kTicksPerBeats = 24; // Equivalent to midi clock
 
+CHECK_TYPE = function(value, expectedType)
+{
+  var objectType = typeof value;
+  var valid = (objectType === "object") ? (value instanceof expectedType) : (objectType === expectedType);
+  if (!valid)
+  {
+    console.log("while checking ");
+    throw TypeError("Expecting a " + expectedType + " but got " + JSON.stringify(value));
+  }
+  return true;
+}
+
 //------------ Time signature ---------------------------
 
 Signature = function()
@@ -32,6 +44,7 @@ createSequencingPosition = function(tickCount, ticksPerBeat)
 
 ticksFromPosition = function(position)
 {
+  CHECK_TYPE(position, SequencingPosition);
   var tickCount = position.beats_;
   tickCount = 4 * tickCount + position.sixteenth_;
   tickCount = tickCount * (position.ticksPerBeat_ / 4) + position.ticks_;
@@ -75,6 +88,7 @@ sixteenthCount = function(position)
 
 stringPositionToTicks = function(position, signature, ticksPerBeat)
 {
+  CHECK_TYPE(position, "string");
   var elementPosition = convertToPosition(position, signature, ticksPerBeat);
   var elementPositionInTicks = ticksFromPosition(elementPosition);
   return elementPositionInTicks;

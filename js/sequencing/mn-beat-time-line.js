@@ -80,6 +80,13 @@ subPositions = function(pos1, pos2)
   return createSequencingPosition(ticks1 - ticks2, pos1.ticksPerBeat_);
 }
 
+maxPositions = function(pos1, pos2)
+{
+  var ticks1 = ticksFromPosition(pos1);
+  var ticks2 = ticksFromPosition(pos2);
+  return createSequencingPosition(Math.max(ticks1, ticks2), pos1.ticksPerBeat_);
+}
+
 sixteenthCount = function(position)
 {
   return position.sixteenth_ + 4 * position.beats_;

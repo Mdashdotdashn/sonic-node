@@ -36,7 +36,7 @@ HarmonyEngine.prototype.rebuild = function()
 		// create chord progression
 		var chordSequence = makeChordProgression(this.rootNote_, this.scale_, this.progression_);
 		// apply desired inversion to the first chord
-		chordSequence[0].notes_ = invertChord(chordSequence[0].notes_,this.inversion_);
+		chordSequence[0].notes = invertChord(chordSequence[0].notes,this.inversion_);
 		// apply voicing
 		rectify_progression(chordSequence, this.rectificationMethod_);
 		return chordSequence;

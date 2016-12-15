@@ -30,9 +30,54 @@ createSequencingPosition = function(tickCount, ticksPerBeat)
   return position;
 }
 
+ticksFromPosition = function(position)
+{
+  var tickCount = position.beats_;
+  tickCount = 4 * tickCount + position.sixteenth_;
+  tickCount = tickCount * (position.ticksPerBeat_ / 4) + position.ticks_;
+  return tickCount;
+}
+
+comparePositions = function(pos1, pos2)
+{
+  var ticks1 = ticksFromPosition(pos1);
+  var ticks2 = ticksFromPosition(pos2);
+  if (ticks1 == ticks2) return 0;
+  return ticks1 < ticks2 ? -1 : 1;
+}
+
+addPositions = function(pos1, pos2)
+{
+  var ticks1 = ticksFromPosition(pos1);
+  var ticks2 = ticksFromPosition(pos2);
+  return createSequencingPosition(ticks1 + ticks2, pos1.ticksPerBeat_);
+}
+
+moduloPosition = function(pos1, pos2)
+{
+  var ticks1 = ticksFromPosition(pos1);
+  var ticks2 = ticksFromPosition(pos2);
+  return createSequencingPosition(ticks1 % ticks2, pos1.ticksPerBeat_);
+}
+
+subPositions = function(pos1, pos2)
+{
+  var ticks1 = ticksFromPosition(pos1);
+  var ticks2 = ticksFromPosition(pos2);
+  return createSequencingPosition(ticks1 - ticks2, pos1.ticksPerBeat_);
+}
+
 sixteenthCount = function(position)
 {
   return position.sixteenth_ + 4 * position.beats_;
+}
+
+
+stringPositionToTicks = function(position, signature, ticksPerBeat)
+{
+  var elementPosition = convertToPosition(position, signature, ticksPerBeat);
+  var elementPositionInTicks = ticksFromPosition(elementPosition);
+  return elementPositionInTicks;
 }
 
 // converts a beat string ("1.1.3.2") to a sequencing position

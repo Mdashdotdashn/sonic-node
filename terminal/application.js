@@ -77,7 +77,7 @@ Application.prototype.updateSequence = function()
 		// create chord progression
 		var chordSequence = makeChordProgression(this.rootNote_, this.scale_, this.progression_);
 		// apply desired inversion to the first chord
-		chordSequence[0].notes_ = invertChord(chordSequence[0].notes_,this.inversion_);
+		chordSequence[0].notes = invertChord(chordSequence[0].notes,this.inversion_);
 		// apply voicing
 		rectify_progression(chordSequence, this.rectificationMethod_);
 		console.log("should send chord seaquence")
@@ -91,7 +91,7 @@ Application.prototype.currentSequenceString = function()
 	var chordSequence = this.chordSequencer_.getContent();
 	chordSequence.forEach(function (chord)
 	{
-		chordnameList += chordname(chord.notes_) + ",";
+		chordnameList += chordname(chord.notes) + ",";
 	})
 	return chordnameList;*/
 }
@@ -112,7 +112,10 @@ Application.prototype.exit = function(arguments)
 Application.prototype.rebuild = function()
 {
 	var chordSequence = this.harmony_.rebuild();
-	this.engine_.setChordSequence(chordSequence);
+	if (chordSequence)
+	{
+		this.engine_.setChordSequence(chordSequence);		
+	}
 }
 
 Application.prototype.setScale = function(arguments)
@@ -127,7 +130,7 @@ Application.prototype.setScale = function(arguments)
 	scaleChordsNameList = "";
 	scaleChords.forEach(function (chord)
 	{
-		scaleChordsNameList += chordname(chord.notes_) + ",";
+		scaleChordsNameList += chordname(chord.notes) + ",";
 	})
 
 	return "Scale chords: " + scaleChordsNameList;

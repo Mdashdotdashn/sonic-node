@@ -1,16 +1,8 @@
 // Build a chord object to manipulate the content
 
-ProgressionElement = function (notes, bass)
+ProgressionElement = function (notes)
 {
-  this.notes_ = notes;
-  this.bass_ = bass;
-}
-
-// return the notes
-
-ProgressionElement.prototype.notes = function()
-{
-  return this.notes_;
+  this.notes = notes;
 }
 
 // Chord progression helper object
@@ -31,7 +23,6 @@ ChordProgression.prototype.makeChord = function(degree, alteration)
 {
   var n = this.scaleNotes_;
   var root = n[degree-1];
-  var bass = root - 24;
 
   // If there's an alteration, force it
   if (alteration && alteration.length_ != 0)
@@ -43,10 +34,10 @@ ChordProgression.prototype.makeChord = function(degree, alteration)
         current += interval;
         notes.push(current);
       })
-      return new ProgressionElement(notes, bass )
+      return new ProgressionElement(notes)
   }
   // return the default chord for the scale
-  return new ProgressionElement([n[degree-1], n[degree+1], n[degree+3]], bass);
+  return new ProgressionElement([n[degree-1], n[degree+1], n[degree+3]]);
 }
 
 // creates a chord progression from a list of scale degree

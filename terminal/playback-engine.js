@@ -33,7 +33,7 @@ ChordPlayer.prototype.tick = function(position)
       &&(step.position.ticks_ == wrapped.ticks_))
       {
         console.log("queing " + JSON.stringify(step));
-        noteQueuer.queueNotes(step.chord.notes_);
+        noteQueuer.queueNotes(step.element.notes);
       }
     })
   }
@@ -123,20 +123,20 @@ PlaybackEngine.prototype.run = function()
   this.heartbeat_.run();
 }
 
-PlaybackEngine.prototype.setChordSequence = function(chordSequence)
+PlaybackEngine.prototype.setChordSequence = function(harmonicProgression)
 {
   var currentBar = 1;
   var timeline = new Object;
   var signature = this.signature_;
 
   timeline.sequence_ = [];
-  chordSequence.forEach(function(chord)
+  harmonicProgression.forEach(function(element)
   {
     var position = new SequencingPosition(this.ticksPerBeat_);
     position.beats_ = (currentBar - 1) * signature.denominator;
     timeline.sequence_.push({
       position : position,
-      chord : chord
+      element : element
     });
     currentBar++;
   })

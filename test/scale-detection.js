@@ -17,7 +17,7 @@ function makeChordList()
 
   chordSequence.forEach(function (chord)
   {
-    chordList.push(chordname(chord.notes_));
+    chordList.push(chordname(chord.notes));
   })
   return chordList;
 }

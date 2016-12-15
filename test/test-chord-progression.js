@@ -7,18 +7,18 @@ require("../js/mn-scale.js");
 
 var sequence = [1,6];
 var progression = makeChordProgression("c3", "minor", sequence);
-assert.equal(chordname(progression[0].notes_), "cm");
-assert.equal(chordname(progression[1].notes_), "g#");
+assert.equal(chordname(progression[0].notes), "cm");
+assert.equal(chordname(progression[1].notes), "g#");
 
 var sequence = ["1","6"];
 var progression = makeChordProgression("c3", "minor", sequence);
-assert.equal(chordname(progression[0].notes_), "cm");
-assert.equal(chordname(progression[1].notes_), "g#");
+assert.equal(chordname(progression[0].notes), "cm");
+assert.equal(chordname(progression[1].notes), "g#");
 
 var sequence = ["1","5M"];
 var progression = makeChordProgression("c3", "major", sequence);
-assert.equal(chordname(progression[0].notes_), "c");
-assert.equal(chordname(progression[1].notes_), "g");
+assert.equal(chordname(progression[0].notes), "c");
+assert.equal(chordname(progression[1].notes), "g");
 
 // Rectification
 

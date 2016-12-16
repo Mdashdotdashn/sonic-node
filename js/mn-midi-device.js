@@ -43,7 +43,7 @@ var SFindMatching = function(inname, outname)
 
         output.channel_ = channel;
         output.port_ = this.outputs_[0];
-   
+
         return output;
       }
     }
@@ -103,22 +103,22 @@ NoteStream = function()
 
 util.inherits(NoteStream, EventEmitter);
 
-NoteStream.prototype.broadcast = function(note, isOn)
+NoteStream.prototype.broadcast = function(note, velocity, isOn)
 {
-  this.emit("note", {note: note, velocity:1.0, gate:isOn});
+  this.emit("note", {note: note, velocity:velocity, gate:isOn});
 }
 
-NoteStream.prototype.add = function(note, lengthInTick)
+NoteStream.prototype.add = function(note, velocity, lengthInTick)
 {
   if (this.notes_[note] === undefined)
   {
     this.notes_[note] = lengthInTick;
-    this.broadcast(note, true);
+    this.broadcast(note, velocity, true);
   }
   else
   {
-    this.broadcast(note, false);
-    this.broadcast(note, true);
+    this.broadcast(note, 0, false);
+    this.broadcast(note, velocity, true);
     var length = Math.max(this.notes_[note], lengthInTick);
     this.notes_[note] = length;
   }
@@ -130,7 +130,7 @@ NoteStream.prototype.tick = function()
   {
     if (this.notes_[note] == 0)
     {
-      this.broadcast(note, false);
+      this.broadcast(note, 0, false);
       delete this.notes_[note];
     }
     else

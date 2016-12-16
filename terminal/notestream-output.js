@@ -19,9 +19,9 @@ NoteStreamOutput = function(device, channel)
 	  });
 }
 
-NoteStreamOutput.prototype.add = function(note, lengthInTick)
+NoteStreamOutput.prototype.add = function(note, velocity, lengthInTick)
 {
-  this.noteStream_.add(note, lengthInTick);
+  this.noteStream_.add(note, velocity, lengthInTick);
 }
 
 NoteStreamOutput.prototype.tick = function()

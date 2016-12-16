@@ -81,7 +81,7 @@ Track.prototype.queueNotes = function(noteList)
   var stream = this.stream_;
         console.log("queing " + JSON.stringify(noteList));
   noteList.forEach(function(midinote) {
-       stream.add(midinote,gateLength);
+       stream.add(midinote,0.1, gateLength);
     });
 }
 //------------------------------------------------------------------------------

@@ -15,27 +15,7 @@ function testSequenceRendering(baseSequence, progression, expected)
 
   var chords = makeChordProgression(progression.root, progression.scale, progression.degrees);
 
-  // Puts one chord at every bar, making a 'harmonic structure'
-
-  var startBar = 1;
-
-  var harmonicStructure = {
-    length: 0,
-    structure: [],
-  };
-
-  chords.forEach(function(element)
-  {
-    harmonicStructure.structure.push(
-      {
-        position: ""+ startBar +".1.1",
-        element: element,
-      }
-    )
-    startBar++;
-  })
-
-  harmonicStructure.length = ""+ startBar +".1.1";
+  var harmonicStructure = createTimeline(chords, createSequencingPosition(ticksPerBeat * signature.denominator, ticksPerBeat));
 
   // render the combination
 

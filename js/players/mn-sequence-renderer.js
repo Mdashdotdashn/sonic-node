@@ -6,13 +6,13 @@ var renderSequenceWithTicks = function(harmonicStructure, baseSequence, ticksPer
 
   var harmonyIndex = 0;
   // Do all of the harmonic steps
-  while (harmonyIndex < harmonicStructure.structure.length)
+  while (harmonyIndex < harmonicStructure.sequence.length)
   {
-    var harmonyStep = harmonicStructure.structure[harmonyIndex];
+    var harmonyStep = harmonicStructure.sequence[harmonyIndex];
 
     var stepEndPosition =
-      harmonyIndex < harmonicStructure.structure.length - 1
-      ?  harmonicStructure.structure[harmonyIndex + 1].tickCount
+      harmonyIndex < harmonicStructure.sequence.length - 1
+      ?  harmonicStructure.sequence[harmonyIndex + 1].tickCount
       :  harmonicStructure.length;
 
       // At this point, we'll a new copy the base sequence and loop it until the next or final step
@@ -73,6 +73,8 @@ var renderSequenceWithTicks = function(harmonicStructure, baseSequence, ticksPer
 
 renderSequence = function(harmonicStructure, baseSequence, signature, ticksPerBeat)
 {
+  CHECK_TYPE(harmonicStructure, Timeline);
+
   // Convert base sequence to use ticks for position
   var tickBaseSequence = new Object;
   tickBaseSequence.length = stringPositionToTicks(baseSequence.length, signature, ticksPerBeat);
@@ -89,19 +91,19 @@ renderSequence = function(harmonicStructure, baseSequence, signature, ticksPerBe
 
   // Convert harmonicStructure to use ticks for position
 
-  var tickBaseStructure = new Object;
-  tickBaseStructure.length = stringPositionToTicks(harmonicStructure.length, signature, ticksPerBeat);
-  tickBaseStructure.structure = [] ;
+  var tickBasedStructure = new Object;
+  tickBasedStructure.length = ticksFromPosition(harmonicStructure.length, signature, ticksPerBeat);
+  tickBasedStructure.sequence = [] ;
 
-  harmonicStructure.structure.forEach(function(item)
+  harmonicStructure.sequence.forEach(function(item)
   {
-    tickBaseStructure.structure.push(
+    tickBasedStructure.sequence.push(
       {
-        tickCount: stringPositionToTicks(item.position, signature, ticksPerBeat),
+        tickCount: ticksFromPosition(item.position, signature, ticksPerBeat),
         element: item.element
       }
     )
   });
 
-  return renderSequenceWithTicks(tickBaseStructure, tickBaseSequence, ticksPerBeat);
+  return renderSequenceWithTicks(tickBasedStructure, tickBaseSequence, ticksPerBeat);
 }

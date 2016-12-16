@@ -3,7 +3,7 @@ HarmonyEngine = function()
 {
   this.progression_ = [];
 	this.scale_ = "major";
-	this.rootNote_ = "c3";
+	this.rootNote_ = "c4";
 	this.inversion_ = -2;
 	this.rectificationMethod_ = 1;
 }
@@ -11,7 +11,7 @@ HarmonyEngine = function()
 HarmonyEngine.prototype.setScale = function(scale, rootNote)
 {
   this.scale_ = scale;
-  this.rootNote_ = rootNote;
+  this.rootNote_ = rootNote+"4";
 }
 
 HarmonyEngine.prototype.setRectification = function(rectificationMethod)

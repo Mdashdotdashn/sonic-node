@@ -114,19 +114,19 @@ Application.prototype.rebuild = function()
 	var chordSequence = this.harmony_.rebuild();
 	if (chordSequence)
 	{
-		this.engine_.setChordSequence(chordSequence);		
+		this.engine_.setChordSequence(chordSequence);
 	}
 }
 
 Application.prototype.setScale = function(arguments)
 {
 	var scale = arguments.scale;
-	var rootNote = arguments.root+"3";
+	var rootNote = arguments.root;
 	this.harmony_.setScale(scale, rootNote);
 
 	this.rebuild();
 
-	var scaleChords = makeChordProgression(rootNote, scale, [1,2,3,4,5,6,7]);
+	var scaleChords = makeChordProgression(rootNote+"4", scale, [1,2,3,4,5,6,7]);
 	scaleChordsNameList = "";
 	scaleChords.forEach(function (chord)
 	{

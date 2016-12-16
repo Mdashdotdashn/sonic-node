@@ -32,7 +32,16 @@ ChordPlayer.prototype.tick = function(position)
       &&(step.position.sixteenth_ == wrapped.sixteenth_)
       &&(step.position.ticks_ == wrapped.ticks_))
       {
-        noteQueuer.queueNotes(step.element.voiced);
+        var packet = [];
+        var index = 0;
+        var offset = 0;
+        step.element.voiced.forEach(function(pitch){
+          var velocity = 1 - (0.2 * index) + offset;
+          packet.push({ pitch: pitch, velocity: velocity});
+          offset = Math.random() / 12;
+          index++;
+        })
+        noteQueuer.queueNotes(packet);
       }
     })
   }
@@ -80,8 +89,8 @@ Track.prototype.queueNotes = function(noteList)
   var gateLength = 24 * 2;
   var stream = this.stream_;
         console.log("queing " + JSON.stringify(noteList));
-  noteList.forEach(function(midinote) {
-       stream.add(midinote,0.1, gateLength);
+  noteList.forEach(function(note) {
+       stream.add(note.pitch, note.velocity, gateLength);
     });
 }
 //------------------------------------------------------------------------------

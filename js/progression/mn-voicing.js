@@ -42,7 +42,7 @@ var rectify_progression_sequential = function(sequence)
 {
   for (var i = 0; i < sequence.length-1; i++)
   {
-    sequence[i+1].notes = rectify_closest(sequence[i].notes,sequence[i+1].notes);
+    sequence[i+1].voiced = rectify_closest(sequence[i].notes,sequence[i+1].notes);
   }
 }
 
@@ -50,7 +50,7 @@ var rectify_progression_to_first = function(sequence)
 {
   for (var i = 0; i < sequence.length-1; i++)
   {
-    sequence[i+1].notes = rectify_closest(sequence[0].notes,sequence[i+1].notes);
+    sequence[i+1].voiced = rectify_closest(sequence[0].notes,sequence[i+1].notes);
   }
 }
 
@@ -59,15 +59,15 @@ var rectify_progression_inwards = function(sequence)
   var leftIndex = 1;
   var rightIndex = sequence.length -1;
 
-  sequence[rightIndex].notes = rectify_closest(sequence[0].notes, sequence[rightIndex].notes);
+  sequence[rightIndex].voiced = rectify_closest(sequence[0].notes, sequence[rightIndex].notes);
   rightIndex--;
 
   while (leftIndex < rightIndex)
   {
-    sequence[leftIndex].notes = rectify_closest(sequence[leftIndex -1].notes, sequence[leftIndex].notes);
+    sequence[leftIndex].voiced = rectify_closest(sequence[leftIndex -1].notes, sequence[leftIndex].notes);
     if (rightIndex > leftIndex)
     {
-      sequence[rightIndex].notes = rectify_closest(sequence[rightIndex+1].notes, sequence[rightIndex].notes);
+      sequence[rightIndex].voiced = rectify_closest(sequence[rightIndex+1].notes, sequence[rightIndex].notes);
     }
     rightIndex--;
     leftIndex++;
@@ -76,6 +76,10 @@ var rectify_progression_inwards = function(sequence)
 
 rectify_progression = function(sequence, mode)
 {
+  sequence.forEach(function(element){
+    element.voiced = element.notes.slice(); // to make a copy
+  });
+
   switch(mode)
   {
     case 0:

@@ -32,8 +32,7 @@ ChordPlayer.prototype.tick = function(position)
       &&(step.position.sixteenth_ == wrapped.sixteenth_)
       &&(step.position.ticks_ == wrapped.ticks_))
       {
-        console.log("queing " + JSON.stringify(step));
-        noteQueuer.queueNotes(step.element.notes);
+        noteQueuer.queueNotes(step.element.voiced);
       }
     })
   }
@@ -80,7 +79,7 @@ Track.prototype.queueNotes = function(noteList)
 {
   var gateLength = 24 * 2;
   var stream = this.stream_;
-
+        console.log("queing " + JSON.stringify(noteList));
   noteList.forEach(function(midinote) {
        stream.add(midinote,gateLength);
     });

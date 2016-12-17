@@ -36,10 +36,13 @@ var renderSequenceWithTicks = function(harmonicStructure, baseSequence, ticksPer
             notes: []
           }
 
-        sequenceStep.degrees.forEach(function(degree){
+        sequenceStep.degrees.forEach(function(degreeElement){
+          var isNumber = typeof degreeElement == "number";
+          var degree = isNumber ? degreeElement : degreeElement.d;
+          var transpose = isNumber ? 0 : degreeElement.t;
           if (degree <= notes.length)
           {
-            step.notes.push(notes[degree-1])
+            step.notes.push(notes[degree-1] + transpose)
           }
         })
 

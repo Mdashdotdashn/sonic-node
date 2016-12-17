@@ -29,7 +29,6 @@ function testSequenceRendering(baseSequence, progression, expected)
   {
     element.position = convertToPosition(element.position, signature, ticksPerBeat)
   });
-
   assert.deepEqual(rendered, expected);
 }
 
@@ -39,7 +38,7 @@ var baseSequence = {
     length : "1.4.1",
     sequence:
       [
-        { position: "1.1.1", degrees: [1,2]},
+        { position: "1.1.1", degrees: [{d:1, t:-12}, 1,2]},
         { position: "1.2.1", degrees: [2]},
         { position: "1.3.1", degrees: [3,1]},
       ]
@@ -55,14 +54,14 @@ var expected = {
   length: "3.1.1",
   sequence:
     [
-      { position: "1.1.1", notes: [48, 52]},
+      { position: "1.1.1", notes: [36, 48, 52]},
       { position: "1.2.1", notes: [52]},
       { position: "1.3.1", notes: [55, 48]},
-      { position: "1.4.1", notes: [48, 52]},
-      { position: "2.1.1", notes: [55, 59]},
+      { position: "1.4.1", notes: [36, 48, 52]},
+      { position: "2.1.1", notes: [43, 55, 59]},
       { position: "2.2.1", notes: [59]},
       { position: "2.3.1", notes: [62, 55]},
-      { position: "2.4.1", notes: [55, 59]},
+      { position: "2.4.1", notes: [43, 55, 59]},
     ]
 }
 

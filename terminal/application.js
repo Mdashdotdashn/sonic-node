@@ -41,6 +41,7 @@ var Application = function()
 	});
 
 	this.publisher_ = new Publisher();
+	this.currentSequence_ = null;
 }
 
 // Init merely sets up the data and parameters
@@ -87,13 +88,13 @@ Application.prototype.updateSequence = function()
 
 Application.prototype.currentSequenceString = function()
 {
-/*	var chordnameList = "Chord sequence: ";
-	var chordSequence = this.chordSequencer_.getContent();
+	var chordnameList = "Chord sequence: ";
+	var chordSequence = this.chordSequence_;
 	chordSequence.forEach(function (chord)
 	{
 		chordnameList += chordname(chord.notes) + ",";
 	})
-	return chordnameList;*/
+	return chordnameList;
 }
 
 Application.prototype.parse = function(command)
@@ -116,6 +117,7 @@ Application.prototype.rebuild = function()
 	{
 		this.engine_.setChordSequence(chordSequence);
 	}
+	this.chordSequence_ = chordSequence;
 }
 
 Application.prototype.setScale = function(arguments)

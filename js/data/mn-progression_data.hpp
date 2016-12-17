@@ -33,5 +33,10 @@
       mode: "minor",
       progression: "1,3,7,1,7,5,1,1",
       origin: "dolly parton - jolene"
+    },
+    {
+      mode: "dorian",
+      progression: "1,5,1,5,1,5,3,4,7,7",
+      origin: "beatles - and I love her"
     }
 }

@@ -6,17 +6,16 @@ require("../js/mn-scale.js");
 
 var assert = require("assert");
 
-function testSequenceRendering(baseSequence, progression, expected)
+function testSequenceRendering(signature, baseSequence, progression, expected)
 {
-  var signature = new Signature;
   var ticksPerBeat = kTicksPerBeats;
 
   // Build the basic chord structure
 
   var chords = makeChordProgression(progression.root, progression.scale, progression.degrees);
 
-  var harmonicStructure = createTimeline(chords, createSequencingPosition(ticksPerBeat * signature.denominator, ticksPerBeat));
-  var length = createSequencingPosition(chords.length * ticksPerBeat * signature.denominator, ticksPerBeat);
+  var harmonicStructure = createTimeline(chords, createSequencingPosition(ticksPerBeat * signature.numerator, ticksPerBeat));
+  var length = createSequencingPosition(chords.length * ticksPerBeat * signature.numerator, ticksPerBeat);
   harmonicStructure.setLength(length);
   // render the combination
 
@@ -29,6 +28,8 @@ function testSequenceRendering(baseSequence, progression, expected)
   {
     element.position = convertToPosition(element.position, signature, ticksPerBeat)
   });
+//  console.log(">>>" + JSON.stringify(rendered,null ,2));
+//  console.log("<<<" + JSON.stringify(expected,null ,2));
   assert.deepEqual(rendered, expected);
 }
 
@@ -65,4 +66,21 @@ var expected = {
     ]
 }
 
-testSequenceRendering(baseSequence, progression, expected);
+var signature = new Signature;
+testSequenceRendering(signature, baseSequence, progression, expected);
+
+signature.numerator = 3;
+var expectedOn3_4 = {
+  length: "3.1.1",
+  sequence:
+    [
+      { position: "1.1.1", notes: [36, 48, 52]},
+      { position: "1.2.1", notes: [52]},
+      { position: "1.3.1", notes: [55, 48]},
+      { position: "2.1.1", notes: [43, 55, 59]},
+      { position: "2.2.1", notes: [59]},
+      { position: "2.3.1", notes: [62, 55]},
+    ]
+}
+
+testSequenceRendering(signature, baseSequence, progression, expectedOn3_4);

@@ -30,23 +30,18 @@ Timeline = function(ticksPerBeat)
   this.sequence = [];
 }
 
-Timeline.prototype.add = function(element, position,  duration)
+Timeline.prototype.add = function(element, position)
 {
   CHECK_TYPE(position, SequencingPosition);
-  CHECK_TYPE(duration, SequencingPosition);
   this.sequence.push({
     position: position,
     element: element,
-    duration: duration
   })
-
-  var elementEnd = addPositions(position,duration);
-  this.length = maxPositions(this.length, elementEnd);
 }
 
 Timeline.prototype.setLength = function(length)
 {
-  CHECK_TYPE(position, length);
+  CHECK_TYPE(length, SequencingPosition);
   this.length = length;
 }
 
@@ -59,7 +54,7 @@ createTimeline = function(elements, positionOffset)
   var timeline = new Timeline(ticksPerBeat);
 
   elements.forEach(function(element){
-    timeline.add(element, current, positionOffset);
+    timeline.add(element, current);
     current = addPositions(current, positionOffset);
   })
 

@@ -16,7 +16,8 @@ function testSequenceRendering(baseSequence, progression, expected)
   var chords = makeChordProgression(progression.root, progression.scale, progression.degrees);
 
   var harmonicStructure = createTimeline(chords, createSequencingPosition(ticksPerBeat * signature.denominator, ticksPerBeat));
-
+  var length = createSequencingPosition(chords.length * ticksPerBeat * signature.denominator, ticksPerBeat);
+  harmonicStructure.setLength(length);
   // render the combination
 
   var rendered = renderSequence(harmonicStructure, baseSequence, signature, ticksPerBeat);

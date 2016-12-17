@@ -94,22 +94,24 @@ PlaybackEngine.prototype.run = function()
 
 PlaybackEngine.prototype.setChordSequence = function(harmonicProgression)
 {
-  var currentBar = 1;
-  var timeline = new Object;
-  var signature = this.signature_;
+  // build a timeline
 
-  timeline.sequence_ = [];
+  var currentBar = 0;
+  var timeline = new Timeline;
+  var signature = this.signature_;
+  var ticksPerBeat = this.ticksPerBeat_;
+
+  var ticksPerBar = ticksPerBeat * signature.numerator;
+
   harmonicProgression.forEach(function(element)
   {
-    var position = new SequencingPosition(this.ticksPerBeat_);
-    position.beats_ = (currentBar - 1) * signature.denominator;
-    timeline.sequence_.push({
-      position : position,
-      element : element
-    });
+    var position = createSequencingPosition(currentBar * ticksPerBar, ticksPerBeat);
+    timeline.add(element,position);
     currentBar++;
   })
-  timeline.length_ = (currentBar - 1) * signature.denominator;
+  timeline.setLength (createSequencingPosition(currentBar * ticksPerBar, ticksPerBeat));
+
+  // send to all tracks
   this.tracks_.forEach(function(track){
     track.render(timeline);
   })
@@ -127,4 +129,9 @@ PlaybackEngine.prototype.tick = function(position)
   this.tracks_.forEach(function(track){
     track.tick(position);
   })
+}
+
+PlaybackEngine.prototype.setSignature = function(signature)
+{
+  this.signature_ = signature;
 }

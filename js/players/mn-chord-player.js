@@ -11,7 +11,7 @@ ChordPlayer.prototype.init = function(noteQueuer)
 
 ChordPlayer.prototype.render = function(timeline)
 {
-//  CHECK_TYPE(timeline, Timeline);
+  CHECK_TYPE(timeline, Timeline);
   this.timeline_ = timeline;
 }
 
@@ -19,11 +19,9 @@ ChordPlayer.prototype.tick = function(position)
 {
   if (this.timeline_)
   {
-    var wrapped = position;
-    wrapped.beats_ %= this.timeline_.length_;
+    var wrapped = moduloPosition(position, this.timeline_.length);
     var noteQueuer = this.noteQueuer_;
-
-    this.timeline_.sequence_.forEach(function(step){
+    this.timeline_.sequence.forEach(function(step){
       if ((step.position.beats_ == wrapped.beats_)
       &&(step.position.sixteenth_ == wrapped.sixteenth_)
       &&(step.position.ticks_ == wrapped.ticks_))

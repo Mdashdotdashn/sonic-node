@@ -166,8 +166,11 @@ Application.prototype.analyseChords = function(argument)
 
 Application.prototype.setSignature = function(arguments)
 {
-	this.signature_.numerator = arguments.numerator;
-	this.signature_.denominator =  arguments.denominator;
+	var signature = new Signature();
+	signature.numerator = arguments.numerator;
+	signature.denominator =  arguments.denominator;
+	engine.setSignature(signature);
+	rebuild();
 	return "";
 }
 

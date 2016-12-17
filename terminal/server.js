@@ -89,7 +89,8 @@ Server.prototype.init = function(application)
             }
             catch(err)
             {
-                console.log(err)
+                console.log(err);
+                console.log(err.stack);
                 response = { reply: "*error*: " + err.message };
             }
             reply(response);

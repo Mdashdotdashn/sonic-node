@@ -71,21 +71,6 @@ Application.prototype.start = function()
 	this.engine_.run();
 }
 
-Application.prototype.updateSequence = function()
-{
-	if (this.progression_.length != 0)
-	{
-		// create chord progression
-		var chordSequence = makeChordProgression(this.rootNote_, this.scale_, this.progression_);
-		// apply desired inversion to the first chord
-		chordSequence[0].notes = invertChord(chordSequence[0].notes,this.inversion_);
-		// apply voicing
-		rectify_progression(chordSequence, this.rectificationMethod_);
-		console.log("should send chord seaquence")
-		this.chordSequencer_.setContent(chordSequence);
-	}
-}
-
 Application.prototype.currentSequenceString = function()
 {
 	var chordnameList = "Chord sequence: ";

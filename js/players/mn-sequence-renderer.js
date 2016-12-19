@@ -1,7 +1,6 @@
 var renderSequenceWithTicks = function(harmonicStructure, baseSequence, ticksPerBeat)
 {
   var result = new Object;
-  lo(harmonicStructure);
   result.length = createSequencingPosition(harmonicStructure.length, ticksPerBeat);
   result.sequence = [];
 
@@ -78,7 +77,6 @@ var renderSequenceWithTicks = function(harmonicStructure, baseSequence, ticksPer
 renderSequence = function(harmonicStructure, baseSequence, signature, ticksPerBeat)
 {
   CHECK_TYPE(harmonicStructure, Timeline);
-lo(baseSequence);
   // Convert base sequence to use ticks for position
   var tickBaseSequence = new Object;
   tickBaseSequence.length = stringPositionToTicks(baseSequence.length, signature, ticksPerBeat);

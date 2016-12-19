@@ -5,11 +5,19 @@ if ( global.v8debug) {
 }
 
 var app = require('./application.js');
+
+var devices =
+{
+	dar: "iac",
+	win: "microsoft",
+	lin: "through"
+}
+
+var platformKey = process.platform.substring(0, 3);
+
+
 app.init({
-// device: "through" // Linux
-// device: "microsoft" // Windows
-// device: "loop" // Windows 2
- device: "iac" // Mac
+ device: devices[platformKey]
 });
 
 const server = require('./server.js');

@@ -21,14 +21,13 @@ util.inherits(Heartbeat, EventEmitter);
 Heartbeat.prototype.setTempo = function(tempo)
 {
   this.tempo_ = tempo;
+  this.updateTimer();
 }
 
 Heartbeat.prototype.run = function()
 {
-  var interval = '' + 60000./this.tempo_/this.clockTicksPerBeat_ +'m';
   this.tickCount_ = 0;
-  this.timer_.setInterval(function(hb)
-    { hb.emit("tick", hb.tickCount_++);}, [this], interval);
+  this.updateTimer();
 }
 
 Heartbeat.prototype.connect = function(target)
@@ -49,4 +48,12 @@ Heartbeat.prototype.connect = function(target)
 Heartbeat.prototype.ticksPerBeat = function()
 {
   return this.clockTicksPerBeat_;
+}
+
+Heartbeat.prototype.updateTimer = function()
+{
+  var interval = '' + 60000./this.tempo_/this.clockTicksPerBeat_ +'m';
+  this.timer_.clearInterval();
+  this.timer_.setInterval(function(hb)
+    { hb.emit("tick", hb.tickCount_++);}, [this], interval);
 }

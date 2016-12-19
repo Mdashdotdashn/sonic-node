@@ -174,6 +174,11 @@ Application.prototype.setSignature = function(arguments)
 	return "";
 }
 
+Application.prototype.setTempo = function(arguments)
+{
+	this.engine_.setTempo(arguments.tempo);
+}
+
 Application.prototype.debug = function(arguments)
 {
 	console.log(this);

@@ -172,7 +172,11 @@ analyse
   = "analyze"i	space* a:analysis
 	{ return a;}
 
+tempo
+  = "tempo"i space* t:positive_integer
+	{ return { method: "setTempo", arguments: {tempo: t}}}
+
 //----------------------- Main
 
 command
-  = chord_progression / exit / scale / debug / resolution / clear / inversion / rectify / analyse / signature
+  = chord_progression / exit / scale / debug / resolution / clear / inversion / rectify / analyse / signature / tempo

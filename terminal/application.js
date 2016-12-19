@@ -169,8 +169,8 @@ Application.prototype.setSignature = function(arguments)
 	var signature = new Signature();
 	signature.numerator = arguments.numerator;
 	signature.denominator =  arguments.denominator;
-	engine.setSignature(signature);
-	rebuild();
+	this.engine_.setSignature(signature);
+	this.rebuild();
 	return "";
 }
 

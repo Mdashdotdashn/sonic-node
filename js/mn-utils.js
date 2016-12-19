@@ -23,3 +23,7 @@ Array.prototype.rotate = function(count)
         return copy;
   };
 
+lo = function(o)
+{
+  console.log(JSON.stringify(o, null,2));
+}

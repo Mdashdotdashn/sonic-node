@@ -75,7 +75,21 @@ PlaybackEngine.prototype.init = function(deviceName)
       track.init(device, i);
       this.tracks_.push(track);
     }
-    this.tracks_[0].setPlayer(new ChordPlayer());
+    var player = new SequencePlayer(this.signature_, this.ticksPerBeat_);
+    var baseSequence = {
+        length : "1.4.1",
+        sequence:
+          [
+            { position: "1.1.1", degrees: [{d:1, t:-12}, 1,2]},
+            { position: "1.1.3", degrees: [{d:1, t:-12}]},
+            { position: "1.2.1", degrees: [2]},
+            { position: "1.2.3", degrees: [{d:1, t:-12}]},
+            { position: "1.3.1", degrees: [3,1]},
+            { position: "1.3.3", degrees: [{d:1, t:-12}]},
+          ]
+        }
+    player.setSequence(baseSequence);
+    this.tracks_[0].setPlayer(player);
   }
 
 

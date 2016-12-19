@@ -15,16 +15,17 @@ util.inherits(EventSequence, EventEmitter);
 //   value: anything
 // }
 
-EventSequence.prototype.setContent = function(eventList, sequenceLengthInBars)
+EventSequence.prototype.setContent = function(eventList, sequenceLength)
 {
+  CHECK_TYPE(sequenceLength, SequencingPosition);
+
   this.eventList_ = eventList;
-  this.sequenceLength_ = sequenceLengthInBars * 4;
+  this.sequenceLength_ = sequenceLength;
 }
 
 EventSequence.prototype.tick = function(position)
 {
-  var needle = position;
-  needle.beats_ = position.beats_ % this.sequenceLength_;
+  var needle = moduloPosition(position, this.sequenceLength_);
   var emitter = this;
 
   this.eventList_.forEach(function(e)

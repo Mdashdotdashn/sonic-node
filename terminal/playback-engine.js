@@ -65,17 +65,30 @@ PlaybackEngine.prototype.init = function(deviceName)
     }
     var player = new SequencePlayer(this.signature_, this.ticksPerBeat_);
     var baseSequence = {
-        length : "1.4.1",
+        length : "3.1.1",
         sequence:
           [
-            { position: "1.1.1", degrees: [{d:1, t:-12}]},
-            { position: "1.1.3", degrees: [1]},
-            { position: "1.2.1", degrees: [2]},
-            { position: "1.2.3", degrees: [1]},
+            { position: "1.1.1", degrees: [1]},
+            { position: "1.2.3", degrees: [3]},
             { position: "1.3.1", degrees: [3]},
-            { position: "1.3.3.4", degrees: [3]},
+            { position: "1.4.3", degrees: [1]},
+            { position: "2.1.3", degrees: [1]},
+            { position: "2.2.3", degrees: [3]},
+            { position: "2.3.1", degrees: [3]},
           ]
         }
+//    var baseSequence = {
+//        length : "1.4.1",
+//        sequence:
+//          [
+//            { position: "1.1.1", degrees: [{d:1, t:-12}]},
+//            { position: "1.1.3", degrees: [1]},
+//            { position: "1.2.1", degrees: [2]},
+//            { position: "1.2.3", degrees: [1]},
+//            { position: "1.3.1", degrees: [3]},
+//            { position: "1.3.3.4", degrees: [3]},
+//          ]
+//        }
     player.setSequence(baseSequence);
     this.tracks_[0].setPlayer(player);
   }

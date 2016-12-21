@@ -43,7 +43,7 @@ Track.prototype.render = function(timeline)
 
 Track.prototype.queueNotes = function(noteList)
 {
-  var gateLength = 24 * 2;
+  var gateLength = 4;
   var stream = this.stream_;
 //        console.log("queing " + JSON.stringify(noteList));
   noteList.forEach(function(note) {

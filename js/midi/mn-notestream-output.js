@@ -1,3 +1,9 @@
+NoteData = function(pitch, velocity, length)
+{
+  this.pitch = pitch;
+  this.velocity = velocity;
+  this.length = length;
+}
 
 NoteStreamOutput = function(device, channel)
 {
@@ -5,6 +11,7 @@ NoteStreamOutput = function(device, channel)
   this.noteStream_ = new NoteStream();
 
   var output = this.output_;
+
   this.noteStream_.connect(function(noteEvent)
 	  {
       if (noteEvent.gate)
@@ -18,9 +25,10 @@ NoteStreamOutput = function(device, channel)
 	  });
 }
 
-NoteStreamOutput.prototype.add = function(note, velocity, lengthInTick)
+NoteStreamOutput.prototype.add = function(data)
 {
-  this.noteStream_.add(note, velocity, lengthInTick);
+  CHECK_TYPE(data, NoteData);
+  this.noteStream_.add(data.pitch, data.velocity, data.length);
 }
 
 NoteStreamOutput.prototype.tick = function()

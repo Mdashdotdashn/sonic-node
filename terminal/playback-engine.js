@@ -17,7 +17,7 @@ Track.prototype.init = function(device, channel)
 
 Track.prototype.setPlayer = function(player)
 {
-  player.init(this);
+  player.init(this.stream_);
   this.player_ = player;
 }
 
@@ -38,16 +38,6 @@ Track.prototype.render = function(timeline)
     }
 }
 
-// Note evnet has a pitck, (velocity) and legnth
-
-Track.prototype.queueNotes = function(noteList)
-{
-  var stream = this.stream_;
-//        console.log("queing " + JSON.stringify(noteList));
-  noteList.forEach(function(note) {
-       stream.add(note.pitch, note.velocity, note.length);
-    });
-}
 //------------------------------------------------------------------------------
 
 PlaybackEngine = function()

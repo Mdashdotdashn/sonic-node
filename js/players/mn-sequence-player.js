@@ -9,17 +9,15 @@ SequencePlayer = function(signature, ticksPerBeat)
   this.noteQueuer_ = null;
 }
 
-SequencePlayer.prototype.init = function(noteQueuer)
+SequencePlayer.prototype.init = function(noteStream)
 {
-  this.noteQueuer_ = noteQueuer;
+  this.noteStream_ = noteStream;
   this.eventSequence_.connect(function(event){
     // At this point, we recieve note pitches
-    var packet = [];
     event.forEach(function(pitch) {
       var velocity = 1;
-      packet.push({ pitch: pitch, velocity: velocity, length : 4});
+      noteStream.add(new NoteData(pitch, velocity, 4));
     });
-    noteQueuer.queueNotes(packet);
   });
 }
 

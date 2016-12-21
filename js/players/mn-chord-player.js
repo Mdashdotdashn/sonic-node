@@ -31,7 +31,7 @@ ChordPlayer.prototype.tick = function(position)
         var offset = 0;
         step.element.voiced.forEach(function(pitch){
           var velocity = 1 - (0.2 * index) + offset;
-          packet.push({ pitch: pitch, velocity: velocity});
+          packet.push({ pitch: pitch, velocity: velocity, length: 4});
           offset = Math.random() / 12;
           index++;
         })

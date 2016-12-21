@@ -17,7 +17,7 @@ SequencePlayer.prototype.init = function(noteQueuer)
     var packet = [];
     event.forEach(function(pitch) {
       var velocity = 1;
-      packet.push({ pitch: pitch, velocity: velocity});
+      packet.push({ pitch: pitch, velocity: velocity, length : 4});
     });
     noteQueuer.queueNotes(packet);
   });

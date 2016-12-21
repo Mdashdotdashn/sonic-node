@@ -1,4 +1,3 @@
-require("../js/mn-midi-device.js")
 
 NoteStreamOutput = function(device, channel)
 {

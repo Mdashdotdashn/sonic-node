@@ -1,5 +1,4 @@
-require("./notestream-output.js")
-require("../js/mn-midi-device.js");
+require("../js/midi/midi.js")
 require("../js/sequencing/sequencing.js");
 require("../js/players/players.js");
 
@@ -43,11 +42,10 @@ Track.prototype.render = function(timeline)
 
 Track.prototype.queueNotes = function(noteList)
 {
-  var gateLength = 4;
   var stream = this.stream_;
 //        console.log("queing " + JSON.stringify(noteList));
   noteList.forEach(function(note) {
-       stream.add(note.pitch, note.velocity, gateLength);
+       stream.add(note.pitch, note.velocity, note.length);
     });
 }
 //------------------------------------------------------------------------------

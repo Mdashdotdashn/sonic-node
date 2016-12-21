@@ -98,10 +98,7 @@ Application.prototype.exit = function(arguments)
 Application.prototype.rebuild = function()
 {
 	var chordSequence = this.harmony_.rebuild();
-	if (chordSequence)
-	{
-		this.engine_.setChordSequence(chordSequence);
-	}
+	this.engine_.setChordSequence(chordSequence);
 	this.chordSequence_ = chordSequence;
 }
 

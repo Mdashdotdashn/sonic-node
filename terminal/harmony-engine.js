@@ -41,4 +41,5 @@ HarmonyEngine.prototype.rebuild = function()
 		rectify_progression(chordSequence, this.rectificationMethod_);
 		return chordSequence;
   }
+  return [];
 }

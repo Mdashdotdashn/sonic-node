@@ -106,10 +106,9 @@ PlaybackEngine.prototype.setChordSequence = function(harmonicProgression)
   })
 }
 
-PlaybackEngine.prototype.setCurrentSequence = function(sequence)
+PlaybackEngine.prototype.getPlayer = function(index)
 {
-  var currentTrack = 0;
-  this.tracks_[0].player_.setSequence(sequence);
+  return this.tracks_[index].player_;
 }
 
 PlaybackEngine.prototype.tick = function(position)

@@ -65,6 +65,7 @@ Application.prototype.init = function(options) {
 	this.harmony_ = new HarmonyEngine();
 
 	this.sequenceLoader_ = new SequenceLoader();
+	this.selectedPlayerIndex_ = 0;
 };
 
 Application.prototype.start = function()
@@ -188,7 +189,7 @@ Application.prototype.loadSequence = function(arguments)
 	var baseSequence = this.sequenceLoader_.load(arguments.name);
 	if (baseSequence)
 	{
-		this.engine_.setCurrentSequence(baseSequence);
+		this.engine_.getPlayer(this.selectedPlayerIndex_).setSequence(baseSequence);
 		return "done."
 	}
 	return "sequence ''"+arguments.name+"' not found.";

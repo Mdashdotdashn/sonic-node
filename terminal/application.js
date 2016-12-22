@@ -63,6 +63,8 @@ Application.prototype.init = function(options) {
 	this.engine_.init(parameters.device)
 
 	this.harmony_ = new HarmonyEngine();
+
+	this.sequenceLoader_ = new SequenceLoader();
 };
 
 Application.prototype.start = function()
@@ -180,4 +182,21 @@ Application.prototype.debug = function(arguments)
 {
 	console.log(this);
 }
+
+Application.prototype.loadSequence = function(arguments)
+{
+	var baseSequence = this.sequenceLoader_.load(arguments.name);
+	if (baseSequence)
+	{
+		this.engine_.setCurrentSequence(baseSequence);
+		return "done."
+	}
+	return "sequence ''"+arguments.name+"' not found.";
+}
+
+Application.prototype.listSequences = function(arguments)
+{
+	return this.sequenceLoader_.listSequences();
+}
+
 module.exports = new Application();

@@ -39,7 +39,7 @@ integer
 
 space = " ";
 
-word = chars:[a-z_A-Z]+
+word = chars:[a-z_\-A-Z0-9]+
   { return chars.join(""); }
 
 comma = space* "," space*;
@@ -176,7 +176,17 @@ tempo
   = "tempo"i space* t:positive_integer
 	{ return { method: "setTempo", arguments: {tempo: t}}}
 
+sequence_action
+	= "load"i space* n:word
+	{ return { method: "loadSequence", arguments: {name: n}} }
+	/ "list"i
+	{ return {method: "listSequences", arguments: {}} }
+
+sequence
+  = "sequence"i space* a:sequence_action
+	{ return a};
+
 //----------------------- Main
 
 command
-  = chord_progression / exit / scale / debug / resolution / clear / inversion / rectify / analyse / signature / tempo
+  = chord_progression / exit / scale / debug / resolution / clear / inversion / rectify / analyse / signature / tempo / sequence

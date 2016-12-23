@@ -29,14 +29,19 @@
     progression: "1,4,6,57",
     origin: "amy whinehouse - back to black"
   },
-    {
-      mode: "minor",
-      progression: "1,3,7,1,7,5,1,1",
-      origin: "dolly parton - jolene"
-    },
-    {
-      mode: "dorian",
-      progression: "1,5,1,5,1,5,3,4,7,7",
-      origin: "beatles - and I love her"
-    }
+  {
+    mode: "minor",
+    progression: "1,3,7,1,7,5,1,1",
+    origin: "dolly parton - jolene"
+  },
+  {
+    mode: "dorian",
+    progression: "1,5,1,5,1,5,3,4,7,7",
+    origin: "beatles - and I love her"
+  },
+  {
+    mode: "major",
+    progression: "1,3,5,5",
+    origin: "queen of the stone age - go with the flow"
+  }
 }

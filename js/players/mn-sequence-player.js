@@ -6,21 +6,28 @@ SequencePlayer = function(signature, ticksPerBeat)
   this.ticksPerBeat_ = ticksPerBeat;
   this.eventSequence_ = new EventSequence();
   this.baseSequence_ = null;
-  this.noteQueuer_ = null;
+  this.transpose_ = 0;
 }
 
 SequencePlayer.prototype.init = function(noteStream)
 {
   this.noteStream_ = noteStream;
-  this.eventSequence_.connect(function(event){
-    // At this point, we recieve note pitches
-    event.forEach(function(pitch) {
-      var velocity = 1;
-      noteStream.add(new NoteData(pitch, velocity, 4));
-    });
-  });
+  this.eventSequence_.connect(this);
 }
 
+
+SequencePlayer.prototype.onEvent = function(event)
+{
+  var transpose = this.transpose_;
+  var noteStream = this.noteStream_;
+
+  // At this point, we recieve note pitches
+  event.forEach(function(pitch) {
+    var velocity = 1;
+    noteStream.add(new NoteData(pitch + transpose, velocity, 4));
+  });
+
+}
 SequencePlayer.prototype.render = function(timeline)
 {
   CHECK_TYPE(timeline, Timeline);
@@ -32,6 +39,11 @@ SequencePlayer.prototype.setSequence = function(sequence)
 {
   this.baseSequence_ = sequence;
   this.rebuild();
+}
+
+SequencePlayer.prototype.transpose = function(value)
+{
+  this.transpose_ += value;
 }
 
 SequencePlayer.prototype.tick = function(position)

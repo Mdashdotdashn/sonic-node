@@ -189,12 +189,17 @@ Application.prototype.selectPlayer = function(arguments)
 	this.selectedPlayerIndex_ = arguments.value - 1;
 }
 
+Application.prototype.transpose = function(arguments)
+{
+	var player = this.engine_.getPlayer(this.selectedPlayerIndex_);
+	player.transpose(parseInt(arguments.value));
+}
+
 Application.prototype.loadSequence = function(arguments)
 {
 	var baseSequence = this.sequenceLoader_.load(arguments.name);
 	if (baseSequence)
 	{
-		console.log(this.selectedPlayerIndex_);
 		var player = this.engine_.getPlayer(this.selectedPlayerIndex_);
 		CHECK_TYPE(player, SequencePlayer);
 		player.setSequence(baseSequence);

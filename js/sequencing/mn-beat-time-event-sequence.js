@@ -49,7 +49,8 @@ EventSequence.prototype.connect = function(target)
   {
     this.on("tick", function(noteList)
       {
-        target.tick(noteList);
+        console.log(target);
+        target.onEvent(noteList);
       });
   }
 }

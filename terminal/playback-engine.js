@@ -61,10 +61,10 @@ PlaybackEngine.prototype.init = function(deviceName)
     {
       var track = new Track();
       track.init(device, i);
+      var player = new SequencePlayer(this.signature_, this.ticksPerBeat_);
+      track.setPlayer(player);
       this.tracks_.push(track);
     }
-    var player = new SequencePlayer(this.signature_, this.ticksPerBeat_);
-    this.tracks_[0].setPlayer(player);
   }
 
 

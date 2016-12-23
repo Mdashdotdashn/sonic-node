@@ -184,12 +184,20 @@ Application.prototype.debug = function(arguments)
 	console.log(this);
 }
 
+Application.prototype.selectPlayer = function(arguments)
+{
+	this.selectedPlayerIndex_ = arguments.value - 1;
+}
+
 Application.prototype.loadSequence = function(arguments)
 {
 	var baseSequence = this.sequenceLoader_.load(arguments.name);
 	if (baseSequence)
 	{
-		this.engine_.getPlayer(this.selectedPlayerIndex_).setSequence(baseSequence);
+		console.log(this.selectedPlayerIndex_);
+		var player = this.engine_.getPlayer(this.selectedPlayerIndex_);
+		CHECK_TYPE(player, SequencePlayer);
+		player.setSequence(baseSequence);
 		return "done."
 	}
 	return "sequence ''"+arguments.name+"' not found.";

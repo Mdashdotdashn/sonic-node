@@ -182,11 +182,19 @@ sequence_action
 	/ "list"i
 	{ return {method: "listSequences", arguments: {}} }
 
+player_action
+	= "select"i space* v:integer
+	{ return { method: "selectPlayer", arguments: { value: v}}}
+
 sequence
   = "sequence"i space* a:sequence_action
+	{ return a};
+
+player
+  = "player"i space* a:player_action
 	{ return a};
 
 //----------------------- Main
 
 command
-  = chord_progression / exit / scale / debug / resolution / clear / inversion / rectify / analyse / signature / tempo / sequence
+  = chord_progression / exit / scale / debug / resolution / clear / inversion / rectify / analyse / signature / tempo / sequence / player

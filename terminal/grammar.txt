@@ -56,10 +56,6 @@ chord_alteration
 	= a: ('M'/'m')
 		{ return a;}
 
-scale_degree_repetition // {1,2,3}x4
-  = c:scale_degree_list "x" r:digit
-	{ var res = c  ; for (var i = 0; i < r -1;i++) { res = res.concat(c) ;}; return res;}
-
 major_numeral
 	= d:('VII'/'VI'/'V'/'IV'/'III'/'II'/'I')
 	{ return eval_roman_numeral(d)+"M" ;}
@@ -72,12 +68,10 @@ scale_degree_numeral
 	= minor_numeral / major_numeral
 
 scale_degree_element
-  = d:digit a:chord_alteration*
-    { return [d+a];}
-	/ r:scale_degree_numeral
-		{ return [r];}
-  / r:scale_degree_repetition
-    { return r;}
+  = b:'b'i* d:digit a:chord_alteration*
+    { return [b+d+a];}
+	/ b:'b'i* r:scale_degree_numeral
+		{ return [b+r];}
 
 scale_degree_list // list of elements
   = "{" l:(e:scale_degree_element comma? space* { return e;})+ "}"

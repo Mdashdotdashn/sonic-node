@@ -7,7 +7,7 @@ ChordPlayer = function()
 
 ChordPlayer.prototype.init = function(noteStream)
 {
-  this.noteStream = noteStream;
+  this.noteStream_ = noteStream;
 }
 
 ChordPlayer.prototype.render = function(timeline)
@@ -31,7 +31,7 @@ ChordPlayer.prototype.tick = function(position)
         var offset = 0;
         step.element.voiced.forEach(function(pitch){
           var velocity = 1 - (0.2 * index) + offset;
-          noteSream.add(new NoteData(pitch, velocity, 4));
+          noteStream.add(new NoteData(pitch, velocity, 8));
           offset = Math.random() / 12;
           index++;
         })

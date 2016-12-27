@@ -52,9 +52,19 @@ makeChordProgression = function(rootNote, mode, progression)
 
     progression.forEach(function(degree) {
       var degreeAsString = ("" + degree).trim();
-      var base = parseInt(degreeAsString[0]);
-      var alteration = degreeAsString.slice(1);
-      chordSequence.push(cp.makeChord(base, alteration));
+      var flattened = degreeAsString[0] === 'b';
+      var baseIndex = flattened ? 1 : 0;
+      var base = parseInt( degreeAsString[baseIndex]);
+      var alteration = degreeAsString.slice(baseIndex + 1);
+      var element = cp.makeChord(base, alteration);
+      if (flattened)
+      {
+        element.notes.forEach(function(note, index, array)
+        {
+          array[index] = note - 1;
+        });
+      }
+      chordSequence.push(element);
       });
 
     return chordSequence;

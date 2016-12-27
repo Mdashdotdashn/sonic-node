@@ -44,4 +44,8 @@
     progression: "1,3,5,5",
     origin: "queen of the stone age - go with the flow"
   }
+  {
+    mode: "major",
+    progression: "5,5,1,4,5,1,4,bIII"
+  }
 }

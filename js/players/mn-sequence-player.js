@@ -24,7 +24,7 @@ SequencePlayer.prototype.onEvent = function(event)
   // At this point, we recieve note pitches
   event.forEach(function(pitch) {
     var velocity = 1;
-    noteStream.add(new NoteData(pitch + transpose, velocity, 4));
+    noteStream.add(new NoteData(pitch + transpose, velocity, 12));
   });
 
 }

@@ -66,6 +66,12 @@ Application.prototype.init = function(options) {
 
 	this.sequenceLoader_ = new SequenceLoader();
 	this.selectedPlayerIndex_ = 0;
+
+// init default sequence
+	var baseSequence = this.sequenceLoader_.load("chords");
+	var player = this.engine_.getPlayer(this.selectedPlayerIndex_);
+	CHECK_TYPE(player, SequencePlayer);
+	player.setSequence(baseSequence);
 };
 
 Application.prototype.start = function()

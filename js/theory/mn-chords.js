@@ -44,6 +44,13 @@ makeCanonicalChord = function(midiNotes)
       n = note % 12;
       c.push(n);
     });
+
+  // remove duplicated
+  c = c.filter( function( item, index, inputArray ) {
+           return inputArray.indexOf(item) == index;
+    });
+
+  // sort
   c.sort(function(a, b){return a - b});
 
 

@@ -42,7 +42,7 @@ sequenceDataStore = [
       length : "2.1.1",
       sequence:
         [
-          { position: "1.1.1", degrees: [{d:1, t:12}, 1]},
+          { position: "1.1.1", degrees: [{d:1, t:12}, 1, 0]},
           { position: "1.1.3", degrees: [2]},
           { position: "1.2.1", degrees: [3]},
           { position: "1.2.3", degrees: [{d:1, t:12}, 1]},
@@ -61,8 +61,8 @@ sequenceDataStore = [
       length : "2.1.1",
       sequence:
         [
-          { position: "1.1.1", degrees: [{d:1, t:-12}, 1, 2 ,3]},
+          { position: "1.1.1", degrees: [0, {d:1, t:12}, 1, 2 ,3]},
         ]
-      }    
+      }
   },
 ]

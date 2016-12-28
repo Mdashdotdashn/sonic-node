@@ -40,9 +40,9 @@ var renderSequenceWithTicks = function(harmonicStructure, baseSequence, ticksPer
           var isNumber = typeof degreeElement == "number";
           var degree = isNumber ? degreeElement : degreeElement.d;
           var transpose = isNumber ? 0 : degreeElement.t;
-          if (degree <= notes.length)
+          if (degree < notes.length)
           {
-            step.notes.push(notes[degree-1].pitch + transpose)
+            step.notes.push(notes[degree].pitch + transpose)
           }
         })
 

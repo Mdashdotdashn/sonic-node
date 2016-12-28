@@ -98,31 +98,3 @@ rootofchord = function(midiNotes)
   var c = makeCanonicalChord(midiNotes);
   return c[0];
 }
-
-// invert a sert of notes
-
-invertChord = function(midiNoteList, distance)
-{
-  var sign = Math.sign(distance);
-  var count = Math.abs(distance);
-
-  var inverted = midiNoteList;
-
-  for (var i = 0; i< count; i++)
-  {
-    switch(sign)
-    {
-      case 1:
-        inverted.sort();
-        var lowest = inverted.shift();
-        inverted.push(lowest+12);
-        break;
-
-      case -1:
-        inverted.sort();
-        var highest = inverted.pop();
-        inverted.unshift(highest-12);
-    }
-  }
-  return inverted;
-}

@@ -29,9 +29,9 @@ ChordPlayer.prototype.tick = function(position)
       {
         var index = 0;
         var offset = 0;
-        step.element.voiced.forEach(function(pitch){
+        step.element.notes.forEach(function(note){
           var velocity = 1 - (0.2 * index) + offset;
-          noteStream.add(new NoteData(pitch, velocity, 8));
+          noteStream.add(new NoteData(note.pitch, velocity, 8));
           offset = Math.random() / 12;
           index++;
         })

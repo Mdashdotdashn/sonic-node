@@ -34,12 +34,12 @@ HarmonyEngine.prototype.rebuild = function()
   if (this.progression_.length != 0)
 	{
 		// create chord progression
-		var chordSequence = makeChordProgression(this.rootNote_, this.scale_, this.progression_);
+		var progression = makeChordProgression(this.rootNote_, this.scale_, this.progression_);
 		// apply desired inversion to the first chord
-		chordSequence[0].notes = invertChord(chordSequence[0].notes,this.inversion_);
+		progression[0].notes = invertElement(progression[0].notes,this.inversion_);
 		// apply voicing
-		rectify_progression(chordSequence, this.rectificationMethod_);
-		return chordSequence;
+		rectify_progression(progression, this.rectificationMethod_);
+		return progression;
   }
   return [];
 }

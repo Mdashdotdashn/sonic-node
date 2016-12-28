@@ -5,7 +5,7 @@ var note_gravity_center = function(notes)
   var sum = 0.0;
   notes.forEach(function(note)
     {
-      sum += note;
+      sum += note.pitch;
     });
   return sum / notes.length;
 }
@@ -31,10 +31,10 @@ var rectify_closest = function(noteListFrom, noteListTo)
   while(mind > d)
   {
     mind =d;
-    result = invertChord(result, -sign);
+    result = invertElement(result, -sign);
     d = Math.abs(computeDistance(noteListFrom, result));
   }
-  result = invertChord(result, sign);
+  result = invertElement(result, sign);
   return result;
 }
 
@@ -42,7 +42,7 @@ var rectify_progression_sequential = function(sequence)
 {
   for (var i = 0; i < sequence.length-1; i++)
   {
-    sequence[i+1].voiced = rectify_closest(sequence[i].notes,sequence[i+1].notes);
+    sequence[i+1].notes = rectify_closest(sequence[i].notes,sequence[i+1].notes);
   }
 }
 
@@ -50,7 +50,7 @@ var rectify_progression_to_first = function(sequence)
 {
   for (var i = 0; i < sequence.length-1; i++)
   {
-    sequence[i+1].voiced = rectify_closest(sequence[0].notes,sequence[i+1].notes);
+    sequence[i+1].notes = rectify_closest(sequence[0].notes,sequence[i+1].notes);
   }
 }
 
@@ -59,15 +59,15 @@ var rectify_progression_inwards = function(sequence)
   var leftIndex = 1;
   var rightIndex = sequence.length -1;
 
-  sequence[rightIndex].voiced = rectify_closest(sequence[0].notes, sequence[rightIndex].notes);
+  sequence[rightIndex].notes = rectify_closest(sequence[0].notes, sequence[rightIndex].notes);
   rightIndex--;
 
   while (leftIndex < rightIndex)
   {
-    sequence[leftIndex].voiced = rectify_closest(sequence[leftIndex -1].notes, sequence[leftIndex].notes);
+    sequence[leftIndex].notes = rectify_closest(sequence[leftIndex -1].notes, sequence[leftIndex].notes);
     if (rightIndex > leftIndex)
     {
-      sequence[rightIndex].voiced = rectify_closest(sequence[rightIndex+1].notes, sequence[rightIndex].notes);
+      sequence[rightIndex].notes = rectify_closest(sequence[rightIndex+1].notes, sequence[rightIndex].notes);
     }
     rightIndex--;
     leftIndex++;
@@ -76,10 +76,6 @@ var rectify_progression_inwards = function(sequence)
 
 rectify_progression = function(sequence, mode)
 {
-  sequence.forEach(function(element){
-    element.voiced = element.notes.slice(); // to make a copy
-  });
-
   switch(mode)
   {
     case 0:

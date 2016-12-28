@@ -42,7 +42,7 @@ var renderSequenceWithTicks = function(harmonicStructure, baseSequence, ticksPer
           var transpose = isNumber ? 0 : degreeElement.t;
           if (degree <= notes.length)
           {
-            step.notes.push(notes[degree-1] + transpose)
+            step.notes.push(notes[degree-1].pitch + transpose)
           }
         })
 

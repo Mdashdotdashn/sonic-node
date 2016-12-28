@@ -82,13 +82,8 @@ Application.prototype.start = function()
 
 Application.prototype.currentSequenceString = function()
 {
-	var chordnameList = "Chord sequence: ";
-	var chordSequence = this.chordSequence_;
-	chordSequence.forEach(function (chord)
-	{
-		chordnameList += chordname(chord.notes) + ",";
-	})
-	return chordnameList;
+	var progressionString = stringForProgression(this.chordSequence_);
+	return  "Chord sequence: " + progressionString;
 }
 
 Application.prototype.parse = function(command)
@@ -119,14 +114,10 @@ Application.prototype.setScale = function(arguments)
 
 	this.rebuild();
 
-	var scaleChords = makeChordProgression(rootNote+"4", scale, [1,2,3,4,5,6,7]);
-	scaleChordsNameList = "";
-	scaleChords.forEach(function (chord)
-	{
-		scaleChordsNameList += chordname(chord.notes) + ",";
-	})
+	var scaleProgression = makeChordProgression(rootNote+"4", scale, [1,2,3,4,5,6,7]);
+	var progressionString = stringForProgression(scaleProgression);
 
-	return "Scale chords: " + scaleChordsNameList;
+	return "Scale chords: " + progressionString;
 }
 
 Application.prototype.setRectification = function(argument)

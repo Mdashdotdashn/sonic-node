@@ -2,7 +2,10 @@
 
 ProgressionElement = function (notes)
 {
-  this.notes = notes;
+  this.notes = [];
+  notes.forEach(function(note, index) {
+    this.notes.push({pitch: note, degree: index + 1});
+  }, this);
 }
 
 // Chord progression helper object
@@ -61,12 +64,11 @@ makeChordProgression = function(rootNote, mode, progression)
       {
         element.notes.forEach(function(note, index, array)
         {
-          array[index] = note - 1;
+          array[index].pitch = note.pitch - 1;
         });
       }
       chordSequence.push(element);
       });
-
     return chordSequence;
 }
 
@@ -81,4 +83,48 @@ makeChordSequence = function(chordNames)
     });
 
     return chordSequence;
+}
+
+stringForProgression = function(progression)
+{
+  var chordnameList = "";
+	progression.forEach(function (element)
+	{
+		var chord = [];
+		element.notes.forEach(function(note){
+			chord.push(note.pitch);
+		})
+		chordnameList += chordname(chord) + ",";
+	})
+  return chordnameList;
+}
+
+// invert a sert of notes
+
+invertElement = function(midiNoteList, distance)
+{
+  var sign = Math.sign(distance);
+  var count = Math.abs(distance);
+
+  var inverted = midiNoteList;
+
+  for (var i = 0; i< count; i++)
+  {
+    switch(sign)
+    {
+      case 1:
+        inverted.sort();
+        var lowest = inverted.shift();
+        lowest.pitch += 12;
+        inverted.push(lowest);
+        break;
+
+      case -1:
+        inverted.sort();
+        var highest = inverted.pop();
+        highest.pitch -= 12;
+        inverted.unshift(highest);
+    }
+  }
+  return inverted;
 }

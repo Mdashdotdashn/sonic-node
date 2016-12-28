@@ -46,6 +46,12 @@
   }
   {
     mode: "major",
-    progression: "5,5,1,4,5,1,4,bIII"
+    progression: "5,5,1,4,5,1,4,bIII".
+    origin: "kinks - lola"
+  }
+  {
+    mode: "minor",
+    progression: "1, 7m, 3m, 3m",
+    origin: "rob - maniac (altered)"
   }
 }

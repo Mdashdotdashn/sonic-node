@@ -65,4 +65,20 @@ sequenceDataStore = [
         ]
       }
   },
+
+  {
+    name: "test",
+    type: "test",
+    signature: "4/4",
+    data: {
+      length : "2.1.1",
+      sequence:
+        [
+          { position: "1.1", degrees: [0]},
+          { position: "1.2", degrees: [1]},
+          { position: "1.3", degrees: [2]},
+          { position: "1.4", degrees: [3]},
+        ]
+      }
+  },
 ]

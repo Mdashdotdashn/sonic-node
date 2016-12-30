@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <meta name="Description" content=""/>
+    <link rel="shortcut icon" href=""/>
+    <style>
+      body {
+          background-color: #B9B7AA;
+      }
+
+      #editor {
+          height: 275px;
+          border: 1px solid #DDD;
+          border-radius: 4px;
+          border-bottom-right-radius: 0px;
+          margin-top: 5px;
+      }
+    </style>
+
+    <script src="terminal/js/jquery-1.7.1.min.js"></script>
+    <script src="terminal/js/ace/min/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+
+    function processCommand(command)
+    {
+        command = command.replace(/(\r\n|\n|\r)/gm,"");
+        if (command.trim())
+        {
+            $.getJSON('/command', { command : command }, function(response)
+            {
+                console.log(response.reply);
+            })
+        }
+    }
+
+    function pollServerEvents()
+    {
+      $.getJSON('/reporter', function(response)
+      {
+          console.log(response.reply);
+          setTimeout(pollServerEvents, 1);
+      })
+    }
+
+    $( document ).ready(function() {
+        setTimeout(pollServerEvents, 10);
+        console.log( "ready!" );
+
+        var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/monokai");
+        editor.getSession().setMode("ace/mode/text");
+        editor.commands.addCommand({
+          name: 'trigger',
+          bindKey: {win: 'Ctrl-Enter', mac: 'Command-Enter'},
+          exec: function(editor) {
+            var selection = editor.getSelectedText();
+            processCommand(selection);
+          },
+          readOnly: true
+          });
+
+    });
+    </script>
+</head>
+
+<body>
+<div id="editor"></div>
+</body>
+</html>

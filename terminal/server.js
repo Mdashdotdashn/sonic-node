@@ -53,7 +53,7 @@ Server.prototype.init = function(application)
         method: 'GET',
         path: '/',
         handler: function (request, reply) {
-            reply.file('terminal/index.html');
+            reply.file('terminal/index-edit.html');
         }
     });
 

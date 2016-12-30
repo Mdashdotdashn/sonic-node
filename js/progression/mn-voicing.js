@@ -103,5 +103,7 @@ rectify_progression = function(sequence, mode)
         array.push({ pitch: c1 + (element.pitch) % 12, degree: 0});
       }
     });
+    step.notes = step.notes.rotate(step.notes.length -1);
   });
+  lo(sequence);
 }

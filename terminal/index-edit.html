@@ -29,17 +29,18 @@
     <script src="terminal/js/jquery-1.7.1.min.js"></script>
     <script src="terminal/js/ace/min/ace.js" type="text/javascript" charset="utf-8"></script>
     <script>
+    var Range = ace.require('ace/range').Range;
 
     function processCommand(command)
     {
-        command = command.replace(/(\r\n|\n|\r)/gm,"");
-        if (command.trim())
+      command = command.replace(/(\r\n|\n|\r)/gm,"");
+      if (command.trim())
+      {
+        $.getJSON('/command', { command : command }, function(response)
         {
-            $.getJSON('/command', { command : command }, function(response)
-            {
-                console.log(response.reply);
-            })
-        }
+            console.log(response.reply);
+        })
+      }
     }
 
     function pollServerEvents()
@@ -51,6 +52,21 @@
       })
     }
 
+    function sendRange(editor, range)
+    {
+      console.log(JSON.stringify(range));
+      for (var i = range.start.row; i<= range.end.row; i++)
+      {
+        var lineText = editor.session.getLine(i);
+//        var markerId = editor.session.addMarker(new Range(i, 0, i, 1), "myMarker", "fullLine");
+        processCommand(lineText);
+//        setTimeout(function()
+//        {
+//          editor.session.removeMarker(markerId);
+//        },50)
+      }
+    }
+
     $( document ).ready(function() {
         setTimeout(pollServerEvents, 10);
         console.log( "ready!" );
@@ -58,31 +74,22 @@
         var editor = ace.edit("editor");
         editor.setTheme("ace/theme/monokai");
         editor.getSession().setMode("ace/mode/text");
+
         editor.commands.addCommand({
-          name: 'sendSelection',
-          bindKey: {win: 'Ctrl-Enter', mac: 'Command-Enter'},
+          name: 'sendLine',
+          bindKey: {win: 'Shift-Enter', mac: 'Shift-Enter'},
           exec: function(editor) {
-            var selection = editor.getSelectedText();
-            processCommand(selection);
+            var selection = editor.getSelection();
+            var range = selection.getRange();
+            if (selection.isEmpty())
+            {
+              var currline = editor.getCursorPosition();
+              range =  new Range(currline.row, currline.column, currline.row, currline.column);
+            }
+            sendRange(editor,range);
           },
           readOnly: true
           });
-          editor.commands.addCommand({
-            name: 'sendLine',
-            bindKey: {win: 'Shift-Enter', mac: 'Shift-Enter'},
-            exec: function(editor) {
-              var currline = editor.getCursorPosition().row;
-              var lineText = editor.session.getLine(currline);
-              var Range = ace.require('ace/range').Range;
-              var markerId = editor.session.addMarker(new Range(currline, 0, currline, 1), "myMarker", "fullLine");
-              processCommand(lineText);
-              setTimeout(function()
-              {
-                editor.session.removeMarker(markerId);
-              },50)
-            },
-            readOnly: true
-            });
 
     });
     </script>

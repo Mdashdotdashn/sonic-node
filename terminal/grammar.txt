@@ -179,8 +179,6 @@ sequence_action
 player_action
 	= "select"i space* v:integer
 	{ return { method: "selectPlayer", arguments: { value: v}}}
-  / "transpose"i space* v:integer
-  { return { method: "transpose", arguments: { value: v}}}
 
 sequence
   = "sequence"i space* a:sequence_action
@@ -190,7 +188,11 @@ player
   = "player"i space* a:player_action
 	{ return a};
 
+transpose
+  = "transpose"i space* v:integer
+  { return { method: "transpose", arguments: { value: v}}}
+
 //----------------------- Main
 
 command
-  = chord_progression / exit / scale / debug / resolution / clear / inversion / rectify / analyse / signature / tempo / sequence / player
+  = chord_progression / exit / scale / debug / resolution / clear / inversion / rectify / analyse / signature / tempo / transpose / sequence / player

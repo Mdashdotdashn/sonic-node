@@ -105,5 +105,4 @@ rectify_progression = function(sequence, mode)
     });
     step.notes = step.notes.rotate(step.notes.length -1);
   });
-  lo(sequence);
 }

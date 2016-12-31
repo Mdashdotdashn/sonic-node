@@ -61,6 +61,16 @@
           },
           readOnly: true
           });
+          editor.commands.addCommand({
+            name: 'sendLine',
+            bindKey: {win: 'Shift-Enter', mac: 'Shift-Enter'},
+            exec: function(editor) {
+              var currline = editor.getCursorPosition().row;
+              var lineText = editor.session.getLine(currline);
+              processCommand(lineText);
+            },
+            readOnly: true
+            });
 
     });
     </script>

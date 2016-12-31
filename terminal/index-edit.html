@@ -12,6 +12,7 @@
 
       #editor {
           height: 275px;
+          width: 600px;
           border: 1px solid #DDD;
           border-radius: 4px;
           border-bottom-right-radius: 0px;
@@ -52,7 +53,7 @@
         editor.setTheme("ace/theme/monokai");
         editor.getSession().setMode("ace/mode/text");
         editor.commands.addCommand({
-          name: 'trigger',
+          name: 'sendSelection',
           bindKey: {win: 'Ctrl-Enter', mac: 'Command-Enter'},
           exec: function(editor) {
             var selection = editor.getSelectedText();

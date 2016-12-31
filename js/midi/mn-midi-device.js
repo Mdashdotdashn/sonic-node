@@ -2,8 +2,6 @@ var midi = require("midi");
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 
-require("./mn-midi.js");
-
 //--------------------------------------------------------------------------------------------------
 
 var SFindMatching = function(inname, outname)

@@ -18,6 +18,12 @@
           border-bottom-right-radius: 0px;
           margin-top: 5px;
       }
+
+      .myMarker {
+        position:absolute;
+        background:rgba(100,200,100,0.5);
+        z-index:20
+      }
     </style>
 
     <script src="terminal/js/jquery-1.7.1.min.js"></script>
@@ -67,7 +73,13 @@
             exec: function(editor) {
               var currline = editor.getCursorPosition().row;
               var lineText = editor.session.getLine(currline);
+              var Range = ace.require('ace/range').Range;
+              var markerId = editor.session.addMarker(new Range(currline, 0, currline, 1), "myMarker", "fullLine");
               processCommand(lineText);
+              setTimeout(function()
+              {
+                editor.session.removeMarker(markerId);
+              },50)
             },
             readOnly: true
             });

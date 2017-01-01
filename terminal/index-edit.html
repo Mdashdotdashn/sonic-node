@@ -18,7 +18,14 @@
           border-bottom-right-radius: 0px;
           margin-top: 5px;
       }
-
+      #log {
+          height: 275px;
+          width: 600px;
+          border: 1px solid #DDD;
+          border-radius: 4px;
+          border-bottom-right-radius: 0px;
+          margin-top: 5px;
+      }
       .myMarker {
         position:absolute;
         background:rgba(100,200,100,0.5);
@@ -31,15 +38,18 @@
     <script>
     var Range = ace.require('ace/range').Range;
 
-    function processCommand(command)
+    function processCommand(log, command)
     {
       command = command.replace(/(\r\n|\n|\r)/gm,"");
       if (command.trim())
       {
         $.getJSON('/command', { command : command }, function(response)
         {
-            console.log(response.reply);
-        })
+          var logsession = log.session
+          logsession.insert({
+             row: logsession.getLength(),
+             column: 0
+          }, response.reply + "\n");        })
       }
     }
 
@@ -52,18 +62,12 @@
       })
     }
 
-    function sendRange(editor, range)
+    function sendRange(editor, log, range)
     {
-      console.log(JSON.stringify(range));
       for (var i = range.start.row; i<= range.end.row; i++)
       {
         var lineText = editor.session.getLine(i);
-//        var markerId = editor.session.addMarker(new Range(i, 0, i, 1), "myMarker", "fullLine");
-        processCommand(lineText);
-//        setTimeout(function()
-//        {
-//          editor.session.removeMarker(markerId);
-//        },50)
+        var result =  processCommand(log, lineText);
       }
     }
 
@@ -75,6 +79,10 @@
         editor.setTheme("ace/theme/monokai");
         editor.getSession().setMode("ace/mode/text");
 
+        var log = ace.edit("log");
+        log.setTheme("ace/theme/terminal");
+        log.getSession().setMode("ace/mode/text");
+
         editor.commands.addCommand({
           name: 'sendLine',
           bindKey: {win: 'Shift-Enter', mac: 'Shift-Enter'},
@@ -85,8 +93,9 @@
             {
               var currline = editor.getCursorPosition();
               range =  new Range(currline.row, currline.column, currline.row, currline.column);
+              editor.session.insert(currline,"\n");
             }
-            sendRange(editor,range);
+            sendRange(editor,log, range);
           },
           readOnly: true
           });
@@ -97,5 +106,6 @@
 
 <body>
 <div id="editor"></div>
+<div id="log"></div>
 </body>
 </html>

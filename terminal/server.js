@@ -67,6 +67,14 @@ Server.prototype.init = function(application)
 
     this.server_.route({
         method: 'GET',
+        path: '/grammar.txt',
+        handler: function (request, reply) {
+            reply.file('terminal/grammar.txt');
+        }
+    });
+
+    this.server_.route({
+        method: 'GET',
         path: '/terminal/{file*}',
         handler: {
             directory: {

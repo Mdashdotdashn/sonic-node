@@ -129,7 +129,7 @@ Application.prototype.setRectification = function(argument)
 
 Application.prototype.setInversion = function(argument)
 {
-	this.harmony.setInversion(parseInt(argument));
+	this.harmony_.setInversion(parseInt(argument));
 	this.rebuild();
 	return "";
 }

@@ -35,7 +35,7 @@ var Notes =
   ,
 }
 
-var notenames = ["c","c#","d","d#","e","f","f#","g","g#","a","a#","b"];
+var notenames = ["C","C#","D","D#","E","F","F#","G","G#","G","G#","B"];
 
 // Returns the note name from the given interval/index
 // this is not per se a degree since it's the index from C
@@ -57,7 +57,7 @@ notefromdegree = function(interval)
 
 intervalfromnotename = function(notename)
 {
-  var needle = notename.toLowerCase();
+  var needle = notename.toUpperCase();
 
   for (var index = 0; index < notenames.length; index++)
   {
@@ -93,5 +93,5 @@ n = function(name)
 
 midinotefromname = function(name)
 {
-  return notemap[name.toLowerCase()];
+  return notemap[name.toUpperCase()];
 }

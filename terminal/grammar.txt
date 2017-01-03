@@ -53,7 +53,7 @@ note
 //---------------------- Scale degree progressions
 
 chord_alteration
-	= a: ('M'/'m')
+	= a: ('M'/'m'/'+'/'sus4')
 		{ return a;}
 
 major_numeral

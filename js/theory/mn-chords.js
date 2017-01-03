@@ -71,12 +71,14 @@ makeCanonicalChord = function(midiNotes)
 
 chordname = function(midiNotes)
 {
+  // this should really be done from the chords intervals info
   var chordintervals =
   {
     "4,3" : "",  // major
     "3,4" : "m", // minor
     "3,3" : "º",  // diminished
-    "4,4" : "+"  //   augmented
+    "4,4" : "+",  //   augmented
+    "4,2" : "sus4",  //   sus4
   }
 
   var c = makeCanonicalChord(midiNotes);

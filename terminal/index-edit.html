@@ -119,6 +119,19 @@
           exec: function(editor) {
             var selection = editor.getSelection();
             var range = selection.getRange();
+
+            // look for the case were a single line is selected but selection goes to next one.
+            if (range.start.row > range.end.row)
+            {
+              if (range.start.column ==0)
+              {
+                range.start.row -=1;
+              }
+            }
+            if (range.end.row > range.start.row)
+            {
+              range.end.row -=1;
+            }
             if (selection.isEmpty())
             {
               var currline = editor.getCursorPosition();

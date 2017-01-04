@@ -1,20 +1,22 @@
 var assert = require("assert");
 require("../js/mn-utils.js");
 
-transform = function(array, method, filterFunc)
+transform = function(array, method, filter)
 {
-  var filter = (filterFunc == undefined) ? function() { return true; } : filterFunc;
-  array.forEach(function(element, index, theArray){
-    if (filter(element))
-    {
-      theArray[index] = method(element);
-    }
+  return array.map(function(element)
+  {
+    return (!filter) || filter(element) ? method(element): element;
   });
 }
 
+let isEven = (x) => x%2 == 1;
+let inc = (x) => x + 1;
 
 var test = [1,2,3,5];
-transform(test, function(i) { return i+=1;}, function(i) { return i%2 == 1;});
+var result = transform(test,inc, isEven);
 var expected = [2,2,4,6];
+assert.deepEqual(result, expected);
 
-assert.deepEqual(test,expected);
+var result = transform(test,inc);
+var expected = [2,3,4,6];
+assert.deepEqual(result, expected);

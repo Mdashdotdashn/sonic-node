@@ -29,10 +29,9 @@ function testSequenceRendering(signature, baseSequence, progression, expected)
   expected.sequence.forEach(function(element)
   {
     element.position = convertToPosition(element.position, signature, ticksPerBeat)
-    var notes = [];
-    element.notes.forEach(function(pitch)
+    var notes = element.notes.map(function(pitch)
     {
-      notes.push(new NoteData(pitch, 1, 12));
+      return new NoteData(pitch, 1, 12);
     })
     element.notes = notes;
   });

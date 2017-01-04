@@ -30,22 +30,26 @@ var renderSequenceWithTicks = function(harmonicStructure, baseSequence, ticksPer
 
       if (currentPosition < stepEndPosition)
       {
-        var step =
-          {
-            position: createSequencingPosition(currentPosition, ticksPerBeat),
-            notes: []
-          }
+        // Expand degree data
 
-        sequenceStep.degrees.forEach(function(degreeElement){
+        var degreeData = sequenceStep.degrees.map(function(degreeElement)
+        {
           var isNumber = typeof degreeElement == "number";
           var degree = isNumber ? degreeElement : degreeElement.d;
           var transpose = isNumber ? 0 : degreeElement.t;
-          if (degree < notes.length)
-          {
-            velocity = 1;
-            var data = new NoteData(notes[degree].pitch + transpose , velocity, 12)
-            step.notes.push(data);
-          }
+          return { degree: degree, transpose: transpose}
+        })
+
+        var step = new Object;
+        step.position = createSequencingPosition(currentPosition, ticksPerBeat);
+
+        step.notes = degreeData.filter(function(e)
+        {
+          return (e.degree < notes.length)
+        }).map(function(e)
+        {
+          velocity = 1;
+          return new NoteData(notes[e.degree].pitch + e.transpose , velocity, 12)
         })
 
         result.sequence.push(step);
@@ -82,32 +86,28 @@ renderSequence = function(harmonicStructure, baseSequence, signature, ticksPerBe
   // Convert base sequence to use ticks for position
   var tickBaseSequence = new Object;
   tickBaseSequence.length = stringPositionToTicks(baseSequence.length, signature, ticksPerBeat);
-  tickBaseSequence.sequence = [];
-
-  baseSequence.sequence.forEach(function(element)
-  {
-    tickBaseSequence.sequence.push(
-      {
-        tickCount: stringPositionToTicks(element.position, signature, ticksPerBeat),
-        degrees: element.degrees
-      });
-  })
+  tickBaseSequence.sequence = baseSequence.sequence.map(
+    function(element)
+    {
+      var tickCount = stringPositionToTicks(element.position, signature, ticksPerBeat);
+      return {
+        tickCount: tickCount,
+        degrees: element.degrees,
+      };
+    })
 
   // Convert harmonicStructure to use ticks for position
 
   var tickBasedStructure = new Object;
   tickBasedStructure.length = ticksFromPosition(harmonicStructure.length, signature, ticksPerBeat);
-  tickBasedStructure.sequence = [] ;
-
-  harmonicStructure.sequence.forEach(function(item)
-  {
-    tickBasedStructure.sequence.push(
-      {
-        tickCount: ticksFromPosition(item.position, signature, ticksPerBeat),
-        element: item.element
-      }
-    )
-  });
+  tickBasedStructure.sequence = harmonicStructure.sequence.map(
+    function(item)
+    {
+      return {
+          tickCount: ticksFromPosition(item.position, signature, ticksPerBeat),
+          element: item.element
+        }
+    });
 
   return renderSequenceWithTicks(tickBasedStructure, tickBaseSequence, ticksPerBeat);
 }

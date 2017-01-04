@@ -16,15 +16,15 @@ SequencePlayer.prototype.init = function(noteStream)
 }
 
 
-SequencePlayer.prototype.onEvent = function(event)
+SequencePlayer.prototype.onEvent = function(events)
 {
   var transpose = this.transpose_;
   var noteStream = this.noteStream_;
 
   // At this point, we recieve note pitches
-  event.forEach(function(pitch) {
-    var velocity = 1;
-    noteStream.add(new NoteData(pitch + transpose, velocity, 12));
+  events.forEach(function(data) {
+    CHECK_TYPE(data, NoteData)
+    noteStream.add(new NoteData(data.pitch + transpose, data.velocity, data.length));
   });
 
 }

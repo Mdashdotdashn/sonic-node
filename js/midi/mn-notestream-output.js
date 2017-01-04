@@ -27,7 +27,6 @@ NoteStreamOutput = function(device, channel)
 
 NoteStreamOutput.prototype.add = function(data)
 {
-  CHECK_TYPE(data, NoteData);
   this.noteStream_.add(data.pitch, data.velocity, data.length);
 }
 

@@ -2,6 +2,7 @@ require("../js/players/players.js");
 require("../js/sequencing/sequencing.js");
 require("../js/progression/progression.js");
 require("../js/theory/theory.js");
+require("../js/midi/midi.js");
 require("../js/mn-scale.js");
 
 var assert = require("assert");
@@ -13,6 +14,7 @@ function testSequenceRendering(signature, baseSequence, progression, expected)
   // Build the basic chord structure
 
   var chords = makeChordProgression(progression.root, progression.scale, progression.degrees);
+  rectify_progression(chords, 0);
 
   var harmonicStructure = createTimeline(chords, createSequencingPosition(ticksPerBeat * signature.numerator, ticksPerBeat));
   var length = createSequencingPosition(chords.length * ticksPerBeat * signature.numerator, ticksPerBeat);
@@ -27,6 +29,12 @@ function testSequenceRendering(signature, baseSequence, progression, expected)
   expected.sequence.forEach(function(element)
   {
     element.position = convertToPosition(element.position, signature, ticksPerBeat)
+    var notes = [];
+    element.notes.forEach(function(pitch)
+    {
+      notes.push(new NoteData(pitch, 1, 12));
+    })
+    element.notes = notes;
   });
 //  console.log(">>>" + JSON.stringify(rendered,null ,2));
 //  console.log("<<<" + JSON.stringify(expected,null ,2));

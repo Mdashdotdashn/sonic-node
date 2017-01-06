@@ -1,30 +1,5 @@
 _ = require("lodash");
 
-var ProcessStack = function()
-{}
-
-ProcessStack.prototype.process = function(timeline)
-{
-  newTimeline = new Timeline();
-  newTimeline.sequence = timeline.sequence.map(function(item)
-  {
-    var position = item.position;
-    var noteData = item.element;
-
-    CHECK_TYPE(position, SequencingPosition);
-    CHECK_TYPE(noteData, NoteData);
-
-    noteData.length = 36;
-    return {
-      position: position,
-      element: noteData
-    }
-  })
-  newTimeline.setLength(timeline.length);
-  lo(newTimeline);
-  return newTimeline;
-}
-
 SequencePlayer = function(signature, ticksPerBeat)
 {
   CHECK_TYPE(signature, Signature);
@@ -33,7 +8,7 @@ SequencePlayer = function(signature, ticksPerBeat)
   this.eventSequence_ = new EventSequence();
   this.baseSequence_ = null;
   this.transpose_ = 0;
-  this.processStack_ = new ProcessStack();
+  this.transformationStack_ = new SequenceTransformationStack();
 }
 
 SequencePlayer.prototype.init = function(noteStream)
@@ -65,6 +40,7 @@ SequencePlayer.prototype.render = function(timeline)
 SequencePlayer.prototype.setSequence = function(sequence)
 {
   this.baseSequence_ = sequence;
+  this.transformationStack_.reset();
   this.rebuild();
 }
 
@@ -86,7 +62,7 @@ SequencePlayer.prototype.rebuild = function()
   if (this.harmonicStructure_ && this.baseSequence_)
   {
     var rendered = renderSequence(this.harmonicStructure_, this.baseSequence_, this.signature_, this.ticksPerBeat_);
-    var processed = this.processStack_.process(rendered.expand());
+    var processed = this.transformationStack_.process(rendered.expand());
     this.eventSequence_.setContent(processed.compact());
   }
 }

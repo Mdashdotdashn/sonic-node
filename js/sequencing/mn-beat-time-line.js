@@ -89,11 +89,10 @@ Timeline.prototype.compact = function()
     return map;
   }, {});
 
-
   timeline.sequence = _.map(timemap, function(value, key){
       return {
         position: createSequencingPosition(parseInt(key), ticksPerBeat),
-        element: value.element
+        element: value
       }
   })
   return timeline;

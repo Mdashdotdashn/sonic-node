@@ -9,7 +9,7 @@ var app = require('./application.js');
 var devices =
 {
 	dar: "iac",
-	win: "loop",
+	win: "microsoft",
 	lin: "through"
 }
 

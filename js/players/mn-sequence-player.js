@@ -21,6 +21,7 @@ SequencePlayer.prototype.onEvent = function(events)
   var transpose = this.transpose_;
   var noteStream = this.noteStream_;
 
+  lo(events);
   // At this point, we recieve note pitches
   events.forEach(function(data) {
     CHECK_TYPE(data, NoteData)
@@ -59,10 +60,7 @@ SequencePlayer.prototype.rebuild = function()
   if (this.harmonicStructure_ && this.baseSequence_)
   {
     var rendered = renderSequence(this.harmonicStructure_, this.baseSequence_, this.signature_, this.ticksPerBeat_);
-    var eventSequence = [];
-    rendered.sequence.forEach(function(element){
-      eventSequence.push({ position: element.position, value: element.notes});
-    })
-    this.eventSequence_.setContent(eventSequence, rendered.length);
+    CHECK_TYPE(rendered,Timeline);
+    this.eventSequence_.setContent(rendered);
   }
 }

@@ -1,8 +1,6 @@
 var renderSequenceWithTicks = function(harmonicStructure, baseSequence, ticksPerBeat)
 {
-  var result = new Object;
-  result.length = createSequencingPosition(harmonicStructure.length, ticksPerBeat);
-  result.sequence = [];
+  var result = new Timeline();
 
   var harmonyIndex = 0;
   // Do all of the harmonic steps
@@ -41,9 +39,9 @@ var renderSequenceWithTicks = function(harmonicStructure, baseSequence, ticksPer
         })
 
         var step = new Object;
-        step.position = createSequencingPosition(currentPosition, ticksPerBeat);
+        var position = createSequencingPosition(currentPosition, ticksPerBeat);
 
-        step.notes = degreeData.filter(function(e)
+       var renderedNotes = degreeData.filter(function(e)
         {
           return (e.degree < notes.length)
         }).map(function(e)
@@ -51,8 +49,7 @@ var renderSequenceWithTicks = function(harmonicStructure, baseSequence, ticksPer
           velocity = 1;
           return new NoteData(notes[e.degree].pitch + e.transpose , velocity, 12)
         })
-
-        result.sequence.push(step);
+        result.add(renderedNotes,position);
 
         // next one and wrap sequence if needed
         sequenceIndex++;
@@ -70,6 +67,7 @@ var renderSequenceWithTicks = function(harmonicStructure, baseSequence, ticksPer
 
     harmonyIndex++;
   }
+  result.setLength(createSequencingPosition(harmonicStructure.length, ticksPerBeat));
   return result;
 }
 

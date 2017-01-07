@@ -41,6 +41,7 @@ SequencePlayer.prototype.setSequence = function(sequence)
 {
   this.baseSequence_ = sequence;
   this.transformationStack_.reset();
+  this.transformationStack_.add(new STLegato());
   this.rebuild();
 }
 

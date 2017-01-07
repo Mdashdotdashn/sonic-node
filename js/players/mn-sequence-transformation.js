@@ -1,9 +1,36 @@
 STLegato = function(parameters)
 {
+  this.amount_ = 0.7;
 }
 
 STLegato.prototype.process = function(timeline, transformation)
 {
+  // Generate a sorted array of the note's position in ticks
+  var sequenceInTicks = _.sortBy(
+    timeline.sequence.map(function(item){
+      return {
+        position: ticksFromPosition(item.position),
+        element: item.element
+      }
+    })
+    , 'position');
+
+  var timestampInTicks = sequenceInTicks.reduce(function(set, item){
+    set.add(item.position);
+    return set;
+  }, new Set());
+  timestampInTicks.add(ticksFromPosition(timeline.length));
+
+  // Build a map from position to length
+
+  var positionArray = Array.from(timestampInTicks);
+  var lengthMap = new Object;
+  for (var i = 0; i < positionArray.length - 1; i++)
+  {
+    var length = Math.floor((positionArray[i+1] - positionArray[i]) * this.amount_);
+    lengthMap[positionArray[i]] = Math.max(length,1);
+  }
+
   newTimeline = new Timeline();
   newTimeline.sequence = timeline.sequence.map(function(item)
   {
@@ -13,7 +40,8 @@ STLegato.prototype.process = function(timeline, transformation)
     CHECK_TYPE(position, SequencingPosition);
     CHECK_TYPE(noteData, NoteData);
 
-    noteData.length = 36;
+    var newLength = lengthMap[ticksFromPosition(position)];
+    noteData.length = newLength;
     return {
       position: position,
       element: noteData
@@ -34,10 +62,15 @@ SequenceTransformationStack.prototype.reset = function()
   this.stack_ = [];
 }
 
+SequenceTransformationStack.prototype.add = function(transformation)
+{
+  this.stack_.push(transformation);
+}
+
 SequenceTransformationStack.prototype.process = function(timeline)
 {
   return this.stack_.reduce(function(timeline, transformation)
   {
-    return transformation(timeline);
+    return transformation.process(timeline);
   }, timeline);
 }

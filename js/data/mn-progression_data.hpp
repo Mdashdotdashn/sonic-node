@@ -54,4 +54,9 @@
     progression: "1, 7m, 3m, 3m",
     origin: "rob - maniac (altered)"
   }
+  {
+    mode: "major",
+    progression: "1,7m,3M,1",
+    origin: "[mre]";
+  }
 }

@@ -3,6 +3,7 @@ require("../js/progression/progression.js");
 require("../js/mn-scale.js");
 require("../js/mn-note.js");
 require("../js/mn-utils.js");
+require("../js/transform/transform.js")
 
 require("./playback-engine.js")
 require("./harmony-engine.js")
@@ -65,6 +66,7 @@ Application.prototype.init = function(options) {
 	this.harmony_ = new HarmonyEngine();
 
 	this.sequenceLoader_ = new SequenceLoader();
+	this.transformationLoader_ = new TransformationLoader();
 	this.selectedPlayerIndex_ = 0;
 
 // init default sequence
@@ -202,8 +204,30 @@ Application.prototype.loadSequence = function(arguments)
 		player.setSequence(baseSequence);
 		return "done."
 	}
-	return "sequence ''"+arguments.name+"' not found.";
+	return "sequence '"+arguments.name+"' not found.";
 }
+
+Application.prototype.resetTransformation = function()
+{
+	var player = this.engine_.getPlayer(this.selectedPlayerIndex_);
+	CHECK_TYPE(player, SequencePlayer);
+	player.resetTransformation();
+}
+
+Application.prototype.pushTransformation = function(argument)
+{
+	var transformation = this.transformationLoader_.load(argument.name);
+	if (transformation)
+	{
+		transformation.setParameters(argument.parameters);
+		var player = this.engine_.getPlayer(this.selectedPlayerIndex_);
+		CHECK_TYPE(player, SequencePlayer);
+		player.pushTransformation(transformation);
+		return "done."
+	}
+	return "transformation '"+argument.name+"' not found.";
+}
+
 
 Application.prototype.listSequences = function(arguments)
 {

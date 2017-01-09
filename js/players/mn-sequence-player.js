@@ -40,8 +40,18 @@ SequencePlayer.prototype.render = function(timeline)
 SequencePlayer.prototype.setSequence = function(sequence)
 {
   this.baseSequence_ = sequence;
+  this.rebuild();
+}
+
+SequencePlayer.prototype.pushTransformation = function(transform)
+{
+  this.transformationStack_.add(transform);
+  this.rebuild();
+}
+
+SequencePlayer.prototype.resetTransformation = function()
+{
   this.transformationStack_.reset();
-  this.transformationStack_.add(new STLegato());
   this.rebuild();
 }
 
@@ -62,6 +72,7 @@ SequencePlayer.prototype.rebuild = function()
 {
   if (this.harmonicStructure_ && this.baseSequence_)
   {
+    lo(this.transformationStack_);
     var rendered = renderSequence(this.harmonicStructure_, this.baseSequence_, this.signature_, this.ticksPerBeat_);
     var processed = this.transformationStack_.process(rendered.expand());
     this.eventSequence_.setContent(processed.compact());

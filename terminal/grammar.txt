@@ -44,6 +44,9 @@ word = chars:[a-z_\-A-Z0-9]+
 
 comma = space* "," space*;
 
+percentage
+	= positive_integer
+
 //---------------------- Notes
 
 note
@@ -112,6 +115,14 @@ scale_definition
   = n:note " " w:word
     { return { root: n, scale: w}; }
 
+//----------------------- Transformations
+
+sequence_transform
+	= "legato"i space* p:percentage
+	{ return { method: "pushTransformation", arguments: { name: "legato", parameters : { amount: p}}}}
+	/ "reset"i
+	{ return { method: "resetTransformation", arguments: {}}}
+
 //----------------------- Commands
 
 chord_progression // expect chord and some list in brackets
@@ -175,6 +186,8 @@ sequence_action
 	{ return { method: "loadSequence", arguments: {name: n}} }
 	/ "list"i
 	{ return {method: "listSequences", arguments: {}} }
+	/ "transform"i space* t:sequence_transform
+	{ return t;}
 
 player_action
 	= "select"i space* v:integer

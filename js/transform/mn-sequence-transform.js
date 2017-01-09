@@ -1,6 +1,13 @@
-STLegato = function(parameters)
+_ = require("lodash");
+
+STLegato = function()
 {
-  this.amount_ = 0.7;
+  this.amount = 70;
+}
+
+STLegato.prototype.setParameters = function(parameters)
+{
+  _.extend(this,parameters);
 }
 
 STLegato.prototype.process = function(timeline, transformation)
@@ -27,7 +34,7 @@ STLegato.prototype.process = function(timeline, transformation)
   var lengthMap = new Object;
   for (var i = 0; i < positionArray.length - 1; i++)
   {
-    var length = Math.floor((positionArray[i+1] - positionArray[i]) * this.amount_);
+    var length = Math.floor((positionArray[i+1] - positionArray[i]) * (this.amount / 100));
     lengthMap[positionArray[i]] = Math.max(length,1);
   }
 
@@ -71,6 +78,7 @@ SequenceTransformationStack.prototype.process = function(timeline)
 {
   return this.stack_.reduce(function(timeline, transformation)
   {
+    lo(transformation);
     return transformation.process(timeline);
   }, timeline);
 }

@@ -1,5 +1,29 @@
 _ = require("lodash");
 
+//------------------------------------------------------------------------------
+
+// change the toPath property of the item by applying fn to the fromPath
+
+var applyFn = (item, srcPath, dstPath, fn) => {
+  let srcData = _.get(item, [_.toPath(srcPath)]);
+  let dstData = fn(srcData);
+  return _.set(_.clone(item), _.toPath(dstPath), dstData);
+}
+
+//------------------------------------------------------------------------------
+//
+// apply a generic transform to the timelne elements
+//
+
+var applyTransform = (timeline, srcPath, dstPath, fn) => {
+  newTimeline = new Timeline();
+  newTimeline.sequence = timeline.sequence.map(item => applyFn(item, srcPath,dstPath, fn));
+  newTimeline.setLength(timeline.length);
+  return newTimeline;
+}
+
+//------------------------------------------------------------------------------
+
 STLegato = function()
 {
   this.amount = 70;
@@ -10,52 +34,27 @@ STLegato.prototype.setParameters = function(parameters)
   _.extend(this,parameters);
 }
 
-STLegato.prototype.process = function(timeline, transformation)
+STLegato.prototype.process = function(timeline)
 {
-  // Generate a sorted array of the note's position in ticks
-  var sequenceInTicks = _.sortBy(
-    timeline.sequence.map(function(item){
-      return {
-        position: ticksFromPosition(item.position),
-        element: item.element
-      }
-    })
-    , 'position');
+  // Generate a an array with the note's position in ticks
 
-  var timestampInTicks = sequenceInTicks.reduce(function(set, item){
-    set.add(item.position);
-    return set;
-  }, new Set());
-  timestampInTicks.add(ticksFromPosition(timeline.length));
+  var timestampInTicks = _(timeline.sequence)
+    .map(item => ticksFromPosition(item.position))
+    .uniq()
+    .value();
+  timestampInTicks.push(ticksFromPosition(timeline.length));
 
-  // Build a map from position to length
+  // compute the length each step shoud be
+  var lengthArray = _(timestampInTicks)
+    .map((value, index, array) => array[(index+1) % array.length] - value)  // Get the length of each step by diffence to the next
+    .map((value) => Math.max(Math.floor(value * (this.amount / 100)),1)) // Apply amount
+    .value()
 
-  var positionArray = Array.from(timestampInTicks);
-  var lengthMap = new Object;
-  for (var i = 0; i < positionArray.length - 1; i++)
-  {
-    var length = Math.floor((positionArray[i+1] - positionArray[i]) * (this.amount / 100));
-    lengthMap[positionArray[i]] = Math.max(length,1);
-  }
+  // build a position => length map
+  let lengthMap = _.zipObject(timestampInTicks, lengthArray);
 
-  newTimeline = new Timeline();
-  newTimeline.sequence = timeline.sequence.map(function(item)
-  {
-    var position = item.position;
-    var noteData = item.element;
-
-    CHECK_TYPE(position, SequencingPosition);
-    CHECK_TYPE(noteData, NoteData);
-
-    var newLength = lengthMap[ticksFromPosition(position)];
-    noteData.length = newLength;
-    return {
-      position: position,
-      element: noteData
-    }
-  })
-  newTimeline.setLength(timeline.length);
-  return newTimeline;
+  // apply the postion -> length mapping
+  return applyTransform(timeline, "position", "element.length", (x) => lengthMap[ticksFromPosition(x)]);
 }
 
 //------------------------------------------------------------------------------
@@ -78,7 +77,6 @@ SequenceTransformationStack.prototype.process = function(timeline)
 {
   return this.stack_.reduce(function(timeline, transformation)
   {
-    lo(transformation);
     return transformation.process(timeline);
   }, timeline);
 }

@@ -24,6 +24,26 @@ var applyTransform = (timeline, srcPath, dstPath, fn) => {
 
 //------------------------------------------------------------------------------
 
+STSpeed = function()
+{
+  this.amount = 1;
+}
+
+STSpeed.prototype.setParameters = function(parameters)
+{
+  _.extend(this,parameters);
+}
+
+STSpeed.prototype.process = function(timeline)
+{
+  var convertPositionFn = (x) => { console.log(ticksFromPosition(x)); return createSequencingPosition(ticksFromPosition(x) * 100 / this.amount, x.ticksPerBeat_)};
+  var newTimeline = applyTransform(timeline, "position", "position", (x) => convertPositionFn(x));
+  newTimeline.length = convertPositionFn(newTimeline.length);
+  return newTimeline;
+}
+
+//------------------------------------------------------------------------------
+
 STLegato = function()
 {
   this.amount = 70;

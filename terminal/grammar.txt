@@ -120,6 +120,8 @@ scale_definition
 sequence_transform
 	= "legato"i space* p:percentage
 	{ return { method: "pushTransformation", arguments: { name: "legato", parameters : { amount: p}}}}
+	/ "speed"i space* p:percentage
+	{ return { method: "pushTransformation", arguments: { name: "speed", parameters : { amount: p}}}}
 	/ "reset"i
 	{ return { method: "resetTransformation", arguments: {}}}
 

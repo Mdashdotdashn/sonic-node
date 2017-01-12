@@ -36,10 +36,11 @@ STSpeed.prototype.setParameters = function(parameters)
 
 STSpeed.prototype.process = function(timeline)
 {
-  var convertPositionFn = (x) => { console.log(ticksFromPosition(x)); return createSequencingPosition(ticksFromPosition(x) * 100 / this.amount, x.ticksPerBeat_)};
+  var convertTickFn = (x) => x * 100 / this.amount;
+  var convertPositionFn = (x) => createSequencingPosition(convertTickFn(ticksFromPosition(x)));
   var newTimeline = applyTransform(timeline, "position", "position", (x) => convertPositionFn(x));
   newTimeline.length = convertPositionFn(newTimeline.length);
-  return newTimeline;
+  return applyTransform(newTimeline, "element.length", "element.length", (x) => convertTickFn(x));
 }
 
 //------------------------------------------------------------------------------

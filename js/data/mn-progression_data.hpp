@@ -59,4 +59,9 @@
     progression: "1,7m,3M,1",
     origin: "[mre]";
   }
+  {
+    mode: "major",
+    progression: "3,1",
+    origin: "front 242 - no shuffle";
+  }
 }

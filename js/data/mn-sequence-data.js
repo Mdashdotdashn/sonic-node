@@ -86,13 +86,17 @@ sequenceDataStore = [
     type: "bass",
     signature: "4/4",
     data: {
-      length : "2.1.1",
+      length : "3.1.1",
       sequence:
         [
           { position: "1.1", degrees: [1]},
           { position: "1.2", degrees: [1]},
           { position: "1.3", degrees: [1]},
-          { position: "1.4", degrees: [2]},
+          { position: "1.4", degrees: [3]},
+          { position: "2.1", degrees: [1]},
+          { position: "2.2", degrees: [1]},
+          { position: "2.3", degrees: [1]},
+          { position: "2.4", degrees: [2]},
         ]
       }
   },

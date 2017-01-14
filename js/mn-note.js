@@ -35,7 +35,7 @@ var Notes =
   ,
 }
 
-var notenames = ["C","C#","D","D#","E","F","F#","G","G#","G","G#","B"];
+var notenames = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
 
 // Returns the note name from the given interval/index
 // this is not per se a degree since it's the index from C

@@ -8,6 +8,11 @@ ProgressionElement = function (notes)
   }, this);
 }
 
+progressionElementChordName = function(element)
+{
+  return chordname(element.notes.map((n) => n.pitch));
+}
+
 // Chord progression helper object
 
 ChordProgression = function(rootNote, mode)
@@ -26,7 +31,6 @@ ChordProgression.prototype.makeChord = function(degree, alteration)
 {
   var n = this.scaleNotes_;
   var root = n[degree-1];
-
   // If there's an alteration, force it
   if (alteration && alteration.length_ != 0)
   {
@@ -90,11 +94,7 @@ stringForProgression = function(progression)
   var chordnameList = "";
 	progression.forEach(function (element)
 	{
-		var chord = [];
-		element.notes.forEach(function(note){
-			chord.push(note.pitch);
-		})
-		chordnameList += chordname(chord) + ",";
+		chordnameList += progressionElementChordName(element) + ",";
 	})
   return chordnameList;
 }

@@ -3,22 +3,27 @@ var assert = require("assert");
 require("../js/progression/progression.js");
 require("../js/theory/theory.js");
 require("../js/mn-scale.js");
+
 // Progression generation
 
 var sequence = [1,6];
 var progression = makeChordProgression("c3", "minor", sequence);
-assert.equal(chordname(progression[0].notes), "cm");
-assert.equal(chordname(progression[1].notes), "g#");
+assert.equal(progressionElementChordName(progression[0]), "Cm");
+assert.equal(progressionElementChordName(progression[1]), "G#");
 
 var sequence = ["1","6"];
 var progression = makeChordProgression("c3", "minor", sequence);
-assert.equal(chordname(progression[0].notes), "cm");
-assert.equal(chordname(progression[1].notes), "g#");
+assert.equal(progressionElementChordName(progression[0]), "Cm");
+assert.equal(progressionElementChordName(progression[1]), "G#");
 
 var sequence = ["1","5M"];
 var progression = makeChordProgression("c3", "major", sequence);
-assert.equal(chordname(progression[0].notes), "c");
-assert.equal(chordname(progression[1].notes), "g");
+assert.equal(progressionElementChordName(progression[0]), "C");
+assert.equal(progressionElementChordName(progression[1]), "G");
+
+var sequence = ["1"];
+var progression = makeChordProgression("a3", "minor", sequence);
+assert.equal(progressionElementChordName(progression[0]), "Am");
 
 // Rectification
 

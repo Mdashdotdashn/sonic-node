@@ -26,6 +26,8 @@ function makeChordList()
 var chordList = ["cm", "a#", "fm", "g#"];
 var result = scalesFromChords(chordList);
 
+lo(result);
+
 assert.equal(result.score_, 1);
 assert.equal(result.scaleList_.length, 1);
 assert.equal(result.scaleList_[0], "c minor");

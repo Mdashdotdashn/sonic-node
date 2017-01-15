@@ -30,11 +30,11 @@ Track.prototype.tick = function(position)
   this.stream_.tick();
 }
 
-Track.prototype.render = function(timeline)
+Track.prototype.setHarmonicTimeline = function(timeline)
 {
     if (this.player_)
     {
-      this.player_.render(timeline);
+      this.player_.setHarmonicTimeline(timeline);
     }
 }
 
@@ -102,7 +102,7 @@ PlaybackEngine.prototype.setChordSequence = function(harmonicProgression)
 
   // send to all tracks
   this.tracks_.forEach(function(track){
-    track.render(timeline);
+    track.setHarmonicTimeline(timeline);
   })
 }
 

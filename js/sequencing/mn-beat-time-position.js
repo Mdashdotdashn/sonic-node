@@ -71,7 +71,6 @@ sixteenthCount = function(position)
   return position.sixteenth_ + 4 * position.beats_;
 }
 
-
 stringPositionToTicks = function(position, signature, ticksPerBeat)
 {
   CHECK_TYPE(position, "string");

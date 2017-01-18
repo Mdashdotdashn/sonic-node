@@ -16,12 +16,13 @@ function testSequenceRendering(signature, baseSequence, progression, expected)
   var chords = makeChordProgression(progression.root, progression.scale, progression.degrees);
   rectify_progression(chords, 0);
 
-  var harmonicStructure = createTimeline(chords, createSequencingPosition(ticksPerBeat * signature.numerator, ticksPerBeat));
-  var length = createSequencingPosition(chords.length * ticksPerBeat * signature.numerator, ticksPerBeat);
-  harmonicStructure.setLength(length);
+  // transform it to a harmonic timeline
+  var beatsPerBar = ticksPerBeat * signature.numerator;
+  var harmonicTimeline = createTimeline(chords, createSequencingPosition(beatsPerBar, ticksPerBeat));
+
   // render the combination
 
-  var rendered = renderSequence(harmonicStructure, baseSequence, signature, ticksPerBeat);
+  var rendered = renderSequence(harmonicTimeline, baseSequence, signature, ticksPerBeat);
 
   // Test against expected
 
@@ -44,7 +45,7 @@ function testSequenceRendering(signature, baseSequence, progression, expected)
   assert.deepEqual(rendered.sequence.length,expectedTimeline.sequence.length);
   for (var i = 0; i < rendered.sequence.length; i++)
   {
-    assert.deepEqual(rendered.sequence[i],expectedTimeline.sequence[i]);    
+    assert.deepEqual(rendered.sequence[i],expectedTimeline.sequence[i]);
   }
 }
 
@@ -98,4 +99,4 @@ var expectedOn3_4 = {
     ]
 }
 
-//testSequenceRendering(signature, baseSequence, progression, expectedOn3_4);
+testSequenceRendering(signature, baseSequence, progression, expectedOn3_4);

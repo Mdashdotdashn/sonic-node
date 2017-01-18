@@ -4,8 +4,8 @@ require("../js/sequencing/sequencing.js");
 require("../js/mn-utils.js");
 
 var elements = [ [1,2],[3],[6,7]]
-var beatTime = createSequencingPosition(kTicksPerBeats, kTicksPerBeats);
-var timeline = createTimeline(elements, beatTime);
+var beat = createSequencingPosition(kTicksPerBeats, kTicksPerBeats);
+var timeline = createTimeline(elements, beat);
 
 var expanded = timeline.expand();
 assert.equal(expanded.sequence.length, 5);

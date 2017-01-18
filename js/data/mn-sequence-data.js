@@ -119,4 +119,52 @@ sequenceDataStore = [
         ]
       }
   },
+  {
+    name: "split-bass",
+    type: "split",
+    signature: "4/4",
+    data: {
+      length : "2.1.1",
+      sequence:
+        [
+          { position: "1.1", degrees: [0]}
+        ]
+      }
+  },
+  {
+    name: "split-tenor",
+    type: "split",
+    signature: "4/4",
+    data: {
+      length : "2.1.1",
+      sequence:
+        [
+          { position: "1.1", degrees: [1]}
+        ]
+      }
+  },
+  {
+    name: "split-alto",
+    type: "split",
+    signature: "4/4",
+    data: {
+      length : "2.1.1",
+      sequence:
+        [
+          { position: "1.1", degrees: [2]}
+        ]
+      }
+  },
+  {
+    name: "split-soprano",
+    type: "split",
+    signature: "4/4",
+    data: {
+      length : "2.1.1",
+      sequence:
+        [
+          { position: "1.1", degrees: [3]}
+        ]
+      }
+  },
 ]

@@ -13,7 +13,7 @@ var renderSequenceWithTicks = function(harmonicStructure, baseSequence, ticksPer
       ?  harmonicStructure.sequence[harmonyIndex + 1].tickCount
       :  harmonicStructure.length;
 
-      // At this point, we'll a new copy the base sequence and loop it until the next or final step
+      // At this point, we'll render new slice the base sequence and loop it until the next or final step
 
     var sequenceIndex = 0;
     var render = true;

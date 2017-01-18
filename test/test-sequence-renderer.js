@@ -39,12 +39,12 @@ function testSequenceRendering(signature, baseSequence, progression, expected)
   });
   expectedTimeline.setLength(convertToPosition(expected.length, signature, ticksPerBeat));
 
-//  console.log(">>>" + JSON.stringify(rendered,null ,2));
-//  console.log("<<<" + JSON.stringify(expectedTimeline,null ,2));
   assert.deepEqual(rendered.length,expectedTimeline.length);
   assert.deepEqual(rendered.sequence.length,expectedTimeline.sequence.length);
   for (var i = 0; i < rendered.sequence.length; i++)
   {
+//    console.log(">>>" + JSON.stringify(rendered.sequence[i],null ,2));
+//    console.log("<<<" + JSON.stringify(expectedTimeline.sequence[i],null ,2));
     assert.deepEqual(rendered.sequence[i],expectedTimeline.sequence[i]);
   }
 }
@@ -64,7 +64,7 @@ var baseSequence = {
 var progression = {
     root: "c3",
     scale: "major",
-    degrees: [1,5]
+    degrees: [1,"b5"]
 }
 
 var expected = {
@@ -75,10 +75,10 @@ var expected = {
       { position: "1.2.1", notes: [52]},
       { position: "1.3.1", notes: [55, 48]},
       { position: "1.4.1", notes: [36, 48, 52]},
-      { position: "2.1.1", notes: [43, 55, 59]},
-      { position: "2.2.1", notes: [59]},
-      { position: "2.3.1", notes: [62, 55]},
-      { position: "2.4.1", notes: [43, 55, 59]},
+      { position: "2.1.1", notes: [42, 54, 58]},
+      { position: "2.2.1", notes: [58]},
+      { position: "2.3.1", notes: [61, 54]},
+      { position: "2.4.1", notes: [42, 54, 58]},
     ]
 }
 
@@ -93,9 +93,9 @@ var expectedOn3_4 = {
       { position: "1.1.1", notes: [36, 48, 52]},
       { position: "1.2.1", notes: [52]},
       { position: "1.3.1", notes: [55, 48]},
-      { position: "2.1.1", notes: [43, 55, 59]},
-      { position: "2.2.1", notes: [59]},
-      { position: "2.3.1", notes: [62, 55]},
+      { position: "2.1.1", notes: [42, 54, 58]},
+      { position: "2.2.1", notes: [58]},
+      { position: "2.3.1", notes: [61, 54]},
     ]
 }
 

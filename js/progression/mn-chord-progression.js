@@ -15,7 +15,7 @@ progressionElementChordName = function(element)
 
 // Chord progression helper object
 
-ChordProgression = function(rootNote, mode)
+var ChordProgressionBuilder = function(rootNote, mode)
 {
   this.scaleNotes_ = scale(rootNote, mode);
   this.scaleNotes_.forEach(function(note)
@@ -24,27 +24,49 @@ ChordProgression = function(rootNote, mode)
     }, this);
 }
 
+// Convert a string like bVIIsus4 to a property of the form
+// { base: 7, pitchOffset: -1, alteration: "sus4"}  (pitchOffset is the pitch offset resulting of flattening)
+
+var packDegreeProperties = function(degreeAsString)
+{
+  let flattened = degreeAsString[0] === 'b';
+  let baseIndex = flattened ? 1 : 0;
+  let pitchOffset =  flattened ? -1: 0;
+  let base = parseInt( degreeAsString[baseIndex]);
+  let alteration = degreeAsString.slice(baseIndex + 1);
+  return { base: base, pitchOffset: pitchOffset, alteration : alteration};
+}
+
 // return the chord corresponding to the nth degree in the current progression
 // n starts with 1
 
-ChordProgression.prototype.makeChord = function(degree, alteration)
+ChordProgressionBuilder.prototype.makeElement = function(props)
 {
-  var n = this.scaleNotes_;
-  var root = n[degree-1];
-  // If there's an alteration, force it
-  if (alteration && alteration.length_ != 0)
-  {
-      var current = root;
-      var notes = [ current ];
-      var intervals = intervalsFromChordToken(alteration);
-      intervals.forEach(function(interval) {
-        current += interval;
-        notes.push(current);
-      })
-      return new ProgressionElement(notes)
-  }
-  // return the default chord for the scale
-  return new ProgressionElement([n[degree-1], n[degree+1], n[degree+3]]);
+  // Rather than remembering scale notes, we could remember the type of chord
+  // And use uniformly intervalsFromChordToken rather than the current ternary switch
+
+  const n = this.scaleNotes_;
+  const baseIndex = props.base - 1;
+  var root = n[baseIndex];
+
+  const intervals =
+    (props.alteration.length != 0)
+    ? intervalsFromChordToken(props.alteration)
+    : [ n[baseIndex+2] - root, n[baseIndex+4] - n[baseIndex+2] ];
+
+  root += props.pitchOffset;
+  let context = {
+    current: root,
+    notes: [root]
+  };
+
+  intervals.reduce((context, interval) => {
+    context.current += interval;
+    context.notes.push(context.current);
+    return context;
+  }, context)
+
+  return new ProgressionElement(context.notes)
 }
 
 // creates a chord progression from a list of scale degree
@@ -54,39 +76,23 @@ ChordProgression.prototype.makeChord = function(degree, alteration)
 
 makeChordProgression = function(rootNote, mode, progression)
 {
-    var cp = new ChordProgression(rootNote, mode);
-    var chordSequence = [];
+    var builder = new ChordProgressionBuilder(rootNote, mode);
 
-    progression.forEach(function(degree) {
-      var degreeAsString = ("" + degree).trim();
-      var flattened = degreeAsString[0] === 'b';
-      var baseIndex = flattened ? 1 : 0;
-      var base = parseInt( degreeAsString[baseIndex]);
-      var alteration = degreeAsString.slice(baseIndex + 1);
-      var element = cp.makeChord(base, alteration);
-      if (flattened)
-      {
-        element.notes.forEach(function(note, index, array)
-        {
-          array[index].pitch = note.pitch - 1;
-        });
-      }
-      chordSequence.push(element);
-      });
-    return chordSequence;
+    const degreeToElementFn = (degree) =>
+    {
+      const degreeAsString = ("" + degree).trim();
+      const degreeProperties = packDegreeProperties(degreeAsString);
+      return element = builder.makeElement(degreeProperties);
+    };
+
+    return progression.map( (degree) => degreeToElementFn(degree));
 }
 
 // creates a chord progression from a list chord names
 
 makeChordSequence = function(chordNames)
 {
-    var chordSequence = [];
-    chordNames.forEach(function(chordName)
-    {
-        chordSequence.push(new ProgressionElement(notesfromchordname(chordName)));
-    });
-
-    return chordSequence;
+    return chordSequence = chordNames.map((chordName) => new ProgressionElement(notesfromchordname(chordName)));
 }
 
 stringForProgression = function(progression)
@@ -99,7 +105,7 @@ stringForProgression = function(progression)
   return chordnameList;
 }
 
-// invert a sert of notes
+// invert the notes of a list
 
 invertElement = function(midiNoteList, distance)
 {

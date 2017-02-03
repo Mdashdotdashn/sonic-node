@@ -71,11 +71,15 @@ Timeline.prototype.expand = function()
     return timeline;
 }
 
+// compact and sort an expanded timiline
+
 Timeline.prototype.compact = function()
 {
   var timeline = new Timeline();
   timeline.length = this.length;
   var ticksPerBeat = timeline.length.ticksPerBeat_;
+
+  this.sequence.sort((a,b) => comparePositions(a.position,b.position));
 
   var timemap = this.sequence.reduce(function(map,item)
   {
@@ -96,6 +100,17 @@ Timeline.prototype.compact = function()
       }
   })
   return timeline;
+}
+
+mergeTimeline = function(t1, t2)
+{
+  var expT1 = t1.expand();
+  var expT2 = t2.expand();
+
+  var timeline = new Timeline();
+  timeline.setLength(maxPositions(expT1.length, expT2.length));
+  timeline.sequence = _.union(expT1.sequence, expT2.sequence);
+  return timeline.compact();
 }
 
 createTimeline = function(elements, positionOffset)

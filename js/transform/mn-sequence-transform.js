@@ -26,7 +26,7 @@ var applyTransform = (timeline, srcPath, dstPath, fn) => {
 
 STSpeed = function()
 {
-  this.amount = 1;
+  this.amount = 100;
 }
 
 STSpeed.prototype.setParameters = function(parameters)
@@ -37,7 +37,7 @@ STSpeed.prototype.setParameters = function(parameters)
 STSpeed.prototype.process = function(timeline)
 {
   var convertTickFn = (x) => x * 100 / this.amount;
-  var convertPositionFn = (x) => createSequencingPosition(convertTickFn(ticksFromPosition(x)));
+  var convertPositionFn = (x) => createSequencingPosition(convertTickFn(ticksFromPosition(x)), x.ticksPerBeat_);
   var newTimeline = applyTransform(timeline, "position", "position", (x) => convertPositionFn(x));
   newTimeline.length = convertPositionFn(newTimeline.length);
   return applyTransform(newTimeline, "element.length", "element.length", (x) => convertTickFn(x));

@@ -1,74 +1,84 @@
 var renderSequenceWithTicks = function(harmonicStructure, baseSequence, ticksPerBeat)
 {
-  var result = new Timeline();
+  var renderedTimeline = new Timeline();
+  renderedTimeline.length = createSequencingPosition(0, ticksPerBeat);
 
-  var harmonyIndex = 0;
+  var harmonyStepIndex = 0;
   // Do all of the harmonic steps
-  while (harmonyIndex < harmonicStructure.sequence.length)
+  while (harmonyStepIndex < harmonicStructure.sequence.length)
   {
-    var harmonyStep = harmonicStructure.sequence[harmonyIndex];
+    var fromStep = harmonicStructure.sequence[harmonyStepIndex];
+    var lastStep = harmonyStepIndex == harmonicStructure.sequence.length - 1;
 
-    var stepEndPosition =
-      harmonyIndex < harmonicStructure.sequence.length - 1
-      ?  harmonicStructure.sequence[harmonyIndex + 1].tickCount
-      :  harmonicStructure.length;
-
-      // At this point, we'll render new slice the base sequence and loop it until the next or final step
-
-    var sequenceIndex = 0;
-    var render = true;
-
-    var notes = harmonyStep.element.notes;
-    var baseSequenceOffset = 0;
-
-    while (render)
+    var toStep = _.clone(harmonicStructure.sequence[lastStep ? 0 : harmonyStepIndex+1]);
+    if (lastStep)
     {
-      var sequenceStep = baseSequence.sequence[sequenceIndex];
-      var currentPosition = harmonyStep.tickCount + sequenceStep.tickCount + baseSequenceOffset;
-
-      if (currentPosition < stepEndPosition)
-      {
-        // Expand degree data
-
-        var degreeData = sequenceStep.degrees.map(function(degreeElement)
-        {
-          var isNumber = typeof degreeElement == "number";
-          var degree = isNumber ? degreeElement : degreeElement.d;
-          var transpose = isNumber ? 0 : degreeElement.t;
-          return { degree: degree, transpose: transpose}
-        })
-
-        var step = new Object;
-        var position = createSequencingPosition(currentPosition, ticksPerBeat);
-
-       var renderedNotes = degreeData.filter(function(e)
-        {
-          return (e.degree < notes.length)
-        }).map(function(e)
-        {
-          velocity = 1;
-          return new NoteData(notes[e.degree].pitch + e.transpose , velocity, 12)
-        })
-        result.add(renderedNotes,position);
-
-        // next one and wrap sequence if needed
-        sequenceIndex++;
-         if (sequenceIndex >= baseSequence.sequence.length)
-         {
-           sequenceIndex = 0;
-           baseSequenceOffset += baseSequence.length;
-//           render = false; // for a single iteration
-         }
-      }
-      else {
-        render = false;
-      }
+      toStep.tickCount = harmonicStructure.length;
     }
 
-    harmonyIndex++;
+    var renderedSlice = function(harmonyStepFrom, harmonyStepTo)
+    {
+      var sequenceIndex = 0;
+      var render = true;
+
+      var notes = harmonyStepFrom.element.notes;
+      var baseSequenceOffset = 0;
+
+      var renderedSlice = new Timeline();
+
+      while (render)
+      {
+        var sequenceStep = baseSequence.sequence[sequenceIndex];
+        var currentPosition = harmonyStepFrom.tickCount + sequenceStep.tickCount + baseSequenceOffset;
+
+        if (currentPosition < harmonyStepTo.tickCount)
+        {
+          // Expand degree data
+
+          var degreeData = sequenceStep.degrees.map(function(degreeElement)
+          {
+            var isNumber = typeof degreeElement == "number";
+            var degree = isNumber ? degreeElement : degreeElement.d;
+            var transpose = isNumber ? 0 : degreeElement.t;
+            return { degree: degree, transpose: transpose}
+          })
+
+          var step = new Object;
+          var position = createSequencingPosition(currentPosition, ticksPerBeat);
+
+         var renderedNotes = degreeData.filter(function(e)
+          {
+            return (e.degree < notes.length)
+          }).map(function(e)
+          {
+            velocity = 1;
+            return new NoteData(notes[e.degree].pitch + e.transpose , velocity, 12)
+          })
+          renderedSlice.add(renderedNotes,position);
+
+          // next one and wrap sequence if needed
+          sequenceIndex++;
+           if (sequenceIndex >= baseSequence.sequence.length)
+           {
+             sequenceIndex = 0;
+             baseSequenceOffset += baseSequence.length;
+  //           render = false; // for a single iteration
+           }
+        }
+        else {
+          render = false;
+        }
+      }
+      renderedSlice.setLength(createSequencingPosition(harmonyStepTo.tickCount, ticksPerBeat));
+      return renderedSlice;
+    }(fromStep, toStep)
+
+    renderedTimeline = mergeTimeline(renderedTimeline, renderedSlice);
+
+    harmonyStepIndex++;
   }
-  result.setLength(createSequencingPosition(harmonicStructure.length, ticksPerBeat));
-  return result;
+  renderedTimeline.setLength(createSequencingPosition(harmonicStructure.length, ticksPerBeat));
+  return renderedTimeline;
 }
 
 // renders a serie of note events to be played from

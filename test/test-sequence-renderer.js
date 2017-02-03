@@ -43,9 +43,10 @@ function testSequenceRendering(signature, baseSequence, progression, expected)
   assert.deepEqual(rendered.sequence.length,expectedTimeline.sequence.length);
   for (var i = 0; i < rendered.sequence.length; i++)
   {
-//    console.log(">>>" + JSON.stringify(rendered.sequence[i],null ,2));
-//    console.log("<<<" + JSON.stringify(expectedTimeline.sequence[i],null ,2));
-    assert.deepEqual(rendered.sequence[i],expectedTimeline.sequence[i]);
+    assert.deepEqual(rendered.sequence.length,expectedTimeline.sequence.length);
+    var actual = _.sortBy(rendered.sequence[i].element, 'pitch');
+    var expected = _.sortBy(expectedTimeline.sequence[i].element, 'pitch');
+    assert.deepEqual(actual, expected);
   }
 }
 

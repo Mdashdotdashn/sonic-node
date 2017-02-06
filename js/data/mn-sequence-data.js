@@ -167,4 +167,18 @@ sequenceDataStore = [
         ]
       }
   },
+  {
+    name: "clocks",
+    type: "arp",
+    signature: "4/4",
+    data: {
+      length : "1.2.3",
+      sequence:
+        [
+          { position: "1.1.1", degrees: [3] },
+          { position: "1.1.3", degrees: [2] },
+          { position: "1.2.1", degrees: [1] },
+        ]
+      }
+  },
 ]

@@ -57,11 +57,21 @@
   {
     mode: "major",
     progression: "1,7m,3M,1",
-    origin: "[mre]";
+    origin: "[mre]"
   }
   {
     mode: "major",
     progression: "3,1",
-    origin: "front 242 - no shuffle";
+    origin: "front 242 - no shuffle"
+  }
+  {
+    mode: "mixolydian",
+    progrssion: "1,b3M,2M,b2M",
+    origin: "coldplay - god put a smile upon your face"
+  }
+  {
+    mode: "minor",
+    progression: "1,4,7",
+    origin: "pj harvey: to bring you my love"
   }
 }

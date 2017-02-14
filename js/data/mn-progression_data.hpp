@@ -74,4 +74,9 @@
     progression: "1,4,7",
     origin: "pj harvey: to bring you my love"
   }
+  {
+    mode: "minor",
+    progression: "1,5M,1,5M,1,4,3,5M",
+    origin: "muse - new born";
+  }  
 }

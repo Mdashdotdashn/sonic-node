@@ -37,12 +37,8 @@ integer
   = n:"-"? d:digit+
       { return (n?n:"") + d.join("");}
 
-space = " ";
-
 word = chars:[a-z_\-A-Z0-9]+
   { return chars.join(""); }
-
-comma = space* "," space*;
 
 percentage
 	= positive_integer
@@ -52,6 +48,15 @@ percentage
 note
   = n:[a-g] m:[b#]?
     { return (m === null) ? n : n+m; }
+
+//---------------------- Tokens
+
+space = " ";
+
+comma = space* "," space*;
+
+token_list_head = space* "{" space*;
+token_list_tail = space* "}" space*;
 
 //---------------------- Scale degree progressions
 
@@ -77,7 +82,7 @@ scale_degree_element
 		{ return [b+r];}
 
 scale_degree_list // list of elements
-  = "{" l:(e:scale_degree_element comma? space* { return e;})+ "}"
+  = token_list_head l:(e:scale_degree_element comma? space* { return e;})+ token_list_tail
     { console.log(l) ; return l; }
 
 //----------------------- Notes
@@ -87,7 +92,7 @@ commaed_note
 		{ return e; }
 
 note_list
-  = "{" space* e:note c:commaed_note* space* "}"
+  = token_list_head space* e:note c:commaed_note* space* token_list_tail
     { var a = [e]; var v = a.concat(c); return v; }
 
 
@@ -106,7 +111,7 @@ commaed_chord_element
 		{ return e; }
 
 chord_list
-	= "{" space* e:chord_element c:commaed_chord_element* space* "}"
+	= token_list_head space* e:chord_element c:commaed_chord_element* space* token_list_tail
 	  { var v = e.concat(c); return v; }
 
 //----------------------- scale

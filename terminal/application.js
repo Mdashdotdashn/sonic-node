@@ -63,7 +63,6 @@ Application.prototype.init = function(options) {
 		tempo: 120,
 		resolution: 16,  // In sixteenth
 		length: 0.5,      // percentage
-		ticksPerBeat: 24,
 	}
 
 	extend(parameters, options);

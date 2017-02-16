@@ -104,6 +104,10 @@ commaed_chord_element
 	= comma e:chord_element
 		{ return e; }
 
+sequence_element
+	= i:positive_integer
+	{ return i;}
+
 //----------------------- lists
 
 scale_degree_list // list of elements
@@ -117,6 +121,10 @@ chord_list
 note_list
   = token_list_head e:note c:commaed_note* token_list_tail
     { var a = [e]; var v = a.concat(c); return v; }
+
+sequence_step_list
+	= token_list_head l:(e:sequence_element comma? space* { return e;})+ token_list_tail
+		{ console.log(l) ; return l;}
 
 //----------------------- scale
 
@@ -188,6 +196,10 @@ tempo
   = "tempo"i space* t:positive_integer
 	{ return { method: "setTempo", arguments: {tempo: t}}}
 
+sequence_definition
+	= l:sequence_step_list
+	{ return { sequence: l }; }
+
 sequence_action
 	= "load"i space* n:word
 	{ return { method: "loadSequence", arguments: {name: n}} }
@@ -195,6 +207,8 @@ sequence_action
 	{ return {method: "listSequences", arguments: {}} }
 	/ "transform"i space* t:sequence_transform
 	{ return t;}
+	/ d:sequence_definition
+	{ return { method: "generateSequence", arguments: d} ;}
 
 player_action
 	= "select"i space* v:integer

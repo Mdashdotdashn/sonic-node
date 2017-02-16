@@ -196,6 +196,11 @@ Application.prototype.transpose = function(arguments)
 	player.transpose(parseInt(arguments.value));
 }
 
+Application.prototype.generateSequence = function(arguments)
+{
+	lo(arguments);
+}
+
 Application.prototype.loadSequence = function(arguments)
 {
 	var baseSequence = this.sequenceLoader_.load(arguments.name);

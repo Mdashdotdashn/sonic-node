@@ -185,11 +185,6 @@ Application.prototype.setTempo = function(arguments)
 	this.engine_.setTempo(arguments.tempo);
 }
 
-Application.prototype.debug = function(arguments)
-{
-	console.log(this);
-}
-
 Application.prototype.selectPlayer = function(arguments)
 {
 	this.selectedPlayerIndex_ = arguments.value - 1;

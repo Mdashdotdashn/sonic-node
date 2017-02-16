@@ -144,10 +144,6 @@ exit
   = "exit"i
     { return { method: "exit" , arguments : []}}
 
-debug
-  = "debug"i
-    { return { method: "debug" , arguments : []}}
-
 scale
   = "scale"i space* s:scale_definition
     { return { method: "setScale", arguments: s }}
@@ -215,4 +211,4 @@ transpose
 //----------------------- Main
 
 command
-  = chord_progression / exit / scale / debug / resolution / clear / inversion / rectify / analyse / signature / tempo / transpose / sequence / player
+  = chord_progression / exit / scale / resolution / clear / inversion / rectify / analyse / signature / tempo / transpose / sequence / player

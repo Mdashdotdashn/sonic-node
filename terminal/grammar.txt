@@ -21,7 +21,8 @@
 	}
 }
 
-start = command
+start = space* c:command space*
+	{ return c;}
 
 //---------------------- Basic types
 
@@ -55,8 +56,8 @@ space = " ";
 
 comma = space* "," space*;
 
-token_list_head = space* "{" space*;
-token_list_tail = space* "}" space*;
+token_list_head = "{" space*;
+token_list_tail = space* "}";
 
 //---------------------- Scale degree progressions
 
@@ -81,19 +82,12 @@ scale_degree_element
 	/ b:'b'i* r:scale_degree_numeral
 		{ return [b+r];}
 
-scale_degree_list // list of elements
-  = token_list_head l:(e:scale_degree_element comma? space* { return e;})+ token_list_tail
-    { console.log(l) ; return l; }
-
 //----------------------- Notes
 
 commaed_note
 	= comma e:note
 		{ return e; }
 
-note_list
-  = token_list_head space* e:note c:commaed_note* space* token_list_tail
-    { var a = [e]; var v = a.concat(c); return v; }
 
 
 //----------------------- Chords
@@ -110,9 +104,19 @@ commaed_chord_element
 	= comma e:chord_element
 		{ return e; }
 
+//----------------------- lists
+
+scale_degree_list // list of elements
+  = token_list_head l:(e:scale_degree_element comma? space* { return e;})+ token_list_tail
+    { return l; }
+
 chord_list
-	= token_list_head space* e:chord_element c:commaed_chord_element* space* token_list_tail
+	= token_list_head e:chord_element c:commaed_chord_element* token_list_tail
 	  { var v = e.concat(c); return v; }
+
+note_list
+  = token_list_head e:note c:commaed_note* token_list_tail
+    { var a = [e]; var v = a.concat(c); return v; }
 
 //----------------------- scale
 

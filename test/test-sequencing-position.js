@@ -64,6 +64,14 @@ function testStringConversion(s,br,sr,tr)
   assert.equal(result.ticks_, tr);
 }
 
+function testToString(br,sr,s)
+{
+  var position = new SequencingPosition(kTicksPerBeats);
+  position.beats_ = br;
+  position.sixteenth_ = sr;
+  assert.equal(s, positionToString(position, new Signature));
+}
+
 function testMax(b1,s1,t1,b2,s2,t2,br,sr,tr)
 {
   var pos1 = new SequencingPosition(kTicksPerBeats);
@@ -85,6 +93,8 @@ function testMax(b1,s1,t1,b2,s2,t2,br,sr,tr)
 
 testStringConversion("1.1.1",0,0,0);
 testStringConversion("2.1.1",4,0,0);
+
+testToString(4,1,"2.1.2.1");
 
 testAdd(1,1,0, 3,3,1, 5,0,1);
 

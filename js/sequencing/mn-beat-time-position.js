@@ -106,3 +106,11 @@ convertToPosition = function(beatString, signature, ticksPerBeat)
   }
   return position;
 }
+
+positionToString = function(position, signature)
+{
+  CHECK_TYPE(position, SequencingPosition);
+  var beats = position.beats_ % signature.numerator;
+  var measure = (position.beats_ - beats) / signature.numerator;
+  return ""+(measure+1)+"."+(beats+1)+"."+(position.sixteenth_+1)+"."+(position.ticks_+1);
+}

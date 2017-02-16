@@ -119,3 +119,18 @@ renderSequence = function(harmonicStructure, baseSequence, signature, ticksPerBe
 
   return renderSequenceWithTicks(tickBasedStructure, tickBaseSequence, ticksPerBeat);
 }
+
+createSequenceFromDefinition = function(sequence, baseTime, signature)
+{
+  var result = new Object();
+  var position = createSequencingPosition(0, baseTime.ticksPerBeat_);
+  result.sequence = sequence.map((e) => {
+    var d = new Array();
+    d.push(parseInt(e));
+    var result = { position: positionToString(position, signature), degrees: d };
+    position = addPositions(position, baseTime);
+    return result;
+  })
+  result.length = positionToString(position, signature);
+  return result;
+}

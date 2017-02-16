@@ -37,7 +37,15 @@ var Application = function()
 	  if (err) {
 	    throw err;
 	  }
-	  this.parser = peg.generate(data.toString());
+		try {
+			this.parser = peg.generate(data.toString());
+		}
+		catch(err)
+		{
+			console.log(err.message);
+			console.log(err.location);
+			throw err;
+		}
 		console.log("loaded.");
 	});
 

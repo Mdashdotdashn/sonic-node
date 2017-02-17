@@ -124,13 +124,26 @@ createSequenceFromDefinition = function(sequence, baseTime, signature)
 {
   var result = new Object();
   var position = createSequencingPosition(0, baseTime.ticksPerBeat_);
-  result.sequence = sequence.map((e) => {
+
+  var createPositionsFn = (e) => {
     var d = new Array();
-    d.push(parseInt(e));
-    var result = { position: positionToString(position, signature), degrees: d };
+    var result = { position: positionToString(position, signature), degrees: [e] };
     position = addPositions(position, baseTime);
     return result;
-  })
+  };
+
+  var removeRestFn = (e) => (e.degrees[0] != ".");
+
+  var convertToIntFn = (e) => ({
+     position: e.position,
+     degrees:  e.degrees.map((s) => parseInt(s))
+   });
+
+  result.sequence = sequence
+    .map(createPositionsFn)
+    .filter(removeRestFn)
+    .map(convertToIntFn);
+
   result.length = positionToString(position, signature);
   return result;
 }

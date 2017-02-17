@@ -107,6 +107,7 @@ commaed_chord_element
 sequence_element
 	= i:positive_integer
 	{ return i;}
+	/ "."
 
 //----------------------- lists
 

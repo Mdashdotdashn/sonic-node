@@ -198,10 +198,9 @@ Application.prototype.transpose = function(arguments)
 
 Application.prototype.generateSequence = function(arguments)
 {
-//	lo(arguments);
 	// uses a 4th/beat as default timebase
 	var ticksPerBeat = this.engine_.ticksPerBeat_;
-	var baseTime = createSequencingPosition(ticksPerBeat, ticksPerBeat);
+	var baseTime = createSequencingPosition(parseInt(arguments.baseTime*4*ticksPerBeat), ticksPerBeat);
 	var baseSequence = createSequenceFromDefinition(arguments.sequence, baseTime, this.engine_.signature_);
 
 //	lo(baseSequence);

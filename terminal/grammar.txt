@@ -129,6 +129,16 @@ sequence_step_list
 
 //----------------------- scale
 
+base_time
+	= "1/8"
+	{return 0.125;}
+	/ "1/4"
+	{return 0.25;}
+	/ "1/2"
+	{return 0.5;}
+	/ d:("1"/"2"/"3"/"4")
+	{return parseFloat(d);}
+
 scale_definition
   = n:note " " w:word
     { return { root: n, scale: w}; }
@@ -198,8 +208,8 @@ tempo
 	{ return { method: "setTempo", arguments: {tempo: t}}}
 
 sequence_definition
-	= l:sequence_step_list
-	{ return { sequence: l }; }
+	= l:sequence_step_list space* b:("base"i space* b:base_time { return b;})?
+	{ return { sequence: l, baseTime: (b)? b: 0.25}; }
 
 sequence_action
 	= "load"i space* n:word

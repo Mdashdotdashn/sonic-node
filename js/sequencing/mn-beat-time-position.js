@@ -30,6 +30,23 @@ ticksFromPosition = function(position)
   return tickCount;
 }
 
+multPosition = function(position, factor)
+{
+  CHECK_TYPE(position, SequencingPosition);
+  var ticks = ticksFromPosition(position);
+  return createSequencingPosition(ticks * factor, position.ticksPerBeat_);
+}
+
+divPosition = function(position, factor)
+{
+  CHECK_TYPE(position, SequencingPosition);
+  var ticks = ticksFromPosition(position);
+  if (ticks % factor)
+  {
+    throw Error("tick resolution exceeded");
+  }
+  return createSequencingPosition(ticks / factor, position.ticksPerBeat_);
+}
 comparePositions = function(pos1, pos2)
 {
   var ticks1 = ticksFromPosition(pos1);

@@ -120,30 +120,65 @@ renderSequence = function(harmonicStructure, baseSequence, signature, ticksPerBe
   return renderSequenceWithTicks(tickBasedStructure, tickBaseSequence, ticksPerBeat);
 }
 
-createSequenceFromDefinition = function(sequence, baseTime, signature)
+var expandToPositionArray = function(source, start, offset)
 {
-  var result = new Object();
-  var position = createSequencingPosition(0, baseTime.ticksPerBeat_);
+  CHECK_TYPE(start, SequencingPosition);
+  CHECK_TYPE(offset, SequencingPosition);
+  CHECK_TYPE(source, Array);
 
-  var createPositionsFn = (e) => {
-    var d = new Array();
-    var result = { position: positionToString(position, signature), degrees: [e] };
-    position = addPositions(position, baseTime);
+  var stepPosition = start;
+
+  // create a (position, step) array
+  var insertPositionFn = (step) => {
+    var result;
+    switch(typeof step)
+    {
+      case "string":
+        result = { position: stepPosition, step: [parseInt(step)] };
+        break;
+
+      case "object":
+        if (step instanceof Array)
+        {
+          result = { position: stepPosition, step: step.map((s) => parseInt(s)) };
+        } else {
+          var sequence = step.sequence;
+          var subDivision = divPosition(offset, sequence.length);
+          result = expandToPositionArray(sequence, stepPosition, subDivision);
+        }
+    }
+
+    stepPosition = addPositions(stepPosition, offset);
     return result;
   };
 
-  var removeRestFn = (e) => (e.degrees[0] != ".");
+  return _.flatten(source.map(insertPositionFn));
+}
 
-  var convertToIntFn = (e) => ({
-     position: e.position,
-     degrees:  e.degrees.map((s) => parseInt(s))
+createSequenceFromDefinition = function(sequence, baseTime, signature)
+{
+  // initialize step position
+  var start = createSequencingPosition(0, baseTime.ticksPerBeat_);
+  var length = multPosition(baseTime, sequence.length);
+
+  timedSequence = expandToPositionArray(sequence, start, baseTime);
+
+  // remove any step with a rest
+  var removeRestFn = (e) => (e.step != ".");
+
+  // convert step from string to array and position to string
+  var convertPositionFn = (e) => ({
+     position: positionToString(e.position, signature),
+     degrees:  e.step
    });
 
-  result.sequence = sequence
-    .map(createPositionsFn)
-    .filter(removeRestFn)
-    .map(convertToIntFn);
+// build result array
+   var result = new Object();
 
-  result.length = positionToString(position, signature);
+  result.sequence = timedSequence
+    .filter(removeRestFn)
+    .map(convertPositionFn);
+
+  result.length = positionToString(length, signature);
   return result;
 }

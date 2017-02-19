@@ -104,10 +104,12 @@ commaed_chord_element
 	= comma e:chord_element
 		{ return e; }
 
-sequence_element
+sequence_step
 	= i:positive_integer
 	{ return i;}
 	/ "."
+	/ "(" l:(e:sequence_step comma? space* { return e;})+ ")"
+	{ return { sequence: l} }
 
 //----------------------- lists
 
@@ -124,7 +126,7 @@ note_list
     { var a = [e]; var v = a.concat(c); return v; }
 
 sequence_step_list
-	= token_list_head l:(e:sequence_element comma? space* { return e;})+ token_list_tail
+	= token_list_head l:(e:sequence_step comma? space* { return e;})+ token_list_tail
 		{ console.log(l) ; return l;}
 
 //----------------------- scale

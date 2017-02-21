@@ -5,30 +5,44 @@ var BaseSequenceContext = function(base)
 {
   this.index_ = 0;
   this.offset_ = 0;
+  this.baseTick_ = 0;
   this.base_ = base;
+  this.cycled_ = false;
 }
+
+BaseSequenceContext.prototype.reset = function(baseTick)
+{
+  var offset = baseTick - this.baseTick_;
+  this.baseTick_ = baseTick;
+
+  if (this.cycled_)
+  {
+    this.index_ = 0;
+    this.offset_ = 0;
+    this.cycled_ = false;
+  }
+  else
+  {
+    this.offset_ -= offset;
+  }
+};
 
 BaseSequenceContext.prototype.position = function()
 {
-  return this.base_.sequence[this.index_].tickCount + this.offset_;
+  return this.baseTick_ + this.base_.sequence[this.index_].tickCount + this.offset_;
 }
 
 BaseSequenceContext.prototype.stepData = function()
 {
-  return this.base_.sequence[this.index_].degrees.map(function(degreeElement)
+  var result = this.base_.sequence[this.index_].degrees.map(function(degreeElement)
   {
     var isNumber = typeof degreeElement == "number";
     var degree = isNumber ? degreeElement : degreeElement.d;
     var transpose = isNumber ? 0 : degreeElement.t;
     return { degree: degree, transpose: transpose}
   })
+  return result;
 }
-
-BaseSequenceContext.prototype.reset = function()
-{
-  this.index_ = 0;
-  this.offset_ = 0
-};
 
 BaseSequenceContext.prototype.next = function()
 {
@@ -38,6 +52,7 @@ BaseSequenceContext.prototype.next = function()
    {
      this.index_ = 0;
      this.offset_ += this.base_.length;
+     this.cycled_ = true;
    }
 }
 
@@ -45,7 +60,6 @@ BaseSequenceContext.prototype.next = function()
 
 var renderSequenceWithTicks = function(harmonicStructure, baseSequence, ticksPerBeat)
 {
-
   var renderedTimeline = new Timeline();
   renderedTimeline.length = createSequencingPosition(0, ticksPerBeat);
 
@@ -71,11 +85,11 @@ var renderSequenceWithTicks = function(harmonicStructure, baseSequence, ticksPer
 
       var renderedSlice = new Timeline();
 
-      baseSequenceContext.reset();
+      baseSequenceContext.reset(harmonyStepFrom.tickCount);
 
       while (render)
       {
-        var currentPosition = harmonyStepFrom.tickCount + baseSequenceContext.position();
+        var currentPosition = baseSequenceContext.position();
 
         if (currentPosition < harmonyStepTo.tickCount)
         {
@@ -91,7 +105,6 @@ var renderSequenceWithTicks = function(harmonicStructure, baseSequence, ticksPer
             })
 
           var position = createSequencingPosition(currentPosition, ticksPerBeat);
-
           renderedSlice.add(renderedNotes,position);
 
           baseSequenceContext.next();

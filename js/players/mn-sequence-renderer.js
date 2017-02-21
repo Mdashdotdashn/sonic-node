@@ -1,7 +1,55 @@
+
+//------------------------------------------------------------------------------
+
+var BaseSequenceContext = function(base)
+{
+  this.index_ = 0;
+  this.offset_ = 0;
+  this.base_ = base;
+}
+
+BaseSequenceContext.prototype.position = function()
+{
+  return this.base_.sequence[this.index_].tickCount + this.offset_;
+}
+
+BaseSequenceContext.prototype.stepData = function()
+{
+  return this.base_.sequence[this.index_].degrees.map(function(degreeElement)
+  {
+    var isNumber = typeof degreeElement == "number";
+    var degree = isNumber ? degreeElement : degreeElement.d;
+    var transpose = isNumber ? 0 : degreeElement.t;
+    return { degree: degree, transpose: transpose}
+  })
+}
+
+BaseSequenceContext.prototype.reset = function()
+{
+  this.index_ = 0;
+  this.offset_ = 0
+};
+
+BaseSequenceContext.prototype.next = function()
+{
+  // next one and wrap sequence if needed
+   this.index_++;
+   if (this.index_ >= this.base_.sequence.length)
+   {
+     this.index_ = 0;
+     this.offset_ += this.base_.length;
+   }
+}
+
+//------------------------------------------------------------------------------
+
 var renderSequenceWithTicks = function(harmonicStructure, baseSequence, ticksPerBeat)
 {
+
   var renderedTimeline = new Timeline();
   renderedTimeline.length = createSequencingPosition(0, ticksPerBeat);
+
+  var baseSequenceContext = new BaseSequenceContext(baseSequence);
 
   var harmonyStepIndex = 0;
   // Do all of the harmonic steps
@@ -18,52 +66,35 @@ var renderSequenceWithTicks = function(harmonicStructure, baseSequence, ticksPer
 
     var renderedSlice = function(harmonyStepFrom, harmonyStepTo)
     {
-      var sequenceIndex = 0;
       var render = true;
-
       var notes = harmonyStepFrom.element.notes;
-      var baseSequenceOffset = 0;
 
       var renderedSlice = new Timeline();
 
+      baseSequenceContext.reset();
+
       while (render)
       {
-        var sequenceStep = baseSequence.sequence[sequenceIndex];
-        var currentPosition = harmonyStepFrom.tickCount + sequenceStep.tickCount + baseSequenceOffset;
+        var currentPosition = harmonyStepFrom.tickCount + baseSequenceContext.position();
 
         if (currentPosition < harmonyStepTo.tickCount)
         {
           // Expand degree data
 
-          var degreeData = sequenceStep.degrees.map(function(degreeElement)
-          {
-            var isNumber = typeof degreeElement == "number";
-            var degree = isNumber ? degreeElement : degreeElement.d;
-            var transpose = isNumber ? 0 : degreeElement.t;
-            return { degree: degree, transpose: transpose}
-          })
+          var renderedNotes = baseSequenceContext.stepData().filter(function(e)
+            {
+              return (e.degree < notes.length)
+            }).map(function(e)
+            {
+              velocity = 1;
+              return new NoteData(notes[e.degree].pitch + e.transpose , velocity, 12)
+            })
 
-          var step = new Object;
           var position = createSequencingPosition(currentPosition, ticksPerBeat);
 
-         var renderedNotes = degreeData.filter(function(e)
-          {
-            return (e.degree < notes.length)
-          }).map(function(e)
-          {
-            velocity = 1;
-            return new NoteData(notes[e.degree].pitch + e.transpose , velocity, 12)
-          })
           renderedSlice.add(renderedNotes,position);
 
-          // next one and wrap sequence if needed
-          sequenceIndex++;
-           if (sequenceIndex >= baseSequence.sequence.length)
-           {
-             sequenceIndex = 0;
-             baseSequenceOffset += baseSequence.length;
-  //           render = false; // for a single iteration
-           }
+          baseSequenceContext.next();
         }
         else {
           render = false;

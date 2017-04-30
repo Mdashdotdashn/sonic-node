@@ -62,7 +62,7 @@ token_list_tail = space* "}";
 //---------------------- Scale degree progressions
 
 chord_alteration
-	= a: ('M'/'m'/'+'/'sus4')
+	= a: ('M'/'m'/'+'/'dim'/'sus4')
 		{ return a;}
 
 major_numeral

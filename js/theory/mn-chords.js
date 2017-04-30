@@ -76,7 +76,7 @@ chordname = function(midiNotes)
   {
     "4,3" : "",  // major
     "3,4" : "m", // minor
-    "3,3" : "º",  // diminished
+    "3,3" : "dim",  // diminished
     "4,4" : "+",  //   augmented
     "4,2" : "sus4",  //   sus4
   }

@@ -1,6 +1,7 @@
 var assert = require("assert");
 
 require("../js/sequencing/sequencing.js");
+require("../js/mn-utils.js");
 
 var eventList =
 [
@@ -12,14 +13,16 @@ makePosition = function(positionString)
 {
   return convertToPosition(positionString, new Signature(), kTicksPerBeats);
 }
-var content = [];
+
+var content = new Timeline();
 
 eventList.forEach(function(event)
 {
   position = makePosition(event.position)
-  content.push({ position: position, value: event.value});
+  content.add(event.value, position);
 });
 
+content.length = makePosition("3.1.1");
 var result = 0;
 var sequence = new EventSequence();
 sequence.connect(function(value)

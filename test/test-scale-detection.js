@@ -9,4 +9,4 @@ var result = scalesFromChords(chordList);
 
 assert.equal(result.score_, 1);
 assert.equal(result.scaleList_.length, 1);
-assert.equal(result.scaleList_[0], "c minor");
+assert.equal(result.scaleList_[0], "C minor");

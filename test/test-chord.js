@@ -17,7 +17,7 @@ function convertToMidiNote(noteList)
 function testChordName(noteList, expectedChord)
 {
   var chordName = chordname(convertToMidiNote(noteList));
-  assert.equal(chordName,expectedChord.toLowerCase());
+  assert.equal(chordName,expectedChord);
 }
 
 function testChordRootIndex(noteList, expectedRootNote)
@@ -27,8 +27,8 @@ function testChordRootIndex(noteList, expectedRootNote)
   assert.equal(chordRootIndex, expectedRootIndex);
 }
 
-testChordName([ "G" , "E", "C"], "c");
-testChordName([ "E" , "C", "G"], "c");
+testChordName([ "G" , "E", "C"], "C");
+testChordName([ "E" , "C", "G"], "C");
 testChordName([ "G" , "D#", "C"], "Cm");
 testChordName([ "B" , "G", "D"], "G");
 

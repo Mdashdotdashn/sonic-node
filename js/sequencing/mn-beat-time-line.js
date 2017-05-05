@@ -16,10 +16,17 @@ CHECK_TYPE = function(value, expectedType)
 
 //------------ Time signature ---------------------------
 
-Signature = function()
+Signature = function(string)
 {
-  this.numerator = 4;
-  this.denominator = 4;
+  if (string)
+  {
+    var split = string.split("/");
+    this.numerator = parseInt(split[0]);
+    this.denominator = parseInt(split[1]);
+  } else {
+    this.numerator = 4;
+    this.denominator = 4;
+  }
 }
 
 
@@ -38,7 +45,6 @@ Timeline = function()
 
 Timeline.prototype.add = function(element, position)
 {
-  CHECK_TYPE(position, SequencingPosition);
   this.sequence.push({
     position: position,
     element: element,
@@ -47,7 +53,6 @@ Timeline.prototype.add = function(element, position)
 
 Timeline.prototype.setLength = function(length)
 {
-  CHECK_TYPE(length, SequencingPosition);
   this.length = length;
 }
 

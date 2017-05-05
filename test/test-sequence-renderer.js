@@ -11,18 +11,24 @@ function testSequenceRendering(signature, baseSequence, progression, expected)
 {
   var ticksPerBeat = kTicksPerBeats;
 
-  // Build the basic chord structure
+  // convert base sequence to timeline
 
-  var chords = makeChordProgression(progression.root, progression.scale, progression.degrees);
-  rectify_progression(chords, 0);
+  sequenceTimeline = new Timeline();
+  sequenceTimeline.sequence = baseSequence.sequence.map(function(element)
+  {
+    var position = convertToPosition(element.position, signature, ticksPerBeat);
+    return { position: position, element: element.degrees };
+  });
 
-  // transform it to a harmonic timeline
+  sequenceTimeline.setLength(convertToPosition(baseSequence.length, signature, ticksPerBeat));
+  // convert harmonic progression to timeline
+
   var beatsPerBar = ticksPerBeat * signature.numerator;
-  var harmonicTimeline = createTimeline(chords, createSequencingPosition(beatsPerBar, ticksPerBeat));
+  var degreeTimeline = createTimeline(progression.degrees, createSequencingPosition(beatsPerBar, ticksPerBeat));
+  var harmonicTimeline = makeChordProgression(progression.root, progression.scale, degreeTimeline);
 
-  // render the combination
-
-  var rendered = renderSequence(harmonicTimeline, baseSequence, signature, ticksPerBeat);
+  // render
+  var rendered = renderSequence(harmonicTimeline, sequenceTimeline, signature, ticksPerBeat);
 
   // Test against expected
 

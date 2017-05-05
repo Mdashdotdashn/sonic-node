@@ -1,18 +1,3 @@
-// Build a chord object to manipulate the content
-
-ProgressionElement = function (notes)
-{
-  this.notes = [];
-  notes.forEach(function(note, index) {
-    this.notes.push({pitch: note, degree: index + 1});
-  }, this);
-}
-
-progressionElementChordName = function(element)
-{
-  return chordname(element.notes.map((n) => n.pitch));
-}
-
 // Chord progression helper object
 
 var ChordProgressionBuilder = function(rootNote, mode)
@@ -40,7 +25,7 @@ var packDegreeProperties = function(degreeAsString)
 // return the chord corresponding to the nth degree in the current progression
 // n starts with 1
 
-ChordProgressionBuilder.prototype.makeElement = function(props)
+ChordProgressionBuilder.prototype.buildNotes = function(props)
 {
   // Rather than remembering scale notes, we could remember the type of chord
   // And use uniformly intervalsFromChordToken rather than the current ternary switch
@@ -66,7 +51,7 @@ ChordProgressionBuilder.prototype.makeElement = function(props)
     return context;
   }, context)
 
-  return new ProgressionElement(context.notes)
+  return context.notes;
 }
 
 // creates a chord progression from a list of scale degree
@@ -76,31 +61,33 @@ ChordProgressionBuilder.prototype.makeElement = function(props)
 
 makeChordProgression = function(rootNote, mode, progression)
 {
-    var builder = new ChordProgressionBuilder(rootNote, mode);
+  CHECK_TYPE(progression, Timeline);
 
-    const degreeToElementFn = (degree) =>
-    {
-      const degreeAsString = ("" + degree).trim();
-      const degreeProperties = packDegreeProperties(degreeAsString);
-      return element = builder.makeElement(degreeProperties);
-    };
+  var builder = new ChordProgressionBuilder(rootNote, mode);
 
-    return progression.map( (degree) => degreeToElementFn(degree));
-}
+  const degreeToNotesFn = (degree) =>
+  {
+    const degreeAsString = ("" + degree).trim();
+    const degreeProperties = packDegreeProperties(degreeAsString);
+    return  builder.buildNotes(degreeProperties);
+  };
 
-// creates a chord progression from a list chord names
+  var noteProgression = new Timeline();
 
-makeChordSequence = function(chordNames)
-{
-    return chordSequence = chordNames.map((chordName) => new ProgressionElement(notesfromchordname(chordName)));
+  progression.sequence.forEach(function(step)
+  {
+    noteProgression.add(degreeToNotesFn(step.element), step.position);
+  });
+  noteProgression.length = progression.length;
+  return noteProgression;
 }
 
 stringForProgression = function(progression)
 {
   var chordnameList = "";
-	progression.forEach(function (element)
+	progression.sequence.forEach(function (step)
 	{
-		chordnameList += progressionElementChordName(element) + ",";
+		chordnameList += chordname(step.element) + ",";
 	})
   return chordnameList;
 }

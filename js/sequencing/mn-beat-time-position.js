@@ -88,14 +88,6 @@ sixteenthCount = function(position)
   return position.sixteenth_ + 4 * position.beats_;
 }
 
-stringPositionToTicks = function(position, signature, ticksPerBeat)
-{
-  CHECK_TYPE(position, "string");
-  var elementPosition = convertToPosition(position, signature, ticksPerBeat);
-  var elementPositionInTicks = ticksFromPosition(elementPosition);
-  return elementPositionInTicks;
-}
-
 // converts a beat string ("1.1.3.2") to a sequencing position
 
 convertToPosition = function(beatString, signature, ticksPerBeat)

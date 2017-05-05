@@ -1,17 +1,35 @@
 require("../data/mn-sequence-data.js")
 
-SequenceLoader = function()
+var ConvertSequenceData = function(data, signatureString, ticksPerBeat)
 {
-  this.dataStore = sequenceDataStore;
+  var signature = new Signature(signatureString);
+
+  sequenceTimeline = new Timeline();
+  sequenceTimeline.sequence = data.sequence.map(function(element)
+  {
+    var position = convertToPosition(element.position, signature, ticksPerBeat);
+    return { position: position, element: element.degrees };
+  });
+
+  sequenceTimeline.setLength(convertToPosition(data.length, signature, ticksPerBeat));
+  return sequenceTimeline;
+}
+
+SequenceLoader = function(ticksPerBeat)
+{
+  this.dataStore_ = sequenceDataStore;
+  this.ticksPerBeat_ = ticksPerBeat;
 }
 
 SequenceLoader.prototype.load = function(name)
 {
   var result;
-  sequenceDataStore.forEach(function(sequenceData){
+  var ticksPerBeat = this.ticksPerBeat_;
+
+  this.dataStore_.forEach(function(sequenceData){
       if (sequenceData.name == name)
       {
-        result = sequenceData.data;
+        result = ConvertSequenceData(sequenceData.data, sequenceData.signature, ticksPerBeat);
       }
   })
   return result;
@@ -20,7 +38,7 @@ SequenceLoader.prototype.load = function(name)
 SequenceLoader.prototype.listSequences = function()
 {
   var result = [];
-  sequenceDataStore.forEach(function(sequenceData){
+  this.dataStore_.forEach(function(sequenceData){
     result.push(sequenceData.name);
   });
   return result;

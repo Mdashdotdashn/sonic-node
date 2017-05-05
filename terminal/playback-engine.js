@@ -81,25 +81,8 @@ PlaybackEngine.prototype.run = function()
   this.heartbeat_.run();
 }
 
-PlaybackEngine.prototype.setChordSequence = function(harmonicProgression)
+PlaybackEngine.prototype.setChordSequence = function(timeline)
 {
-  // build a timeline
-
-  var currentBar = 0;
-  var timeline = new Timeline;
-  var signature = this.signature_;
-  var ticksPerBeat = this.ticksPerBeat_;
-
-  var ticksPerBar = ticksPerBeat * signature.numerator;
-
-  harmonicProgression.forEach(function(element)
-  {
-    var position = createSequencingPosition(currentBar * ticksPerBar, ticksPerBeat);
-    timeline.add(element,position);
-    currentBar++;
-  })
-  timeline.setLength (createSequencingPosition(currentBar * ticksPerBar, ticksPerBeat));
-
   // send to all tracks
   this.tracks_.forEach(function(track){
     track.setHarmonicTimeline(timeline);

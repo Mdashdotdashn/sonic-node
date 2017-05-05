@@ -29,12 +29,12 @@ BaseSequenceContext.prototype.reset = function(baseTick)
 
 BaseSequenceContext.prototype.position = function()
 {
-  return this.baseTick_ + this.base_.sequence[this.index_].tickCount + this.offset_;
+  return this.baseTick_ + this.base_.sequence[this.index_].position + this.offset_;
 }
 
 BaseSequenceContext.prototype.stepData = function()
 {
-  var result = this.base_.sequence[this.index_].degrees.map(function(degreeElement)
+  var result = this.base_.sequence[this.index_].element.map(function(degreeElement)
   {
     var isNumber = typeof degreeElement == "number";
     var degree = isNumber ? degreeElement : degreeElement.d;
@@ -60,6 +60,9 @@ BaseSequenceContext.prototype.next = function()
 
 var renderSequenceWithTicks = function(harmonicStructure, baseSequence, ticksPerBeat)
 {
+  CHECK_TYPE(harmonicStructure, Timeline);
+  CHECK_TYPE(baseSequence, Timeline);
+
   var renderedTimeline = new Timeline();
   renderedTimeline.length = createSequencingPosition(0, ticksPerBeat);
 
@@ -69,39 +72,42 @@ var renderSequenceWithTicks = function(harmonicStructure, baseSequence, ticksPer
   // Do all of the harmonic steps
   while (harmonyStepIndex < harmonicStructure.sequence.length)
   {
+    // Prepare data for from step
     var fromStep = harmonicStructure.sequence[harmonyStepIndex];
-    var lastStep = harmonyStepIndex == harmonicStructure.sequence.length - 1;
 
-    var toStep = _.clone(harmonicStructure.sequence[lastStep ? 0 : harmonyStepIndex+1]);
-    if (lastStep)
+    // Prepare data for to step. If we're doing the last index, to step is the first one
+    var isLastStep = (harmonyStepIndex == harmonicStructure.sequence.length - 1);
+    var toStep = _.clone(harmonicStructure.sequence[isLastStep ? 0 : harmonyStepIndex+1]);
+    if (isLastStep)
     {
-      toStep.tickCount = harmonicStructure.length;
+      toStep.position = harmonicStructure.length;
     }
 
     var renderedSlice = function(harmonyStepFrom, harmonyStepTo)
     {
       var render = true;
-      var notes = harmonyStepFrom.element.notes;
+      var notes = harmonyStepFrom.element;
 
       var renderedSlice = new Timeline();
 
-      baseSequenceContext.reset(harmonyStepFrom.tickCount);
+      baseSequenceContext.reset(harmonyStepFrom.position);
 
       while (render)
       {
         var currentPosition = baseSequenceContext.position();
 
-        if (currentPosition < harmonyStepTo.tickCount)
+        if (currentPosition < harmonyStepTo.position)
         {
           // Expand degree data
 
-          var renderedNotes = baseSequenceContext.stepData().filter(function(e)
+          var baseSequenceStep = baseSequenceContext.stepData();
+          var renderedNotes = baseSequenceStep.filter(function(e)
             {
-              return (e.degree < notes.length)
+              return (e.degree -1 < notes.length)
             }).map(function(e)
             {
               velocity = 1;
-              return new NoteData(notes[e.degree].pitch + e.transpose , velocity, 12)
+              return new NoteData(notes[e.degree -1] + e.transpose , velocity, 12)
             })
 
           var position = createSequencingPosition(currentPosition, ticksPerBeat);
@@ -113,7 +119,7 @@ var renderSequenceWithTicks = function(harmonicStructure, baseSequence, ticksPer
           render = false;
         }
       }
-      renderedSlice.setLength(createSequencingPosition(harmonyStepTo.tickCount, ticksPerBeat));
+      renderedSlice.setLength(createSequencingPosition(harmonyStepTo.position, ticksPerBeat));
       return renderedSlice;
     }(fromStep, toStep)
 
@@ -135,94 +141,34 @@ var renderSequenceWithTicks = function(harmonicStructure, baseSequence, ticksPer
 renderSequence = function(harmonicStructure, baseSequence, signature, ticksPerBeat)
 {
   CHECK_TYPE(harmonicStructure, Timeline);
+  CHECK_TYPE(baseSequence, Timeline);
+
   // Convert base sequence to use ticks for position
-  var tickBaseSequence = new Object;
-  tickBaseSequence.length = stringPositionToTicks(baseSequence.length, signature, ticksPerBeat);
+  var tickBaseSequence = new Timeline;
+  tickBaseSequence.setLength(ticksFromPosition(baseSequence.length, signature, ticksPerBeat));
+
   tickBaseSequence.sequence = baseSequence.sequence.map(
-    function(element)
+    function(step)
     {
-      var tickCount = stringPositionToTicks(element.position, signature, ticksPerBeat);
+      var tickCount = ticksFromPosition(step.position, signature, ticksPerBeat);
       return {
-        tickCount: tickCount,
-        degrees: element.degrees,
+        position: tickCount,
+        element: step.element,
       };
     })
 
   // Convert harmonicStructure to use ticks for position
 
-  var tickBasedStructure = new Object;
-  tickBasedStructure.length = ticksFromPosition(harmonicStructure.length, signature, ticksPerBeat);
+  var tickBasedStructure = new Timeline;
+  tickBasedStructure.setLength(ticksFromPosition(harmonicStructure.length, signature, ticksPerBeat));
   tickBasedStructure.sequence = harmonicStructure.sequence.map(
     function(item)
     {
       return {
-          tickCount: ticksFromPosition(item.position, signature, ticksPerBeat),
+          position: ticksFromPosition(item.position, signature, ticksPerBeat),
           element: item.element
         }
     });
 
   return renderSequenceWithTicks(tickBasedStructure, tickBaseSequence, ticksPerBeat);
-}
-
-var expandToPositionArray = function(source, start, offset)
-{
-  CHECK_TYPE(start, SequencingPosition);
-  CHECK_TYPE(offset, SequencingPosition);
-  CHECK_TYPE(source, Array);
-
-  var stepPosition = start;
-
-  // create a (position, step) array
-  var insertPositionFn = (step) => {
-    var result;
-    switch(typeof step)
-    {
-      case "string":
-        result = { position: stepPosition, step: [parseInt(step)] };
-        break;
-
-      case "object":
-        if (step instanceof Array)
-        {
-          result = { position: stepPosition, step: step.map((s) => parseInt(s)) };
-        } else {
-          var sequence = step.sequence;
-          var subDivision = divPosition(offset, sequence.length);
-          result = expandToPositionArray(sequence, stepPosition, subDivision);
-        }
-    }
-
-    stepPosition = addPositions(stepPosition, offset);
-    return result;
-  };
-
-  return _.flatten(source.map(insertPositionFn));
-}
-
-createSequenceFromDefinition = function(sequence, baseTime, signature)
-{
-  // initialize step position
-  var start = createSequencingPosition(0, baseTime.ticksPerBeat_);
-  var length = multPosition(baseTime, sequence.length);
-
-  timedSequence = expandToPositionArray(sequence, start, baseTime);
-
-  // remove any step with a rest
-  var removeRestFn = (e) => (e.step != ".");
-
-  // convert step from string to array and position to string
-  var convertPositionFn = (e) => ({
-     position: positionToString(e.position, signature),
-     degrees:  e.step
-   });
-
-// build result array
-   var result = new Object();
-
-  result.sequence = timedSequence
-    .filter(removeRestFn)
-    .map(convertPositionFn);
-
-  result.length = positionToString(length, signature);
-  return result;
 }

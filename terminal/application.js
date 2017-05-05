@@ -7,6 +7,7 @@ require("../js/transform/transform.js")
 
 require("./playback-engine.js")
 require("./harmony-engine.js")
+require("./sequence-parser.js")
 
 var extend = require("extend")
 var peg = require("pegjs");
@@ -72,7 +73,7 @@ Application.prototype.init = function(options) {
 
 	this.harmony_ = new HarmonyEngine();
 
-	this.sequenceLoader_ = new SequenceLoader();
+	this.sequenceLoader_ = new SequenceLoader(this.engine_.ticksPerBeat_);
 	this.transformationLoader_ = new TransformationLoader();
 	this.selectedPlayerIndex_ = 0;
 
@@ -115,6 +116,14 @@ Application.prototype.rebuild = function()
 	this.chordSequence_ = chordSequence;
 }
 
+Application.prototype.buildProgressionTimeline = function(degreeList)
+{
+	// Build a default timeline using one bar per degree
+	var ticksPerBeat = this.engine_.ticksPerBeat_;
+	var beatsPerBar = ticksPerBeat * this.engine_.signature_.numerator;
+	return createTimeline(degreeList, createSequencingPosition(beatsPerBar, ticksPerBeat));
+}
+
 Application.prototype.setScale = function(arguments)
 {
 	var scale = arguments.scale;
@@ -123,7 +132,10 @@ Application.prototype.setScale = function(arguments)
 
 	this.rebuild();
 
-	var scaleProgression = makeChordProgression(rootNote+"4", scale, [1,2,3,4,5,6,7]);
+	var scaleDegrees = [1,2,3,4,5,6,7];
+	var progressionTimeline = this.buildProgressionTimeline(scaleDegrees);
+
+	var scaleProgression = makeChordProgression(rootNote+"4", scale, progressionTimeline);
 	var progressionString = stringForProgression(scaleProgression);
 
 	return "Scale chords: " + progressionString;
@@ -131,9 +143,7 @@ Application.prototype.setScale = function(arguments)
 
 Application.prototype.setRectification = function(argument)
 {
-	this.harmony_.setRectification(parseInt(argument));
-	this.rebuild();
-	return "";
+	return "not implemented";
 }
 
 Application.prototype.setInversion = function(argument)
@@ -141,19 +151,6 @@ Application.prototype.setInversion = function(argument)
 	this.harmony_.setInversion(parseInt(argument));
 	this.rebuild();
 	return "";
-}
-
-Application.prototype.setProgression = function(arguments)
-{
-	var chords = [];
-	 arguments.forEach(function(element) {
-	 	chords.push(element)
-	 });
-
-	this.harmony_.setProgression(chords);
-	this.rebuild();
-
-	return this.currentSequenceString();
 }
 
 Application.prototype.analyseNotes = function(argument)
@@ -196,9 +193,23 @@ Application.prototype.transpose = function(arguments)
 	player.transpose(parseInt(arguments.value));
 }
 
+Application.prototype.generateProgression = function(arguments)
+{
+	var ticksPerBeat = this.engine_.ticksPerBeat_;
+	var baseTime = createSequencingPosition(parseInt(arguments.baseTime*4*ticksPerBeat), ticksPerBeat);
+	var progressionTimeline = createProgressionFromDefinition(arguments.sequence, baseTime, this.engine_.signature_);
+
+//	lo(progressionTimeline);
+
+	this.harmony_.setProgression(progressionTimeline);
+	this.rebuild();
+
+	return this.currentSequenceString();
+}
+
+
 Application.prototype.generateSequence = function(arguments)
 {
-	// uses a 4th/beat as default timebase
 	var ticksPerBeat = this.engine_.ticksPerBeat_;
 	var baseTime = createSequencingPosition(parseInt(arguments.baseTime*4*ticksPerBeat), ticksPerBeat);
 	var baseSequence = createSequenceFromDefinition(arguments.sequence, baseTime, this.engine_.signature_);

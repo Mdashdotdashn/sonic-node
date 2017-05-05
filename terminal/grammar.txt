@@ -104,6 +104,12 @@ commaed_chord_element
 	= comma e:chord_element
 		{ return e; }
 
+progression_step
+  = scale_degree_element
+	/ "."
+	/ "(" l:(e:progression_step comma? space* { return e;})+ ")"
+	{ return { sequence: l} }
+
 sequence_step
 	= i:positive_integer
 	{ return i;}
@@ -112,10 +118,6 @@ sequence_step
 	{ return { sequence: l} }
 
 //----------------------- lists
-
-scale_degree_list // list of elements
-  = token_list_head l:(e:scale_degree_element comma? space* { return e;})+ token_list_tail
-    { return l; }
 
 chord_list
 	= token_list_head e:chord_element c:commaed_chord_element* token_list_tail
@@ -127,7 +129,11 @@ note_list
 
 sequence_step_list
 	= token_list_head l:(e:sequence_step comma? space* { return e;})+ token_list_tail
-		{ console.log(l) ; return l;}
+		{ return l;}
+
+progression_step_list
+	= token_list_head l:(e:progression_step comma? space* { return e;})+ token_list_tail
+		{ return l;}
 
 //----------------------- scale
 
@@ -157,9 +163,13 @@ sequence_transform
 
 //----------------------- Commands
 
-chord_progression // expect chord and some list in brackets
-  = "progression"i " " d:scale_degree_list
-    { return { method: "setProgression", arguments: d.toString().split(",")} }
+progression_definition
+	= l:progression_step_list space* b:("base"i space* b:base_time { return b;})?
+	{ return { sequence: l, baseTime: (b)? b: 1.0}; }
+
+scale_progression
+  = "progression"i " " d:progression_definition
+    { return { method: "generateProgression", arguments: d}; }
 
 clear
   = "clear"i
@@ -242,4 +252,4 @@ transpose
 //----------------------- Main
 
 command
-  = chord_progression / exit / scale / resolution / clear / inversion / rectify / analyse / signature / tempo / transpose / sequence / player
+  = scale_progression / exit / scale / resolution / clear / inversion / rectify / analyse / signature / tempo / transpose / sequence / player

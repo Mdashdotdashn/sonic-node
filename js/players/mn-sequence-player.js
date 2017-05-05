@@ -30,9 +30,13 @@ SequencePlayer.prototype.onEvent = function(events)
   });
 
 }
+
 SequencePlayer.prototype.setHarmonicTimeline = function(timeline)
 {
-  CHECK_TYPE(timeline, Timeline);
+  if (timeline)
+  {
+    CHECK_TYPE(timeline, Timeline);
+  }
   this.harmonicStructure_ = timeline;
   this.rebuild();
 }

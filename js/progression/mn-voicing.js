@@ -76,10 +76,6 @@ var rectify_progression_inwards = function(sequence)
 
 rectify_progression = function(sequence, mode)
 {
-  // Grab the bass as transposed root note
-
-  var c1 = midinotefromname("c1");
-
   switch(mode)
   {
     case 0:
@@ -95,9 +91,14 @@ rectify_progression = function(sequence, mode)
       break;
   }
 
+  // Todo - extract as this is not rectification but transformation
+
+  var c1 = midinotefromname("c1");
+
   sequence.forEach(function(step)
   {
     step.notes.forEach(function(element, index, array){
+      // If root, adds a c1 transposed version for the bass
       if (element.degree === 1)
       {
         array.push({ pitch: c1 + (element.pitch) % 12, degree: 0});

@@ -31,7 +31,6 @@ HarmonyEngine.prototype.rebuild = function()
 		// create chord progression
 		var progression = makeChordProgression(this.rootNote_, this.scale_, this.progression_);
 		// apply desired inversion to the first chord
-		progression.sequence[0].element = invertElement(progression.sequence[0].element,this.inversion_);
-		return progression;
+    return progression.mapSteps((x) => invertChord(x,this.inversion_));
   }
 }

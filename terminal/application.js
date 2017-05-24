@@ -141,16 +141,18 @@ Application.prototype.setScale = function(arguments)
 	return "Scale chords: " + progressionString;
 }
 
-Application.prototype.setRectification = function(argument)
+Application.prototype.setVoiceLeading = function(argument)
 {
-	return "not implemented";
+	var player = this.engine_.getPlayer(this.selectedPlayerIndex_);
+	player.setVoiceLeading(argument);
+	return "voice leading set.";
 }
 
 Application.prototype.setInversion = function(argument)
 {
 	this.harmony_.setInversion(parseInt(argument));
 	this.rebuild();
-	return "";
+	return "inverted.";
 }
 
 Application.prototype.analyseNotes = function(argument)
@@ -205,6 +207,13 @@ Application.prototype.generateProgression = function(arguments)
 	this.rebuild();
 
 	return this.currentSequenceString();
+}
+
+
+Application.prototype.clear = function()
+{
+	this.harmony_.setProgression(new Timeline());
+	this.rebuild();
 }
 
 

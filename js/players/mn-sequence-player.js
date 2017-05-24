@@ -8,6 +8,7 @@ SequencePlayer = function(signature, ticksPerBeat)
   this.eventSequence_ = new EventSequence();
   this.baseSequence_ = null;
   this.transpose_ = 0;
+  this.voiceLeadingMethod_ = 1;
   this.transformationStack_ = new SequenceTransformationStack();
 }
 
@@ -28,8 +29,8 @@ SequencePlayer.prototype.onEvent = function(events)
     CHECK_TYPE(data, NoteData)
     noteStream.add(new NoteData(data.pitch + transpose, data.velocity, data.length));
   });
-
 }
+
 
 SequencePlayer.prototype.setHarmonicTimeline = function(timeline)
 {
@@ -41,11 +42,20 @@ SequencePlayer.prototype.setHarmonicTimeline = function(timeline)
   this.rebuild();
 }
 
+
 SequencePlayer.prototype.setSequence = function(sequence)
 {
   this.baseSequence_ = sequence;
   this.rebuild();
 }
+
+
+SequencePlayer.prototype.setVoiceLeading = function(method)
+{
+  this.voiceLeadingMethod_ = method;
+  this.rebuild();
+}
+
 
 SequencePlayer.prototype.pushTransformation = function(transform)
 {
@@ -61,7 +71,7 @@ SequencePlayer.prototype.resetTransformation = function()
 
 SequencePlayer.prototype.transpose = function(value)
 {
-  this.transpose_ += value;
+  this.transpose_ = value;
 }
 
 SequencePlayer.prototype.tick = function(position)
@@ -76,7 +86,9 @@ SequencePlayer.prototype.rebuild = function()
 {
   if (this.harmonicStructure_ && this.baseSequence_)
   {
-    var rendered = renderSequence(this.harmonicStructure_, this.baseSequence_, this.signature_, this.ticksPerBeat_);
+    var rectified = rectify_progression(this.harmonicStructure_, this.voiceLeadingMethod_);
+    var sorted = rectified.mapSteps((element) => _.sortBy(element));
+    var rendered = renderSequence(sorted, this.baseSequence_, this.signature_, this.ticksPerBeat_);
     var processed = this.transformationStack_.process(rendered.expand());
     this.eventSequence_.setContent(processed.compact());
   }

@@ -1,3 +1,4 @@
+_ = require("lodash");
 // Chord progression helper object
 
 var ChordProgressionBuilder = function(rootNote, mode)
@@ -94,30 +95,36 @@ stringForProgression = function(progression)
 
 // invert the notes of a list
 
-invertElement = function(midiNoteList, distance)
+invertChord = function(midiNoteList, distance)
 {
   var sign = Math.sign(distance);
   var count = Math.abs(distance);
 
-  var inverted = midiNoteList;
+  var degree = 1;
+  var inverted = midiNoteList.map(function(e){
+    var pair = { note: e, degree: degree};
+    degree++;
+    return pair;
+  });
 
   for (var i = 0; i< count; i++)
   {
     switch(sign)
     {
       case 1:
-        inverted.sort();
+        inverted = _.sortBy(inverted,'note');
         var lowest = inverted.shift();
-        lowest.pitch += 12;
+        lowest.note += 12;
         inverted.push(lowest);
         break;
 
       case -1:
-        inverted.sort();
+        inverted = _.sortBy(inverted,'note');
         var highest = inverted.pop();
-        highest.pitch -= 12;
+        highest.note -= 12;
         inverted.unshift(highest);
     }
   }
-  return inverted;
+
+  return _(inverted).sortBy('degree').map((e) => e.note).value();
 }

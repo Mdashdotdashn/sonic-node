@@ -112,10 +112,12 @@ progression_step
 
 sequence_step
 	= i:positive_integer
-	{ return i;}
+		{ return i;}
 	/ "."
+	/ "[" l:(e:sequence_step comma? space* { return e;})+ "]"
+		{ return l; }
 	/ "(" l:(e:sequence_step comma? space* { return e;})+ ")"
-	{ return { sequence: l} }
+		{ return { sequence: l} }
 
 //----------------------- lists
 
@@ -173,7 +175,7 @@ scale_progression
 
 clear
   = "clear"i
-    { return { method: "setProgression", arguments : []}}
+    { return { method: "clear", arguments : []}}
 
 exit
   = "exit"i
@@ -195,15 +197,15 @@ inversion
   = "inversion"i space* n:integer
     { return { method: "setInversion", arguments: n}}
 
-rectification_method
+voice_leading_method
   = "none" { return 0 ;}
   / "sequential" { return 1;}
   / "first" { return 2;}
   / "inwards" { return 3;}
 
-rectify
-  = "rectify"i space* m:rectification_method
-  { return { method: "setRectification", arguments : m}}
+voice_leading
+  = "leading"i space* m:voice_leading_method
+  { return { method: "setVoiceLeading", arguments : m}}
 
 analysis
   = "chords"i space* l:chord_list
@@ -252,4 +254,4 @@ transpose
 //----------------------- Main
 
 command
-  = scale_progression / exit / scale / resolution / clear / inversion / rectify / analyse / signature / tempo / transpose / sequence / player
+  = scale_progression / exit / scale / resolution / clear / inversion / voice_leading / analyse / signature / tempo / transpose / sequence / player

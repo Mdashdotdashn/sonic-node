@@ -21,6 +21,7 @@ function testSequenceRendering(signature, baseSequence, progression, expected)
   });
 
   sequenceTimeline.setLength(convertToPosition(baseSequence.length, signature, ticksPerBeat));
+
   // convert harmonic progression to timeline
 
   var beatsPerBar = ticksPerBeat * signature.numerator;

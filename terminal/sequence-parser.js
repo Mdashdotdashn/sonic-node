@@ -34,7 +34,7 @@ var expandToPositionArray = function(source, start, offset, convertFn)
   return _.flatten(source.map(insertPositionFn));
 }
 
-splitTokenSequence = function(sequence, baseTime, signature, convertFn)
+var splitTokenSequence = function(sequence, baseTime, signature, convertFn)
 {
   // initialize step position
   var start = createSequencingPosition(0, baseTime.ticksPerBeat_);

@@ -44,6 +44,18 @@ var sequence = makeDegreeSequence(["1"]);
 var progression = makeChordProgression("a3", "minor", sequence);
 assert.equal(chordname(progression.sequence[0].element), "Am");
 
+//var sequence = makeDegreeSequence(["1"]);
+//var progression = makeChordProgression("eb3", "minor", sequence);
+//assert.equal(chordname(progression.sequence[0].element), "D#m");
+
+// inversion
+
+var chord = [40, 44, 47];
+var expectedInversion = [40, 32, 35];
+var result = invertChord(chord, -2);
+assert.deepEqual(result, expectedInversion);
+assert.deepEqual(invertChord(result,2), chord);
+
 // Rectification
 
 //var cp1 = makeChordProgression("a3", "major", [4,1]);

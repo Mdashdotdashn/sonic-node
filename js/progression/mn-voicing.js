@@ -5,7 +5,7 @@ var note_gravity_center = function(notes)
   var sum = 0.0;
   notes.forEach(function(note)
     {
-      sum += note.pitch;
+      sum += note;
     });
   return sum / notes.length;
 }
@@ -27,14 +27,13 @@ var rectify_closest = function(noteListFrom, noteListTo)
   var mind = 1000;
 
   var result = noteListTo;
-
   while(mind > d)
   {
     mind =d;
-    result = invertElement(result, -sign);
+    result = invertChord(result, -sign);
     d = Math.abs(computeDistance(noteListFrom, result));
   }
-  result = invertElement(result, sign);
+  result = invertChord(result, sign);
   return result;
 }
 
@@ -42,7 +41,7 @@ var rectify_progression_sequential = function(sequence)
 {
   for (var i = 0; i < sequence.length-1; i++)
   {
-    sequence[i+1].notes = rectify_closest(sequence[i].notes,sequence[i+1].notes);
+    sequence[i+1].element = rectify_closest(sequence[i].element,sequence[i+1].element);
   }
 }
 
@@ -50,7 +49,7 @@ var rectify_progression_to_first = function(sequence)
 {
   for (var i = 0; i < sequence.length-1; i++)
   {
-    sequence[i+1].notes = rectify_closest(sequence[0].notes,sequence[i+1].notes);
+    sequence[i+1].element = rectify_closest(sequence[0].element,sequence[i+1].element);
   }
 }
 
@@ -59,51 +58,40 @@ var rectify_progression_inwards = function(sequence)
   var leftIndex = 1;
   var rightIndex = sequence.length -1;
 
-  sequence[rightIndex].notes = rectify_closest(sequence[0].notes, sequence[rightIndex].notes);
+  sequence[rightIndex].element = rectify_closest(sequence[0].element, sequence[rightIndex].element);
   rightIndex--;
 
   while (leftIndex < rightIndex)
   {
-    sequence[leftIndex].notes = rectify_closest(sequence[leftIndex -1].notes, sequence[leftIndex].notes);
+    sequence[leftIndex].element = rectify_closest(sequence[leftIndex -1].element, sequence[leftIndex].element);
     if (rightIndex > leftIndex)
     {
-      sequence[rightIndex].notes = rectify_closest(sequence[rightIndex+1].notes, sequence[rightIndex].notes);
+      sequence[rightIndex].element = rectify_closest(sequence[rightIndex+1].element, sequence[rightIndex].element);
     }
     rightIndex--;
     leftIndex++;
   }
 }
 
-rectify_progression = function(sequence, mode)
+rectify_progression = function(timeline, mode)
 {
+  CHECK_TYPE(timeline, Timeline);
+
+  var result = timeline.clone();
+
   switch(mode)
   {
     case 0:
       break;
     case 1:
-      rectify_progression_sequential(sequence);
+      rectify_progression_sequential(result.sequence);
       break;
     case 2:
-      rectify_progression_to_first(sequence);
+      rectify_progression_to_first(result.sequence);
       break;
     case 3:
-      rectify_progression_inwards(sequence);
+      rectify_progression_inwards(result.sequence);
       break;
   }
-
-  // Todo - extract as this is not rectification but transformation
-
-  var c1 = midinotefromname("c1");
-
-  sequence.forEach(function(step)
-  {
-    step.notes.forEach(function(element, index, array){
-      // If root, adds a c1 transposed version for the bass
-      if (element.degree === 1)
-      {
-        array.push({ pitch: c1 + (element.pitch) % 12, degree: 0});
-      }
-    });
-    step.notes = step.notes.rotate(step.notes.length -1);
-  });
+  return result;
 }

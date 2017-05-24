@@ -41,6 +41,7 @@ Signature = function(string)
 Timeline = function()
 {
   this.sequence = [];
+  this.length = 0;
 }
 
 Timeline.prototype.add = function(element, position)
@@ -54,6 +55,24 @@ Timeline.prototype.add = function(element, position)
 Timeline.prototype.setLength = function(length)
 {
   this.length = length;
+}
+
+Timeline.prototype.clone = function()
+{
+  var clone = new Timeline();
+  clone.length = this.length;
+  clone.sequence = this.sequence.clone();
+  return clone;
+}
+Timeline.prototype.mapSteps = function(convertFn)
+{
+  var result = new Timeline();
+  result.length = this.length;
+  result.sequence = this.sequence.map(function(step)
+  {
+    return { position: step.position, element: convertFn(step.element)};
+  });
+  return result;
 }
 
 Timeline.prototype.expand = function()

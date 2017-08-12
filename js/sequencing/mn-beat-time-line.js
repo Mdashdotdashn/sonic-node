@@ -52,18 +52,19 @@ Timeline.prototype.add = function(element, position)
   })
 }
 
+
 Timeline.prototype.setLength = function(length)
 {
   this.length = length;
 }
 
+
 Timeline.prototype.clone = function()
 {
-  var clone = new Timeline();
-  clone.length = this.length;
-  clone.sequence = this.sequence.clone();
-  return clone;
+  return _.cloneDeep(this);
 }
+
+
 Timeline.prototype.mapSteps = function(convertFn)
 {
   var result = new Timeline();

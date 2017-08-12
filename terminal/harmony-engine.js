@@ -4,7 +4,7 @@ HarmonyEngine = function()
   this.progression_ = [];
 	this.scale_ = "major";
 	this.rootNote_ = "c4";
-	this.inversion_ = -2;
+	this.inversion_ = 0;
 }
 
 HarmonyEngine.prototype.setScale = function(scale, rootNote)

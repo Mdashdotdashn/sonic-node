@@ -2,5 +2,5 @@ c,d,,d#,e,f,f# -> 0,1,2,3,4 : note indexes
 i,ii,III, etc: scale degree
 Cm = chord
 Cm4 = midi chord
-C = note
+C = note (see https://en.wikipedia.org/wiki/Pitch_class)
 C5 = midi note

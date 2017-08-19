@@ -47,7 +47,7 @@ percentage
 //---------------------- Notes
 
 note
-  = n:[a-g] m:[b#]?
+  = n:([a-g]/[A-G]) m:[b#]?
     { return (m === null) ? n : n+m; }
 
 //---------------------- Tokens

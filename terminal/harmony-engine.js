@@ -2,15 +2,13 @@
 HarmonyEngine = function()
 {
   this.progression_ = [];
-	this.scale_ = "major";
-	this.rootNote_ = "c4";
+  this.scaleIntervals_ = buildScaleNotes("c4", "major");
 	this.inversion_ = 0;
 }
 
-HarmonyEngine.prototype.setScale = function(scale, rootNote)
+HarmonyEngine.prototype.setScale = function(scalename, rootNote, alterations)
 {
-  this.scale_ = scale;
-  this.rootNote_ = rootNote+"4";
+  this.scaleIntervals_ = buildScaleNotes(rootNote+"4", scalename, alterations);
 }
 
 HarmonyEngine.prototype.setInversion = function(inversion)
@@ -29,7 +27,7 @@ HarmonyEngine.prototype.rebuild = function()
   if (this.progression_.length != 0)
 	{
 		// create chord progression
-		var progression = makeChordProgression(this.rootNote_, this.scale_, this.progression_);
+		var progression = makeChordProgression(this.scaleIntervals_, this.progression_);
 		// apply desired inversion to the first chord
     return progression.mapSteps((x) => invertChord(x,this.inversion_));
   }

@@ -26,7 +26,7 @@ function testSequenceRendering(signature, baseSequence, progression, expected)
 
   var beatsPerBar = ticksPerBeat * signature.numerator;
   var degreeTimeline = createTimeline(progression.degrees, createSequencingPosition(beatsPerBar, ticksPerBeat));
-  var harmonicTimeline = makeChordProgression(progression.root, progression.scale, degreeTimeline);
+  var harmonicTimeline = makeChordProgression(buildScaleNotes(progression.root, progression.scale), degreeTimeline);
 
   // render
   var rendered = renderSequence(harmonicTimeline, sequenceTimeline, signature, ticksPerBeat);

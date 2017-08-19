@@ -23,25 +23,25 @@ makeDegreeSequence = function(degreeList)
 // Progression generation
 // From int indexes
 var sequence = makeDegreeSequence([1,6]);
-var progression = makeChordProgression("c3", "minor", sequence);
+var progression = makeChordProgression(buildScaleNotes("c3", "minor"), sequence);
 assert.equal(chordname(progression.sequence[0].element), "Cm");
 assert.equal(chordname(progression.sequence[1].element), "G#");
 
 // From strings
 var sequence = makeDegreeSequence(["1","6"]);
-var progression = makeChordProgression("c3", "minor", sequence);
+var progression = makeChordProgression(buildScaleNotes("c3", "minor"), sequence);
 assert.equal(chordname(progression.sequence[0].element), "Cm");
 assert.equal(chordname(progression.sequence[1].element), "G#");
 
 // Using modifiers
 var sequence = makeDegreeSequence(["1","5M"]);
-var progression = makeChordProgression("c3", "major", sequence);
+var progression = makeChordProgression(buildScaleNotes("c3", "major"), sequence);
 assert.equal(chordname(progression.sequence[0].element), "C");
 assert.equal(chordname(progression.sequence[1].element), "G");
 
 // There were a bugz
 var sequence = makeDegreeSequence(["1"]);
-var progression = makeChordProgression("a3", "minor", sequence);
+var progression = makeChordProgression(buildScaleNotes("a3", "minor"), sequence);
 assert.equal(chordname(progression.sequence[0].element), "Am");
 
 //var sequence = makeDegreeSequence(["1"]);

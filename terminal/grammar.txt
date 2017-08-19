@@ -88,8 +88,6 @@ commaed_note
 	= comma e:note
 		{ return e; }
 
-
-
 //----------------------- Chords
 
 chord_element // note, optional minor,
@@ -119,6 +117,10 @@ sequence_step
 	/ "(" l:(e:sequence_step comma? space* { return e;})+ ")"
 		{ return { sequence: l} }
 
+scale_degree_alteration
+	= i:integer a:('#'/'b')
+		{ return ((a=='b')? -1 : 1) * i }
+
 //----------------------- lists
 
 chord_list
@@ -137,6 +139,11 @@ progression_step_list
 	= token_list_head l:(e:progression_step comma? space* { return e;})+ token_list_tail
 		{ return l;}
 
+scale_alteration_list
+= token_list_head l:(e:scale_degree_alteration comma? space* { return e;})+ token_list_tail
+	{ return l;}
+
+
 //----------------------- scale
 
 base_time
@@ -150,8 +157,8 @@ base_time
 	{return parseFloat(d);}
 
 scale_definition
-  = n:note " " w:word
-    { return { root: n, scale: w}; }
+  = n:note " " w:word s:(space* a:scale_alteration_list { return a;})?
+    { return { root: n, scale: w, alterations: s}; }
 
 //----------------------- Transformations
 

@@ -81,7 +81,7 @@ var Scale = {
 
 // returns the list of midi notes for a given scale
 
-scale = function(midiNoteName, scaleName)
+buildScaleNotes = function(midiNoteName, scaleName, alterations)
 {
   var s = eval("Scale."+scaleName);
   var note = midinotefromname(midiNoteName);
@@ -90,6 +90,20 @@ scale = function(midiNoteName, scaleName)
   {
     result.push(note);
     note += interval;
+  }
+
+  if (alterations && alterations.length > 0)
+  {
+    for (var a of alterations)
+    {
+      var degree = Math.abs(a);
+      var offset = Math.sign(a);
+
+      if (degree <= result.length)
+      {
+        result[degree - 1] += offset;
+      }
+    }
   }
   return result;
 }

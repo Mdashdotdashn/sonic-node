@@ -126,16 +126,22 @@ Application.prototype.buildProgressionTimeline = function(degreeList)
 
 Application.prototype.setScale = function(arguments)
 {
-	var scale = arguments.scale;
 	var rootNote = arguments.root;
-	this.harmony_.setScale(scale, rootNote);
+	var scalename = arguments.scale;
+	var alterations = arguments.alterations;
+
+	this.harmony_.setScale(
+		scalename,
+		rootNote,
+		alterations);
 
 	this.rebuild();
 
 	var scaleDegrees = [1,2,3,4,5,6,7];
 	var progressionTimeline = this.buildProgressionTimeline(scaleDegrees);
 
-	var scaleProgression = makeChordProgression(rootNote+"4", scale, progressionTimeline);
+	var scaleIntervals = buildScaleNotes(rootNote+"4", scalename, alterations);
+	var scaleProgression = makeChordProgression(scaleIntervals, progressionTimeline);
 	var progressionString = stringForProgression(scaleProgression);
 
 	return "Scale chords: " + progressionString;

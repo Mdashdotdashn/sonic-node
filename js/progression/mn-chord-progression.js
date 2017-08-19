@@ -1,9 +1,9 @@
 _ = require("lodash");
 // Chord progression helper object
 
-var ChordProgressionBuilder = function(rootNote, mode)
+var ChordProgressionBuilder = function(scaleIntervals)
 {
-  this.scaleNotes_ = scale(rootNote, mode);
+  this.scaleNotes_ = scaleIntervals;
   this.scaleNotes_.forEach(function(note)
     {
       this.scaleNotes_.push(note+12);
@@ -60,11 +60,11 @@ ChordProgressionBuilder.prototype.buildNotes = function(props)
 //
 // 1,2,3: natural chord from the scale degree
 
-makeChordProgression = function(rootNote, mode, progression)
+makeChordProgression = function(scaleIntervals, progression)
 {
   CHECK_TYPE(progression, Timeline);
 
-  var builder = new ChordProgressionBuilder(rootNote, mode);
+  var builder = new ChordProgressionBuilder(scaleIntervals);
 
   const degreeToNotesFn = (degree) =>
   {

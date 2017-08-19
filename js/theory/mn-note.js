@@ -52,19 +52,6 @@ indexfromnotename = function(notename)
   }
 }
 
-intervalfromnotename = function(notename)
-{
-  var needle = notename.toUpperCase();
-
-  for (var index = 0; index < notenames.length; index++)
-  {
-    if (needle === notenames[index])
-    {
-      return index;
-    }
-  }
-}
-
 // Given a midi note number, returns the note name (with octave - e.g E5)
 
 notename = function(midinote)

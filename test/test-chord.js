@@ -20,7 +20,7 @@ function testChordName(noteList, expectedChord)
 
 function testChordRootIndex(noteList, expectedRootNote)
 {
-  var expectedRootIndex = intervalfromnotename(expectedRootNote);
+  var expectedRootIndex = indexfromnotename(expectedRootNote);
   var chordRootIndex = rootofchord(convertToMidiNote(noteList));
   assert.equal(chordRootIndex, expectedRootIndex);
 }

@@ -23,8 +23,8 @@ notesfromchordname = function(chordname)
     octave = parseInt(chordname.charAt(parseIndex++));
   }
 
-  var interval = intervalfromnotename(basenote);
-  var note = (octave + 1) * 12 + interval;
+  var index = indexfromnotename(basenote);
+  var note = (octave + 1) * 12 + index;
   if (minor)
   {
     return [note, note + 3, note +7];

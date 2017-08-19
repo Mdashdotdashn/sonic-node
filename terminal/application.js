@@ -1,8 +1,5 @@
 require("../js/theory/theory.js");
 require("../js/progression/progression.js");
-require("../js/mn-scale.js");
-require("../js/mn-note.js");
-require("../js/mn-utils.js");
 require("../js/transform/transform.js")
 
 require("./playback-engine.js")

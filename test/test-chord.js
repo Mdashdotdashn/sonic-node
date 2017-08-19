@@ -1,8 +1,6 @@
 var assert = require("assert");
 
-require("../js/theory/mn-chords.js");
-require("../js/mn-note.js");
-require("../js/mn-utils.js");
+require("../js/theory/theory.js");
 
 function convertToMidiNote(noteList)
 {

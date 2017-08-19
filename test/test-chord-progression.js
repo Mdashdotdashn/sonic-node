@@ -4,7 +4,6 @@ require("../js/progression/progression.js");
 require("../js/sequencing/mn-beat-time-line.js");
 require("../js/sequencing/mn-beat-time-position.js");
 require("../js/theory/theory.js");
-require("../js/mn-scale.js");
 
 makeDegreeSequence = function(degreeList)
 {

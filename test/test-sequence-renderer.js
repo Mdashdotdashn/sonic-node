@@ -3,7 +3,6 @@ require("../js/sequencing/sequencing.js");
 require("../js/progression/progression.js");
 require("../js/theory/theory.js");
 require("../js/midi/midi.js");
-require("../js/mn-scale.js");
 
 var assert = require("assert");
 

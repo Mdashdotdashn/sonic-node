@@ -65,17 +65,37 @@ var notemap = {};
 
 for (var midinote = 0; midinote < 128; midinote++)
 {
-  notemap[notename(midinote)] = midinote;
+  var index = midinote % 12;
+  octave = (midinote - index) / 12 - 1;
+  for (name of noteArray[index])
+  {
+    notename = name + octave;
+    notemap[notename.toLowerCase()] = midinote;
+  }
 }
 
 n = function(name)
 {
-  return notemap[name];
+  return notemap[name.toLowerCase()];
 }
 
 // Given a note name (with octave, e.g. D4), returns the midi note number
 
 midinotefromname = function(name)
 {
-  return notemap[name.toUpperCase()];
+  var lowNote = name.toLowerCase();
+  var note = parseInt(notemap[lowNote]);
+  var s = name.substring(0,2);
+  if (s == "cb")
+  {
+    note -= 12;
+  }
+  else
+  {
+    if (s == "b#")
+    {
+      note +=12;
+    }
+  }
+  return note;
 }

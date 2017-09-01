@@ -38,10 +38,10 @@ Signature = function(string)
 // 2: expanded where the sequence is an array of elements
 //    { position: , element: }
 
-Timeline = function()
+Timeline = function(initializer)
 {
-  this.sequence = [];
-  this.length = 0;
+  this.sequence = initializer ? initializer.sequence : [];
+  this.length = initializer ? initializer.length : 0;
 }
 
 Timeline.prototype.add = function(element, position)
@@ -65,13 +65,16 @@ Timeline.prototype.clone = function()
 }
 
 
-Timeline.prototype.mapSteps = function(convertFn)
+Timeline.prototype.mapSteps = function(convertElementFn, convertPositionFn)
 {
   var result = new Timeline();
-  result.length = this.length;
+
+  var posFn = (convertPositionFn) ? convertPositionFn : (x) => x;
+  result.length = posFn(this.length);
+
   result.sequence = this.sequence.map(function(step)
   {
-    return { position: step.position, element: convertFn(step.element)};
+    return { position: posFn(step.position), element: convertElementFn(step.element)};
   });
   return result;
 }

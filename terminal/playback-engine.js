@@ -30,11 +30,11 @@ Track.prototype.tick = function(position)
   this.stream_.tick();
 }
 
-Track.prototype.setHarmonicTimeline = function(timeline)
+Track.prototype.setHarmonicTimeline = function(rootNote, timeline)
 {
     if (this.player_)
     {
-      this.player_.setHarmonicTimeline(timeline);
+      this.player_.setHarmonicTimeline(rootNote, timeline);
     }
 }
 
@@ -81,11 +81,11 @@ PlaybackEngine.prototype.run = function()
   this.heartbeat_.run();
 }
 
-PlaybackEngine.prototype.setChordSequence = function(timeline)
+PlaybackEngine.prototype.setChordSequence = function(rootNote, timeline)
 {
   // send to all tracks
   this.tracks_.forEach(function(track){
-    track.setHarmonicTimeline(timeline);
+    track.setHarmonicTimeline(rootNote, timeline);
   })
 }
 

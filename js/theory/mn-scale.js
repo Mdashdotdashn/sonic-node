@@ -1,33 +1,27 @@
 var tonal = require ('tonal');
 
-// returns the list of midi notes for a given scale
+// returns an array of intervals by applying a scale and alterations
 
-buildScaleNotes = function(midiRootNote, scaleName, alterations)
+buildScaleIntervals = function(scaleName, alterations)
 {
-  var result = [];
-
+  // gets the scale intervals
   var intervals = tonal.scale.get(scaleName, false);
-  var rootNote = midinotefromname(midiRootNote);
 
-  for (var i of intervals)
-  {
-    result.push(rootNote + tonal.ivl.semitones(i));
-  }
-
+  // apply alterations
   if (alterations && alterations.length > 0)
   {
     for (var a of alterations)
     {
       var degree = Math.abs(a);
-      var offset = Math.sign(a);
+      var offset = Math.sign(a) > 0 ? "2m" : "-2m";
 
-      if (degree <= result.length)
+      if (degree <= intervals.length)
       {
-        result[degree - 1] += offset;
+        intervals[degree-1] = tonal.transpose(intervals[degree-1], offset);
       }
     }
   }
-  return result;
+  return intervals;
 }
 
 computeScaleScore = function(scaleName, intervalsToMatch, offset)

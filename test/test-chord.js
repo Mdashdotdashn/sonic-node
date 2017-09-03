@@ -12,23 +12,12 @@ function convertToMidiNote(noteList)
   return midiNotes;
 }
 
-function testChordName(noteList, expectedChord)
-{
-  var chordName = chordname(convertToMidiNote(noteList));
-  assert.equal(chordName,expectedChord);
-}
-
 function testChordRootIndex(noteList, expectedRootNote)
 {
   var expectedRootIndex = indexfromnotename(expectedRootNote);
   var chordRootIndex = rootofchord(convertToMidiNote(noteList));
   assert.equal(chordRootIndex, expectedRootIndex);
 }
-
-testChordName([ "G" , "E", "C"], "C");
-testChordName([ "E" , "C", "G"], "C");
-testChordName([ "G" , "D#", "C"], "Cm");
-testChordName([ "B" , "G", "D"], "G");
 
 testChordRootIndex([ "B" , "G", "D" ], "G"); // G chord
 testChordRootIndex([ "G" , "B", "E" ], "E"); // Eaug chord

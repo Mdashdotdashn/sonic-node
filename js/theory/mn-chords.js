@@ -47,40 +47,6 @@ makeCanonicalChord = function(midiNotes)
   return c;
 }
 
-// given a collaction of note number, returns the name of a chord (without octave)
-// Very coarse as it only supports major/minor
-
-chordname = function(midiNotes)
-{
-  // this should really be done from the chords intervals info
-  var chordintervals =
-  {
-    "4,3" : "",  // major
-    "3,4" : "m", // minor
-    "3,3" : "dim",  // diminished
-    "4,4" : "+",  //   augmented
-    "4,2" : "sus4",  //   sus4
-  }
-
-  var c = makeCanonicalChord(midiNotes);
-
-  // computes intervals between notes
-  var d = [];
-  for (var i = 0; i < c.length -1 ; i++)
-  {
-    if (c[i] > c[i+1])
-    {
-      c[i] -= 12;
-    }
-
-    d.push(c[i+1] - c[i]);
-  }
-
-  // makes chord name
-  var note = notefromdegree(c[0]);
-  return note + chordintervals[d.toString()];
-}
-
 // Returns the root note index
 
 rootofchord = function(midiNotes)

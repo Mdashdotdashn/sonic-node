@@ -74,7 +74,7 @@ matchScaleListFromIndexes = function(indexes, scaleList)
 
         if (score === bestScore)
         {
-          winnerList.push("" + notefromdegree(offset) + " " + scaleName);
+          winnerList.push("" + tonal.transpose('c',tonal.ivl.fromSemitones(offset)) + " " + scaleName);
         }
       }
     })

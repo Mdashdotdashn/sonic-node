@@ -1,3 +1,5 @@
+// returns the chord type from the given interval list
+
 chordTypeFromIntervalList = function (intervalList)
 {
   // We need to recover the chord type from the interval list.
@@ -9,40 +11,6 @@ chordTypeFromIntervalList = function (intervalList)
   detected = tonal.chord.detect(notes);
   parsed = tonal.chord.parse(detected[0]);
   return parsed.type === "M" ? "" : parsed.type;
-}
-
-// Returns the notes for a given chord name (with octave e.g D4)
-
-notesfromchordname = function(chordname)
-{
-  parseIndex = 0;
-  var basenote = chordname.charAt(parseIndex++);
-  if (chordname[parseIndex] === '#')
-  {
-    basenote += chordname.charAt(parseIndex++);
-  }
-
-  var minor =  false;
-
-  if (chordname[parseIndex] === 'm')
-  {
-    minor = true;
-    parseIndex++;
-  }
-
-  octave = 3;
-  if (parseIndex < chordname.length)
-  {
-    octave = parseInt(chordname.charAt(parseIndex++));
-  }
-
-  var index = indexfromnotename(basenote);
-  var note = (octave + 1) * 12 + index;
-  if (minor)
-  {
-    return [note, note + 3, note +7];
-  }
-  return [note, note + 4, note +7];
 }
 
 // given a serie of midi notes belonging to a chord, tries to organise the notes

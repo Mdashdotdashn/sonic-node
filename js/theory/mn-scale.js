@@ -122,7 +122,6 @@ filterScaleResult = function(result, firstNote)
 scalesFromNotes = function(noteNameList)
 {
   var indexes = [0,0,0,0,0,0,0,0,0,0,0,0];
-  var c4 = midinotefromname("c4");
 
   noteNameList.forEach(function(noteName)
   {
@@ -131,8 +130,8 @@ scalesFromNotes = function(noteNameList)
   });
 
   return filterScaleResult(scalesFromIndexes(indexes), noteNameList[0]);
-
 }
+
 // try to detect the scale name from a list of chord names
 
 scalesFromChords = function(chordNameList)
@@ -140,17 +139,13 @@ scalesFromChords = function(chordNameList)
   // build a vector of note indexes, based on C4
   // because at this point, we can't manipulate chords/intervals directly
 
-  var c4 = midinotefromname("c4");
-
   var indexes = [0,0,0,0,0,0,0,0,0,0,0,0];
   chordNameList.forEach(function(chordName)
   {
-    var midiChord = chordName + "4";
-    var midiNotes = notesfromchordname(midiChord);
-    midiNotes.forEach(function(midiNote)
+    var chordIndexes = tonal.chord(chordName).map((note) => tonal.note.chroma(note));
+    chordIndexes.forEach(function(index)
     {
-      var interval = (midiNote - c4) % 12;
-      indexes[interval] = 1;
+      indexes[index] = 1;
     })
   })
 

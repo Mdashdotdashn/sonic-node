@@ -45,16 +45,6 @@ buildChordProgression = function(degreeProgression, scaleIntervals)
   });
 }
 
-stringForProgression = function(progression)
-{
-  var chordnameList = "";
-	progression.sequence.forEach(function (step)
-	{
-		chordnameList += chordname(step.element) + ",";
-	})
-  return chordnameList;
-}
-
 // invert the notes of a list
 
 invertChord = function(midiNoteList, distance)

@@ -73,6 +73,7 @@ Application.prototype.init = function(options) {
 	this.sequenceLoader_ = new SequenceLoader(this.engine_.ticksPerBeat_);
 	this.transformationLoader_ = new TransformationLoader();
 	this.selectedPlayerIndex_ = 0;
+	this.rootNote_ = "c";
 
 // init default sequence
 	var baseSequence = this.sequenceLoader_.load("chords");
@@ -89,7 +90,7 @@ Application.prototype.start = function()
 
 Application.prototype.currentSequenceString = function()
 {
-	var progressionString = stringForProgression(this.chordSequence_);
+	var progressionString =  this.harmony_.chordProgressionString(this.chordSequence_);
 	return  "Chord sequence: " + progressionString;
 }
 
@@ -109,7 +110,7 @@ Application.prototype.exit = function(arguments)
 Application.prototype.rebuild = function()
 {
 	var chordSequence = this.harmony_.rebuild();
-	this.engine_.setChordSequence(chordSequence);
+	this.engine_.setChordSequence(this.rootNote_, chordSequence);
 	this.chordSequence_ = chordSequence;
 }
 
@@ -127,6 +128,8 @@ Application.prototype.setScale = function(arguments)
 	var scalename = arguments.scale;
 	var alterations = arguments.alterations;
 
+	this.rootNote_ = rootNote;
+
 	this.harmony_.setScale(
 		scalename,
 		rootNote,
@@ -134,14 +137,10 @@ Application.prototype.setScale = function(arguments)
 
 	this.rebuild();
 
-	var scaleDegrees = [1,2,3,4,5,6,7];
-	var progressionTimeline = this.buildProgressionTimeline(scaleDegrees);
+	var offset = convertToPosition("1.1.1", new Signature(), this.engine_.ticksPerBeat_);
+  var degreeTimeline = createTimeline([1,2,3,4,5,6,7], offset);
 
-	var scaleIntervals = buildScaleNotes(rootNote+"4", scalename, alterations);
-	var scaleProgression = makeChordProgression(scaleIntervals, progressionTimeline);
-	var progressionString = stringForProgression(scaleProgression);
-
-	return "Scale chords: " + progressionString;
+	return "Scale chords: " + this.harmony_.degreeProgressionString(degreeTimeline);
 }
 
 Application.prototype.setVoiceLeading = function(argument)

@@ -7,6 +7,7 @@ SequencePlayer = function(signature, ticksPerBeat)
   this.ticksPerBeat_ = ticksPerBeat;
   this.eventSequence_ = new EventSequence();
   this.baseSequence_ = null;
+  this.rootNote_ = "c4";
   this.transpose_ = 0;
   this.voiceLeadingMethod_ = 1;
   this.transformationStack_ = new SequenceTransformationStack();
@@ -32,12 +33,13 @@ SequencePlayer.prototype.onEvent = function(events)
 }
 
 
-SequencePlayer.prototype.setHarmonicTimeline = function(timeline)
+SequencePlayer.prototype.setHarmonicTimeline = function(rootNote, timeline)
 {
   if (timeline)
   {
     CHECK_TYPE(timeline, Timeline);
   }
+  this.rootNote_ = rootNote + "4";
   this.harmonicStructure_ = timeline;
   this.rebuild();
 }
@@ -88,7 +90,7 @@ SequencePlayer.prototype.rebuild = function()
   {
     var rectified = rectify_progression(this.harmonicStructure_, this.voiceLeadingMethod_);
     var sorted = rectified.mapSteps((element) => _.sortBy(element));
-    var rendered = renderSequence(sorted, this.baseSequence_, this.signature_, this.ticksPerBeat_);
+    var rendered = renderSequence(this.rootNote_, sorted, this.baseSequence_, this.signature_, this.ticksPerBeat_);
     var processed = this.transformationStack_.process(rendered.expand());
     this.eventSequence_.setContent(processed.compact());
   }

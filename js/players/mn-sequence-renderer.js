@@ -138,37 +138,22 @@ var renderSequenceWithTicks = function(harmonicStructure, baseSequence, ticksPer
 //   structure: [{ position: "1.1.1", midiNoteList: [35,67] }]
 //   length: "4.1.1" // In bars
 
-renderSequence = function(harmonicStructure, baseSequence, signature, ticksPerBeat)
+renderSequence = function(rootNote, harmonicStructure, baseSequence, signature, ticksPerBeat)
 {
   CHECK_TYPE(harmonicStructure, Timeline);
   CHECK_TYPE(baseSequence, Timeline);
 
-  // Convert base sequence to use ticks for position
-  var tickBaseSequence = new Timeline;
-  tickBaseSequence.setLength(ticksFromPosition(baseSequence.length, signature, ticksPerBeat));
+  // convert base sequence to ticks and harmonize it
 
-  tickBaseSequence.sequence = baseSequence.sequence.map(
-    function(step)
-    {
-      var tickCount = ticksFromPosition(step.position, signature, ticksPerBeat);
-      return {
-        position: tickCount,
-        element: step.element,
-      };
-    })
+  tickBaseSequence = baseSequence.mapSteps(
+    (element) => element,
+    (position) =>  ticksFromPosition(position, signature, ticksPerBeat)
+  );
 
-  // Convert harmonicStructure to use ticks for position
 
-  var tickBasedStructure = new Timeline;
-  tickBasedStructure.setLength(ticksFromPosition(harmonicStructure.length, signature, ticksPerBeat));
-  tickBasedStructure.sequence = harmonicStructure.sequence.map(
-    function(item)
-    {
-      return {
-          position: ticksFromPosition(item.position, signature, ticksPerBeat),
-          element: item.element
-        }
-    });
-
+  tickBasedStructure = harmonicStructure.mapSteps(
+    (element) => tonal.harmonize(element, rootNote).map((s) => tonal.note.midi(s)),
+    (position) =>  ticksFromPosition(position, signature, ticksPerBeat)
+  );
   return renderSequenceWithTicks(tickBasedStructure, tickBaseSequence, ticksPerBeat);
 }

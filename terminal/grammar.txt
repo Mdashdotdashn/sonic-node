@@ -41,6 +41,9 @@ integer
 word = chars:[a-z_\-A-Z0-9]+
   { return chars.join(""); }
 
+words = w:(e:word space* { return e;})+
+  { return w.join(" "); }
+
 percentage
 	= positive_integer
 
@@ -157,8 +160,8 @@ base_time
 	{return parseFloat(d);}
 
 scale_definition
-  = n:note " " w:word s:(space* a:scale_alteration_list { return a;})?
-    { return { root: n, scale: w, alterations: s}; }
+  = n:note " " sc:words alt:(space* a:scale_alteration_list { return a;})?
+    { return { root: n, scale: sc, alterations: alt}; }
 
 //----------------------- Transformations
 

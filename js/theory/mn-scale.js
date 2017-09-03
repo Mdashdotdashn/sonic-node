@@ -125,8 +125,7 @@ scalesFromNotes = function(noteNameList)
 
   noteNameList.forEach(function(noteName)
   {
-    var index = indexfromnotename(noteName);
-    indexes[index] = 1;
+    indexes[tonal.note.chroma(noteName)] = 1;
   });
 
   return filterScaleResult(scalesFromIndexes(indexes), noteNameList[0]);
